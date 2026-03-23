@@ -12,8 +12,8 @@
             <div class="logo">ZARA</div>
             <nav>
                 <ul>
-                    <li class="active">Dashboard</li>
-                    <li>Inventario (Hombre/Mujer/Niño)</li>
+                    <li onclick="mostrarDashboard()" class="active">Dashboard</li>
+                    <li onclick="mostrarInventario()">Inventario (Hombre/Mujer/Niño)</li>
                     <li>Ventas y Pedidos</li>
                     <li>Alertas de Stock</li>
                     <li>Reportes de Temporada</li>
@@ -23,68 +23,138 @@
         </aside>
 
         <main class="main-content">
-            <header class="top-bar">
-                <h1>Panel de Control de Inventario</h1>
-                <div class="user-info">Admin: Alan Gerardo</div>
-            </header>
 
-            <section class="metrics">
-                <div class="card blue">
-                    <h3>Ventas Confirmadas</h3>
-                    <p class="number">29</p>
-                </div>
-                <div class="card yellow">
-                    <h3>Por Enviar</h3>
-                    <p class="number">35</p>
-                </div>
-                <div class="card red">
-                    <h3>Poco Stock (Alertas)</h3>
-                    <p class="number">30</p>
-                </div>
-                <div class="card green">
-                    <h3>Stock Total</h3>
-                    <p class="number">654</p>
-                </div>
+            <!-- DASHBOARD -->
+            <section id="dashboard-section">
+                <header class="top-bar">
+                    <h1>Panel de Control de Inventario</h1>
+                    <div class="user-info">Admin: Alan Gerardo</div>
+                </header>
+
+                <section class="metrics">
+                    <div class="card blue">
+                        <h3>Ventas Confirmadas</h3>
+                        <p class="number">29</p>
+                    </div>
+                    <div class="card yellow">
+                        <h3>Por Enviar</h3>
+                        <p class="number">35</p>
+                    </div>
+                    <div class="card red">
+                        <h3>Poco Stock (Alertas)</h3>
+                        <p class="number">30</p>
+                    </div>
+                    <div class="card green">
+                        <h3>Stock Total</h3>
+                        <p class="number">654</p>
+                    </div>
+                </section>
+
+                <section class="orders-section">
+                    <h2>Pedidos de Ventas Recientes</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Estado</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>09/10/2026</td>
+                                <td>SO-00153</td>
+                                <td>Raymond Wade</td>
+                                <td><span class="status draft">Borrador</span></td>
+                                <td>$1,125.00</td>
+                            </tr>
+                            <tr>
+                                <td>10/10/2026</td>
+                                <td>SO-00151</td>
+                                <td>Patsy Carroll</td>
+                                <td><span class="status confirmed">Confirmado</span></td>
+                                <td>$1,000.00</td>
+                            </tr>
+                            <tr>
+                                <td>11/10/2026</td>
+                                <td>SO-00150</td>
+                                <td>Camille Bryant</td>
+                                <td><span class="status closed">Cerrado</span></td>
+                                <td>$1,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
             </section>
 
-            <section class="orders-section">
-                <h2>Pedidos de Ventas Recientes</h2>
-                <table>
+            <!-- INVENTARIO -->
+            <section id="inventory-section" style="display: none;">
+                <div class="inventory-header">
+                    <h2>Gestión de Inventario (Gama de Productos)</h2>
+                    <div class="filters">
+                        <button class="filter-btn active">Todos</button>
+                        <button class="filter-btn">Hombre</button>
+                        <button class="filter-btn">Mujer</button>
+                        <button class="filter-btn">Niños</button>
+                    </div>
+                </div>
+
+                <table class="inventory-table">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>ID Pedido</th>
-                            <th>Cliente</th>
-                            <th>Estado</th>
-                            <th>Monto</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Talla</th>
+                            <th>Color</th>
+                            <th>Temporada</th>
+                            <th>Stock Actual</th>
+                            <th>Estado de Demanda</th>
+                            <th>Acción Sugerida</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>09/10/2026</td>
-                            <td>SO-00153</td>
-                            <td>Raymond Wade</td>
-                            <td><span class="status draft">Borrador</span></td>
-                            <td>$1,125.00</td>
+                        <tr class="alert-low">
+                            <td>Chamarra de Piel</td>
+                            <td>Gama Hombre</td>
+                            <td>M</td>
+                            <td>Negro</td>
+                            <td>Invierno</td>
+                            <td>5</td>
+                            <td><span class="demand high">Alta</span></td>
+                            <td><button class="action-btn reorder">Reordenar Producto</button></td>
+                        </tr>
+                        <tr class="alert-over">
+                            <td>Vestido Floral</td>
+                            <td>Gama Mujer</td>
+                            <td>S</td>
+                            <td>Azul</td>
+                            <td>Primavera</td>
+                            <td>150</td>
+                            <td><span class="demand low">Baja</span></td>
+                            <td><button class="action-btn promo">Aplicar Promoción</button></td>
                         </tr>
                         <tr>
-                            <td>10/10/2026</td>
-                            <td>SO-00151</td>
-                            <td>Patsy Carroll</td>
-                            <td><span class="status confirmed">Confirmado</span></td>
-                            <td>$1,000.00</td>
-                        </tr>
-                        <tr>
-                            <td>11/10/2026</td>
-                            <td>SO-00150</td>
-                            <td>Camille Bryant</td>
-                            <td><span class="status closed">Cerrado</span></td>
-                            <td>$1,000.00</td>
+                            <td>Playera Básica</td>
+                            <td>Gama Niños</td>
+                            <td>10</td>
+                            <td>Blanco</td>
+                            <td>Continua</td>
+                            <td>45</td>
+                            <td><span class="demand mid">Media</span></td>
+                            <td><span class="status ok">Mantener Inventario</span></td>
                         </tr>
                     </tbody>
                 </table>
             </section>
+
         </main>
     </div>
+
+    <script src="../../back-end/index.js">
+       
+    </script>
+
 </body>
 </html>

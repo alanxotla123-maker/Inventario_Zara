@@ -1,0 +1,58 @@
+<section class="inventory-section">
+    <div class="inventory-header">
+        <h2>Gestión de Inventario (Gama de Productos)</h2>
+        <div class="filters">
+            <button class="filter-btn active">Todos</button>
+            <button class="filter-btn">Hombre</button>
+            <button class="filter-btn">Mujer</button>
+            <button class="filter-btn">Niños</button>
+        </div>
+    </div>
+
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Talla</th>
+                <th>Color</th>
+                <th>Temporada</th>
+                <th>Stock Actual</th>
+                <th>Estado de Demanda</th>
+                <th>Acción Sugerida</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="alert-low">
+                <td>Chamarra de Piel</td>
+                <td>Gama Hombre</td>
+                <td>M</td>
+                <td>Negro</td>
+                <td>Invierno</td>
+                <td>5</td>
+                <td><span class="demand high">Alta</span></td>
+                <td><button class="action-btn reorder">Reordenar Producto</button></td>
+            </tr>
+            <tr class="alert-over">
+                <td>Vestido Floral</td>
+                <td>Gama Mujer</td>
+                <td>S</td>
+                <td>Azul</td>
+                <td>Primavera</td>
+                <td>150</td>
+                <td><span class="demand low">Baja</span></td>
+                <td><button class="action-btn promo">Aplicar Promoción</button></td>
+            </tr>
+            <tr>
+                <td>Playera Básica</td>
+                <td>Gama Niños</td>
+                <td>10</td>
+                <td>Blanco</td>
+                <td>Continua</td>
+                <td>45</td>
+                <td><span class="demand mid">Media</span></td>
+                <td><span class="status ok">Mantener Inventario</span></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
