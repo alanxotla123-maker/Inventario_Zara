@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZARA - Sistema de Gestión de Inventario</title>
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">ZARA</div>
+            <nav>
+                <ul>
+                    <li class="active">Dashboard</li>
+                    <li>Inventario (Hombre/Mujer/Niño)</li>
+                    <li>Ventas y Pedidos</li>
+                    <li>Alertas de Stock</li>
+                    <li>Reportes de Temporada</li>
+                    <li>Configuración</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Panel de Control de Inventario</h1>
+                <div class="user-info">Admin: Alan Gerardo</div>
+            </header>
+
+            <section class="metrics">
+                <div class="card blue">
+                    <h3>Ventas Confirmadas</h3>
+                    <p class="number">29</p>
+                </div>
+                <div class="card yellow">
+                    <h3>Por Enviar</h3>
+                    <p class="number">35</p>
+                </div>
+                <div class="card red">
+                    <h3>Poco Stock (Alertas)</h3>
+                    <p class="number">30</p>
+                </div>
+                <div class="card green">
+                    <h3>Stock Total</h3>
+                    <p class="number">654</p>
+                </div>
+            </section>
+
+            <section class="orders-section">
+                <h2>Pedidos de Ventas Recientes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>ID Pedido</th>
+                            <th>Cliente</th>
+                            <th>Estado</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>09/10/2026</td>
+                            <td>SO-00153</td>
+                            <td>Raymond Wade</td>
+                            <td><span class="status draft">Borrador</span></td>
+                            <td>$1,125.00</td>
+                        </tr>
+                        <tr>
+                            <td>10/10/2026</td>
+                            <td>SO-00151</td>
+                            <td>Patsy Carroll</td>
+                            <td><span class="status confirmed">Confirmado</span></td>
+                            <td>$1,000.00</td>
+                        </tr>
+                        <tr>
+                            <td>11/10/2026</td>
+                            <td>SO-00150</td>
+                            <td>Camille Bryant</td>
+                            <td><span class="status closed">Cerrado</span></td>
+                            <td>$1,000.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
