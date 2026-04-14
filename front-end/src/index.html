@@ -9,152 +9,154 @@
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">ZARA</div>
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Zara_Logo.svg" alt="ZARA Logo" style="width: 100%; filter: invert(1); margin-bottom: 20px;">
+            </div>
             <nav>
                 <ul>
-                    <li onclick="mostrarDashboard()" class="active">Dashboard</li>
-                    <li onclick="mostrarInventario()">Inventario (Hombre/Mujer/Niño)</li>
-                    <li>Ventas y Pedidos</li>
+                    <li onclick="navegar('dashboard')" id="nav-dashboard">Dashboard</li>
+                    <li onclick="navegar('inventory')" id="nav-inventory" class="active">Inventario (Gamas)</li>
+                    <li onclick="navegar('sales')" id="nav-sales">Ventas y Pedidos (POS)</li>
+                    <li onclick="navegar('products')" id="nav-products">Configuración Productos</li>
                     <li>Alertas de Stock</li>
                     <li>Reportes de Temporada</li>
-                    <li>Configuración</li>
                 </ul>
             </nav>
         </aside>
 
         <main class="main-content">
-
-            <!-- DASHBOARD -->
-            <section id="dashboard-section">
+            <section id="dashboard-section" style="display: none;">
                 <header class="top-bar">
                     <h1>Panel de Control de Inventario</h1>
                     <div class="user-info">Admin: Alan Gerardo</div>
                 </header>
 
                 <section class="metrics">
-                    <div class="card blue">
-                        <h3>Ventas Confirmadas</h3>
-                        <p class="number">29</p>
-                    </div>
-                    <div class="card yellow">
-                        <h3>Por Enviar</h3>
-                        <p class="number">35</p>
-                    </div>
-                    <div class="card red">
-                        <h3>Poco Stock (Alertas)</h3>
-                        <p class="number">30</p>
-                    </div>
-                    <div class="card green">
-                        <h3>Stock Total</h3>
-                        <p class="number">654</p>
-                    </div>
+                    <div class="card blue"><h3>Ventas Confirmadas</h3><p class="number">29</p></div>
+                    <div class="card yellow"><h3>Por Enviar</h3><p class="number">35</p></div>
+                    <div class="card red"><h3>Poco Stock (Alertas)</h3><p class="number">30</p></div>
+                    <div class="card green"><h3>Stock Total</h3><p class="number">654</p></div>
                 </section>
 
                 <section class="orders-section">
-                    <h2>Pedidos de Ventas Recientes</h2>
+                    <h2>Pedidos Recientes</h2>
                     <table>
                         <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>ID Pedido</th>
-                                <th>Cliente</th>
-                                <th>Estado</th>
-                                <th>Monto</th>
-                            </tr>
+                            <tr><th>Fecha</th><th>ID Pedido</th><th>Cliente</th><th>Estado</th><th>Monto</th></tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>09/10/2026</td>
-                                <td>SO-00153</td>
-                                <td>Raymond Wade</td>
-                                <td><span class="status draft">Borrador</span></td>
-                                <td>$1,125.00</td>
-                            </tr>
-                            <tr>
-                                <td>10/10/2026</td>
-                                <td>SO-00151</td>
-                                <td>Patsy Carroll</td>
-                                <td><span class="status confirmed">Confirmado</span></td>
-                                <td>$1,000.00</td>
-                            </tr>
-                            <tr>
-                                <td>11/10/2026</td>
-                                <td>SO-00150</td>
-                                <td>Camille Bryant</td>
-                                <td><span class="status closed">Cerrado</span></td>
-                                <td>$1,000.00</td>
-                            </tr>
+                            <tr><td>23/03/2026</td><td>SO-00153</td><td>Raymond Wade</td><td><span class="status draft">Borrador</span></td><td>$1,125.00</td></tr>
                         </tbody>
                     </table>
                 </section>
             </section>
 
-            <!-- INVENTARIO -->
-            <section id="inventory-section" style="display: none;">
+            <section id="inventory-section">
                 <div class="inventory-header">
-                    <h2>Gestión de Inventario (Gama de Productos)</h2>
+                    <h2>Gestión de Inventario (Gamas)</h2>
                     <div class="filters">
                         <button class="filter-btn active">Todos</button>
                         <button class="filter-btn">Hombre</button>
                         <button class="filter-btn">Mujer</button>
-                        <button class="filter-btn">Niños</button>
                     </div>
                 </div>
-
                 <table class="inventory-table">
                     <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Categoría</th>
-                            <th>Talla</th>
-                            <th>Color</th>
-                            <th>Temporada</th>
-                            <th>Stock Actual</th>
-                            <th>Estado de Demanda</th>
-                            <th>Acción Sugerida</th>
-                        </tr>
+                        <tr><th>Imagen</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Demanda</th><th>Acción</th></tr>
                     </thead>
                     <tbody>
-                        <tr class="alert-low">
-                            <td>Chamarra de Piel</td>
-                            <td>Gama Hombre</td>
-                            <td>M</td>
-                            <td>Negro</td>
-                            <td>Invierno</td>
-                            <td>5</td>
-                            <td><span class="demand high">Alta</span></td>
-                            <td><button class="action-btn reorder">Reordenar Producto</button></td>
-                        </tr>
-                        <tr class="alert-over">
-                            <td>Vestido Floral</td>
-                            <td>Gama Mujer</td>
-                            <td>S</td>
-                            <td>Azul</td>
-                            <td>Primavera</td>
-                            <td>150</td>
-                            <td><span class="demand low">Baja</span></td>
-                            <td><button class="action-btn promo">Aplicar Promoción</button></td>
-                        </tr>
-                        <tr>
-                            <td>Playera Básica</td>
-                            <td>Gama Niños</td>
-                            <td>10</td>
-                            <td>Blanco</td>
-                            <td>Continua</td>
-                            <td>45</td>
-                            <td><span class="demand mid">Media</span></td>
-                            <td><span class="status ok">Mantener Inventario</span></td>
-                        </tr>
-                    </tbody>
+                        </tbody>
                 </table>
             </section>
 
+            <section id="sales-section" style="display: none;">
+                <h2>Punto de Venta (POS)</h2>
+                <div class="card">
+                    <p>Registrar venta diaria para actualizar stock automáticamente en el sistema.</p>
+                    <div style="margin-top:20px; display:flex; gap:10px;">
+                        <input type="text" id="pos-id" placeholder="ID del producto...">
+                        <input type="number" id="pos-cant" value="1" style="width:80px;">
+                        <button class="action-btn reorder" onclick="venderManual()">Vender</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="products-section" style="display: none;">
+                <h2>Configuración de Productos</h2>
+                <div class="card">
+                    <h3>Añadir Nueva Prenda a la Gama</h3>
+                    <form style="display:grid; gap:15px; margin-top:15px;">
+                        <input type="text" placeholder="Nombre de la prenda">
+                        <select><option>Hombre</option><option>Mujer</option><option>Niños</option></select>
+                        <input type="text" placeholder="Tallas (S, M, L, XL)">
+                        <button type="button" class="action-btn reorder">Dar de Alta</button>
+                    </form>
+                </div>
+            </section>
         </main>
     </div>
 
-    <script src="../../back-end/index.js">
-       
-    </script>
+    <script>
+        // Al cargar la página, traer datos del TXT a través de la API
+        window.onload = cargarInventario;
 
+        async function cargarInventario() {
+            try {
+                const res = await fetch('http://localhost:3003/api/inventario');
+                const productos = await res.json();
+                const tabla = document.querySelector('#inventory-section tbody');
+                tabla.innerHTML = ''; 
+
+                productos.forEach(p => {
+                    const row = `
+                        <tr class="${p.stock < 10 ? 'alert-low' : ''}">
+                            <td><img src="${p.img}" class="product-img"></td>
+                            <td>${p.nombre}</td>
+                            <td>${p.gama}</td>
+                            <td>${p.stock}</td>
+                            <td><span class="demand ${p.demanda.toLowerCase()}">${p.demanda}</span></td>
+                            <td><button class="action-btn reorder" onclick="vender('${p.id}')">Vender</button></td>
+                        </tr>`;
+                    tabla.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Error cargando el inventario:", error);
+            }
+        }
+
+        async function vender(id) {
+            const res = await fetch('http://localhost:3003/api/vender', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                alert("¡Venta realizada! El stock en el archivo TXT ha sido actualizado.");
+                cargarInventario(); 
+            }
+        }
+
+        // Función para el botón del POS
+        function venderManual() {
+            const id = document.getElementById('pos-id').value;
+            if(id) vender(id);
+            else alert("Por favor ingresa un ID válido");
+        }
+
+        function navegar(seccion) {
+            // Ocultar todas
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('inventory-section').style.display = 'none';
+            document.getElementById('sales-section').style.display = 'none';
+            document.getElementById('products-section').style.display = 'none';
+            
+            // Mostrar seleccionada
+            document.getElementById(seccion + '-section').style.display = 'block';
+
+            // Actualizar menú
+            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+            document.getElementById('nav-' + seccion).classList.add('active');
+        }
+    </script>
 </body>
 </html>
