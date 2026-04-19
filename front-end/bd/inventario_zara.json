@@ -1,0 +1,74 @@
+[
+  {
+    "id": "Z-01",
+    "nombre": "Abrigo Largo de Lana Premium",
+    "gama": "Woman Outerwear",
+    "stock": 42,
+    "demanda": "high",
+    "temporada": "Invierno",
+    "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-02",
+    "nombre": "Camisa de Seda 100%",
+    "gama": "Man Shirts",
+    "stock": 12,
+    "demanda": "mid",
+    "temporada": "Continua",
+    "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-03",
+    "nombre": "Zapato de Tacón Piel",
+    "gama": "Woman Footwear",
+    "stock": 0,
+    "demanda": "high",
+    "temporada": "Primavera",
+    "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-04",
+    "nombre": "Vibrant Leather 100ml",
+    "gama": "Home Beauty",
+    "stock": 156,
+    "demanda": "high",
+    "temporada": "Continua",
+    "img": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-05",
+    "nombre": "Blazer Estructurado Studio",
+    "gama": "Man Tailoring",
+    "stock": 28,
+    "demanda": "mid",
+    "temporada": "Otoño",
+    "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-06",
+    "nombre": "Bolso Shopper Minimal",
+    "gama": "Woman Accessories",
+    "stock": 15,
+    "demanda": "low",
+    "temporada": "Invierno",
+    "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-07",
+    "nombre": "Gafas de Sol Carey",
+    "gama": "Unisex Accessories",
+    "stock": 85,
+    "demanda": "high",
+    "temporada": "Verano",
+    "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    "id": "Z-08",
+    "nombre": "Vestido de Lino Drapeado",
+    "gama": "Woman Studio",
+    "stock": 5,
+    "demanda": "high",
+    "temporada": "Primavera",
+    "img": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=400&auto=format&fit=crop"
+  }
+]

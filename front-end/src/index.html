@@ -3,93 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZARA - Sistema de Gestión de Inventario</title>
+    <title>THE EDITORIAL INVENTORY | ZARA GLOBAL</title>
     <link rel="stylesheet" href="../styles/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Zara_Logo.svg" alt="ZARA Logo" style="width: 100%; filter: invert(1); margin-bottom: 20px;">
+            <div class="logo-container">
+                <div class="logo-title">THE EDITORIAL INVENTORY</div>
+                <div class="logo-sub">ZARA GLOBAL</div>
             </div>
+            
             <nav>
                 <ul>
-                    <li onclick="navegar('dashboard')" id="nav-dashboard">Dashboard</li>
-                    <li onclick="navegar('inventory')" id="nav-inventory" class="active">Inventario (Gamas)</li>
-                    <li onclick="navegar('sales')" id="nav-sales">Ventas y Pedidos (POS)</li>
-                    <li onclick="navegar('products')" id="nav-products">Configuración Productos</li>
-                    <li>Alertas de Stock</li>
-                    <li>Reportes de Temporada</li>
+                    <li onclick="navegar('dashboard')" id="nav-dashboard">
+                        <i data-lucide="layout-grid"></i> Dashboard
+                    </li>
+                    <li onclick="navegar('inventory')" id="nav-inventory" class="active">
+                        <i data-lucide="package"></i> Inventory
+                    </li>
+                    <li onclick="navegar('trends')" id="nav-trends">
+                        <i data-lucide="trending-up"></i> Trends
+                    </li>
+                    <li onclick="navegar('reports')" id="nav-reports">
+                        <i data-lucide="bar-chart-3"></i> Reports
+                    </li>
                 </ul>
             </nav>
+
+            <div class="sidebar-footer">
+                <button class="add-item-btn" onclick="navegar('products')">Add New Item</button>
+                <ul>
+                    <li id="nav-settings"><i data-lucide="settings"></i> Settings</li>
+                    <li id="nav-support"><i data-lucide="help-circle"></i> Support</li>
+                </ul>
+            </div>
         </aside>
 
         <main class="main-content">
+            <header class="top-nav">
+                <a href="#" class="active">Colecciones</a>
+                <a href="#">Inventario</a>
+                <a href="#">Movimientos</a>
+                <a href="#">Analítica</a>
+                <i data-lucide="bell" style="width: 18px; margin-left: 20px;"></i>
+                <i data-lucide="user" style="width: 18px;"></i>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
             <section id="dashboard-section" style="display: none;">
-                <header class="top-bar">
-                    <h1>Panel de Control de Inventario</h1>
-                    <div class="user-info">Admin: Alan Gerardo</div>
-                </header>
+                <span class="section-label">Reportes de Eficiencia</span>
+                <h1 class="editorial-title">Precisión en Inventario</h1>
 
-                <section class="metrics">
-                    <div class="card blue"><h3>Ventas Confirmadas</h3><p class="number">29</p></div>
-                    <div class="card yellow"><h3>Por Enviar</h3><p class="number">35</p></div>
-                    <div class="card red"><h3>Poco Stock (Alertas)</h3><p class="number">30</p></div>
-                    <div class="card green"><h3>Stock Total</h3><p class="number">654</p></div>
-                </section>
-
-                <section class="orders-section">
-                    <h2>Pedidos Recientes</h2>
-                    <table>
-                        <thead>
-                            <tr><th>Fecha</th><th>ID Pedido</th><th>Cliente</th><th>Estado</th><th>Monto</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>23/03/2026</td><td>SO-00153</td><td>Raymond Wade</td><td><span class="status draft">Borrador</span></td><td>$1,125.00</td></tr>
-                        </tbody>
-                    </table>
-                </section>
-            </section>
-
-            <section id="inventory-section">
-                <div class="inventory-header">
-                    <h2>Gestión de Inventario (Gamas)</h2>
-                    <div class="filters">
-                        <button class="filter-btn active">Todos</button>
-                        <button class="filter-btn">Hombre</button>
-                        <button class="filter-btn">Mujer</button>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Tasa de Rotación</span>
+                        <div class="metric-value">8.4</div>
+                        <div class="metric-trend" style="color: var(--accent-green);">+12% vs año ant.</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Plazo de Entrega Prom.</span>
+                        <div class="metric-value">14<span style="font-size: 16px;">días</span></div>
+                        <div class="metric-trend" style="color: var(--text-muted);">-2.5d objetivo</div>
+                    </div>
+                    <div class="metric-card black">
+                        <span class="metric-label">Ahorros de Gestión</span>
+                        <div class="metric-value">€4.2M</div>
+                        <p class="metric-description">
+                            Costes operativos reducidos en un 18.4% mediante asignación predictiva de stock.
+                        </p>
                     </div>
                 </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 48px;">
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 24px;">Eficiencia por Categoría</h2>
+                        <table class="inventory-table">
+                            <thead>
+                                <tr><th>Categoría</th><th>Rotación</th><th>Índice Desperdicio</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Abrigos y Chaquetas</h3>
+                                            <p>Colección Invierno '24</p>
+                                        </div>
+                                    </td>
+                                    <td>12.2x</td>
+                                    <td><span style="color: var(--accent-green); font-weight: 600;">Bajo</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Ropa de Noche</h3>
+                                            <p>Special Edition Studio</p>
+                                        </div>
+                                    </td>
+                                    <td>6.1x</td>
+                                    <td><span style="color: var(--text-muted); font-weight: 600;">Moderado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="background: #F9F9F9; padding: 32px; border: 1px solid var(--border-color);">
+                        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 16px;">Reducción de Excedentes</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                            El stock inactivo disminuyó un 22% este trimestre en las colecciones principales.
+                        </p>
+                        <div style="font-size: 48px; font-weight: 300; margin-bottom: 8px;">-22.4%</div>
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Salud de Inventario</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INVENTORY SECTION -->
+            <section id="inventory-section">
+                <span class="section-label">Gestión de Stock Estacional</span>
+                <h1 class="editorial-title">Detalle de Inventario y Edición</h1>
+
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label>Buscar por SKU, Nombre o Categoría...</label>
+                        <input type="text" id="search-input" placeholder="Ej: Abrigo Largo">
+                    </div>
+                    <div class="filter-group">
+                        <label>Categoría</label>
+                        <select id="category-filter">
+                            <option>Todas</option>
+                            <option>Woman</option>
+                            <option>Man</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Ubicación</label>
+                        <select>
+                            <option>Almacén Central</option>
+                            <option>Tienda Madrid</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <a href="#" class="export-link"><i data-lucide="download" style="width: 12px;"></i> Exportar</a>
+                        <button class="batch-action-btn">Acciones en lote</button>
+                    </div>
+                </div>
+
                 <table class="inventory-table">
                     <thead>
-                        <tr><th>Imagen</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Demanda</th><th>Acción</th></tr>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Talla</th>
+                            <th style="text-align: center;">Stock Actual</th>
+                            <th style="text-align: center;">Estado</th>
+                            <th></th>
+                        </tr>
                     </thead>
-                    <tbody>
-                        </tbody>
+                    <tbody id="inventory-tbody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
                 </table>
             </section>
 
-            <section id="sales-section" style="display: none;">
-                <h2>Punto de Venta (POS)</h2>
-                <div class="card">
-                    <p>Registrar venta diaria para actualizar stock automáticamente en el sistema.</p>
-                    <div style="margin-top:20px; display:flex; gap:10px;">
-                        <input type="text" id="pos-id" placeholder="ID del producto...">
-                        <input type="number" id="pos-cant" value="1" style="width:80px;">
-                        <button class="action-btn reorder" onclick="venderManual()">Vender</button>
+            <!-- TRENDS SECTION -->
+            <section id="trends-section" style="display: none;">
+                <span class="section-label">Análisis de Mercado</span>
+                <h1 class="editorial-title">Tendencias de Temporada</h1>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Crecimiento Digital</span>
+                        <div class="metric-value">+24.5%</div>
+                        <div class="metric-trend">Impulsado por colección Studio</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Engagement de Marca</span>
+                        <div class="metric-value">8.2M</div>
+                        <div class="metric-trend">Menciones totales en Q1</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Tasa de Conversión</span>
+                        <div class="metric-value">3.1%</div>
+                        <div class="metric-trend" style="color: var(--accent-green);">+0.5% vs mes anterior</div>
+                    </div>
+                </div>
+
+                <div style="background: #FFF; border: 1px solid var(--border-color); padding: 48px; margin-bottom: 48px;">
+                    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 40px;">Pronóstico de Ventas Regional</h2>
+                    <div style="display: flex; align-items: flex-end; gap: 40px; height: 300px; padding-bottom: 40px; border-bottom: 1px solid #EEE;">
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 80%; background: #000;"></div>
+                            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Madrid</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 65%; background: #000; opacity: 0.6;"></div>
+                            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Paris</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 95%; background: #000;"></div>
+                            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">London</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 45%; background: #000; opacity: 0.3;"></div>
+                            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Berlin</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 75%; background: #000;"></div>
+                            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Milan</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- REPORTS SECTION -->
+            <section id="reports-section" style="display: none;">
+                <span class="section-label">Centro de Documentación</span>
+                <h1 class="editorial-title">Informes y Balances</h1>
+
+                <div class="filter-container" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 32px;">
+                    <div class="filter-group">
+                        <label>Tipo de Reporte</label>
+                        <select>
+                            <option>Financiero Anual</option>
+                            <option>Inventario Trimestral</option>
+                            <option>Logística y Envíos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Periodo</label>
+                        <select>
+                            <option>Enero - Marzo 2026</option>
+                            <option>Octubre - Diciembre 2025</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="justify-content: flex-end;">
+                        <button class="batch-action-btn" style="width: 100%;">Generar Reporte</button>
+                    </div>
+                </div>
+
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Archivo</th>
+                            <th>Fecha de Generación</th>
+                            <th>Tamaño</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <h3>Balance_Anual_2025_Final.pdf</h3>
+                                    <p>Auditoría Externa</p>
+                                </div>
+                            </td>
+                            <td class="sku-cell">15/01/2026</td>
+                            <td class="sku-cell">4.2 MB</td>
+                            <td><span style="color: var(--accent-green); font-size: 10px; font-weight: 600;">LISTO</span></td>
+                            <td><i data-lucide="download" style="width: 16px; cursor: pointer;"></i></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <h3>Inventario_Q1_Proyectado.xlsx</h3>
+                                    <p>Planificación de Stock</p>
+                                </div>
+                            </td>
+                            <td class="sku-cell">02/04/2026</td>
+                            <td class="sku-cell">1.8 MB</td>
+                            <td><span style="color: var(--accent-green); font-size: 10px; font-weight: 600;">LISTO</span></td>
+                            <td><i data-lucide="download" style="width: 16px; cursor: pointer;"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PRODUCTS SECTION (ADD NEW) -->
             <section id="products-section" style="display: none;">
-                <h2>Configuración de Productos</h2>
-                <div class="card">
-                    <h3>Añadir Nueva Prenda a la Gama</h3>
-                    <form style="display:grid; gap:15px; margin-top:15px;">
-                        <input type="text" placeholder="Nombre de la prenda">
-                        <select><option>Hombre</option><option>Mujer</option><option>Niños</option></select>
-                        <input type="text" placeholder="Tallas (S, M, L, XL)">
-                        <button type="button" class="action-btn reorder">Dar de Alta</button>
+                <span class="section-label">Configuración</span>
+                <h1 class="editorial-title">Añadir Nueva Prenda</h1>
+                <div class="filter-container" style="display: block; max-width: 600px;">
+                    <form id="add-product-form" style="display: grid; gap: 24px;">
+                        <div class="filter-group">
+                            <label>Imagen del Producto</label>
+                            <div style="border: 1px dashed var(--border-color); padding: 40px; text-align: center; cursor: pointer;" onclick="document.getElementById('file-input').click()">
+                                <i data-lucide="upload-cloud" style="margin-bottom: 8px;"></i>
+                                <p id="file-label" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Click para subir imagen</p>
+                                <input type="file" id="file-input" style="display: none;" accept="image/*" onchange="previewImage(this)">
+                                <img id="image-preview" style="display: none; width: 100px; height: 130px; object-fit: cover; margin-top: 16px; margin-inline: auto;">
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <label>ID / SKU</label>
+                            <input type="text" id="p-id" placeholder="Ej: Z-09">
+                        </div>
+                        <div class="filter-group">
+                            <label>Nombre de la prenda</label>
+                            <input type="text" id="p-nombre" placeholder="Ej: Camisa de Seda 100%">
+                        </div>
+                        <div class="filter-group">
+                            <label>Categoría / Gama</label>
+                            <input type="text" id="p-gama" placeholder="Ej: Woman Outerwear">
+                        </div>
+                        <div class="filter-group">
+                            <label>Stock Inicial</label>
+                            <input type="number" id="p-stock" value="0">
+                        </div>
+                        <div class="filter-group">
+                            <label>Demanda Estimada</label>
+                            <select id="p-demanda">
+                                <option value="low">Low</option>
+                                <option value="mid">Mid</option>
+                                <option value="high" selected>High</option>
+                            </select>
+                        </div>
+                        <button type="button" class="batch-action-btn" style="width: 100%; padding: 16px;" onclick="guardarNuevoProducto()">Dar de Alta</button>
                     </form>
                 </div>
             </section>
@@ -97,35 +329,144 @@
     </div>
 
     <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
         // Al cargar la página, traer datos del TXT a través de la API
         window.onload = cargarInventario;
 
         async function cargarInventario() {
             try {
-                const res = await fetch('http://localhost:3003/api/inventario');
+                const res = await fetch('/api/inventario');
                 const productos = await res.json();
-                const tabla = document.querySelector('#inventory-section tbody');
+                const tabla = document.querySelector('#inventory-tbody');
                 tabla.innerHTML = ''; 
 
                 productos.forEach(p => {
+                    const statusClass = p.stock < 10 ? 'alert' : (p.stock > 100 ? 'excess' : 'optimal');
+                    const statusText = p.stock < 10 ? 'ALERTA' : (p.stock > 100 ? 'EXCESO' : 'ÓPTIMO');
+                    
+                    // Asegurar que la ruta de la imagen sea correcta si es local
+                    const imgUrl = p.img.startsWith('http') ? p.img : p.img.replace('../', '/');
+
                     const row = `
-                        <tr class="${p.stock < 10 ? 'alert-low' : ''}">
-                            <td><img src="${p.img}" class="product-img"></td>
-                            <td>${p.nombre}</td>
-                            <td>${p.gama}</td>
-                            <td>${p.stock}</td>
-                            <td><span class="demand ${p.demanda.toLowerCase()}">${p.demanda}</span></td>
-                            <td><button class="action-btn reorder" onclick="vender('${p.id}')">Vender</button></td>
+                        <tr>
+                            <td class="sku-cell">${p.id}</td>
+                            <td>
+                                <div class="product-cell">
+                                    <img src="${imgUrl}" class="product-img">
+                                    <div class="product-info">
+                                        <h3>${p.nombre}</h3>
+                                        <p>Edición Limitada FW24</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="category-cell">
+                                <span>${p.gama.split(' ')[0]} /</span>
+                                ${p.gama.split(' ')[1] || 'GENERAL'}
+                            </td>
+                            <td><span class="size-badge">M</span></td>
+                            <td class="stock-cell">
+                                <div class="stock-number">${p.stock}</div>
+                                <div class="stock-label">Unidades</div>
+                            </td>
+                            <td class="status-cell">
+                                <div class="status-indicator ${statusClass}"></div>
+                                <span class="status-text ${statusClass}">${statusText}</span>
+                            </td>
+                            <td>
+                                <i data-lucide="more-vertical" style="width: 16px; color: #CCC; cursor: pointer;"></i>
+                            </td>
                         </tr>`;
                     tabla.innerHTML += row;
                 });
+                lucide.createIcons(); // Refresh icons for new rows
             } catch (error) {
                 console.error("Error cargando el inventario:", error);
             }
         }
 
+        function previewImage(input) {
+            const preview = document.getElementById('image-preview');
+            const label = document.getElementById('file-label');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    label.innerText = input.files[0].name;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function guardarNuevoProducto() {
+            const fileInput = document.getElementById('file-input');
+            const id = document.getElementById('p-id').value;
+            const nombre = document.getElementById('p-nombre').value;
+            const gama = document.getElementById('p-gama').value;
+            const stock = document.getElementById('p-stock').value;
+            const demanda = document.getElementById('p-demanda').value;
+
+            if (!id || !nombre || !fileInput.files[0]) {
+                alert("Por favor completa todos los campos y sube una imagen.");
+                return;
+            }
+
+            try {
+                // 1. Subir la imagen primero
+                const formData = new FormData();
+                formData.append('imagen', fileInput.files[0]);
+                
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!uploadRes.ok) {
+                    const errorText = await uploadRes.text();
+                    throw new Error(`Error en subida de imagen (${uploadRes.status}): ${errorText}`);
+                }
+                const uploadData = await uploadRes.json();
+
+                // 2. Guardar el producto con la URL de la imagen recibida
+                const productData = {
+                    id,
+                    nombre,
+                    gama,
+                    stock,
+                    demanda,
+                    temporada: 'FW24',
+                    img: uploadData.url
+                };
+
+                const res = await fetch('/api/nuevo-producto', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(productData)
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(`Error al guardar producto (${res.status}): ${errorText}`);
+                }
+
+                if (res.ok) {
+                    alert("¡Producto añadido con éxito!");
+                    document.getElementById('add-product-form').reset();
+                    document.getElementById('image-preview').style.display = 'none';
+                    document.getElementById('file-label').innerText = 'Click para subir imagen';
+                    navegar('inventory');
+                    cargarInventario();
+                }
+            } catch (error) {
+                console.error("Detalle del Error:", error);
+                alert("Error: " + error.message + "\n\nVerifica que el servidor esté corriendo y que hayas instalado las dependencias (npm install).");
+            }
+        }
+
         async function vender(id) {
-            const res = await fetch('http://localhost:3003/api/vender', {
+            const res = await fetch('/api/vender', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ id })
@@ -136,26 +477,22 @@
             }
         }
 
-        // Función para el botón del POS
-        function venderManual() {
-            const id = document.getElementById('pos-id').value;
-            if(id) vender(id);
-            else alert("Por favor ingresa un ID válido");
-        }
-
         function navegar(seccion) {
             // Ocultar todas
             document.getElementById('dashboard-section').style.display = 'none';
             document.getElementById('inventory-section').style.display = 'none';
-            document.getElementById('sales-section').style.display = 'none';
+            document.getElementById('trends-section').style.display = 'none';
+            document.getElementById('reports-section').style.display = 'none';
             document.getElementById('products-section').style.display = 'none';
             
             // Mostrar seleccionada
-            document.getElementById(seccion + '-section').style.display = 'block';
+            const targetSection = document.getElementById(seccion + '-section');
+            if (targetSection) targetSection.style.display = 'block';
 
             // Actualizar menú
             document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-            document.getElementById('nav-' + seccion).classList.add('active');
+            const navItem = document.getElementById('nav-' + seccion);
+            if (navItem) navItem.classList.add('active');
         }
     </script>
 </body>

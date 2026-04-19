@@ -1,54 +1,31 @@
+require('dotenv').config();
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
-const app = express();
+const cors = require('cors');
+const apiRoutes = require('./routes/apiRoutes');
 
+const app = express();
+const PORT = process.env.PORT || 3003;
+
+// Middleware Global
+app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos apuntando a la carpeta front-end
-app.use(express.static(path.join(__dirname, '../front-end')));
+// Rutas Estáticas
+const FRONTEND_DIR = path.resolve(__dirname, '../front-end');
+app.use(express.static(FRONTEND_DIR));
 
-const TXT_PATH = path.join(__dirname, '../front-end/bd/inventario_zara.txt');
+// Rutas de API
+app.use('/api', apiRoutes);
 
-// API para leer el inventario
-app.get('/api/inventario', (req, res) => {
-    try {
-        const data = fs.readFileSync(TXT_PATH, 'utf8');
-        const lineas = data.trim().split('\n').filter(linea => linea.trim() !== '' && !linea.startsWith('ID'));
-        const productos = lineas.map(linea => {
-            const [id, nombre, gama, stock, demanda, temporada, img] = linea.split(',');
-            return { id, nombre, gama, stock: parseInt(stock), demanda, temporada, img };
-        });
-        res.json(productos);
-    } catch (e) {
-        console.error("Error al leer el archivo txt:", e);
-        res.status(500).send("Error al leer el archivo txt");
-    }
-});
-
-// API para vender
-app.post('/api/vender', (req, res) => {
-    const { id } = req.body;
-    let data = fs.readFileSync(TXT_PATH, 'utf8').trim().split('\n');
-
-    let nuevaData = data.map(linea => {
-        let campos = linea.split(',');
-        if (campos[0] === id && parseInt(campos[3]) > 0) {
-            campos[3] = parseInt(campos[3]) - 1;
-        }
-        return campos.join(',');
-    });
-
-    fs.writeFileSync(TXT_PATH, nuevaData.join('\n'));
-    res.json({ success: true });
-});
-
-// Ruta principal para abrir el index.html que está en src/
+// Ruta Principal (Frontend)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../front-end/src/index.html'));
+    res.sendFile(path.join(FRONTEND_DIR, 'src/index.html'));
 });
 
-app.listen(3003, () => {
-    console.log('✅ Sistema ZARA corriendo en http://localhost:3003');
-    console.log('📂 Leyendo desde: ' + TXT_PATH);
+// Inicio del Servidor
+app.listen(PORT, () => {
+    console.log(`\n🚀 SERVIDOR EDITORIAL INICIADO`);
+    console.log(`🔗 URL: http://localhost:${PORT}`);
+    console.log(`📁 Estructura organizada por módulos\n`);
 });

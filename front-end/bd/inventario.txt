@@ -1,4 +1,0 @@
-ID,Producto,Gama,Talla,Stock,Temporada
-1,Chamarra Piel,Hombre,M,5,Invierno
-2,Vestido Floral,Mujer,S,150,Primavera
-3,Playera Basica,Niños,10,45,Continua
