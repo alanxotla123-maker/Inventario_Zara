@@ -123,6 +123,8 @@
                 <span class="section-label">Gestión de Stock Estacional</span>
                 <h1 class="editorial-title">Detalle de Inventario y Edición</h1>
 
+                <div id="stock-alerts-container" style="margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; display: none;"></div>
+
                 <div class="filter-container">
                     <div class="filter-group">
                         <label>Buscar por SKU, Nombre o Categoría...</label>
@@ -381,6 +383,7 @@
         let inventarioGlobal = [];
         let modoEdicion = false;
         let idEdicion = null;
+        let filtroStockActual = 'all';
 
         // Al cargar la página, traer datos del TXT a través de la API
         window.onload = cargarInventario;
@@ -389,51 +392,114 @@
             try {
                 const res = await fetch('/api/inventario');
                 inventarioGlobal = await res.json();
-                const tabla = document.querySelector('#inventory-tbody');
-                tabla.innerHTML = ''; 
-
-                inventarioGlobal.forEach(p => {
-                    const statusClass = p.stock < 10 ? 'alert' : (p.stock > 100 ? 'excess' : 'optimal');
-                    const statusText = p.stock < 10 ? 'ALERTA' : (p.stock > 100 ? 'EXCESO' : 'ÓPTIMO');
-                    
-                    // Asegurar que la ruta de la imagen sea correcta si es local
-                    const imgUrl = p.img.startsWith('http') ? p.img : p.img.replace('../', '/');
-
-                    const row = `
-                        <tr>
-                            <td class="sku-cell">${p.id}</td>
-                            <td>
-                                <div class="product-cell">
-                                    <img src="${imgUrl}" class="product-img">
-                                    <div class="product-info">
-                                        <h3>${p.nombre}</h3>
-                                        <p>Edición Limitada FW24</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="category-cell">
-                                <span>${p.gama.split(' ')[0]} /</span>
-                                ${p.gama.split(' ')[1] || 'GENERAL'}
-                            </td>
-                            <td><span class="size-badge">M</span></td>
-                            <td class="stock-cell">
-                                <div class="stock-number">${p.stock}</div>
-                                <div class="stock-label">Unidades</div>
-                            </td>
-                            <td class="status-cell">
-                                <div class="status-indicator ${statusClass}"></div>
-                                <span class="status-text ${statusClass}">${statusText}</span>
-                            </td>
-                            <td style="display: flex; gap: 16px; align-items: center; justify-content: center; padding-top: 40px;">
-                                <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')"></i>
-                                <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')"></i>
-                            </td>
-                        </tr>`;
-                    tabla.innerHTML += row;
-                });
-                lucide.createIcons(); // Refresh icons for new rows
+                renderizarInventario(inventarioGlobal);
             } catch (error) {
                 console.error("Error cargando el inventario:", error);
+            }
+        }
+
+        function renderizarInventario(datosA_Mostrar) {
+            const tabla = document.querySelector('#inventory-tbody');
+            tabla.innerHTML = ''; 
+
+            let lowStockCount = 0;
+            let overStockCount = 0;
+
+            // Calculamos los totales basados en todo el inventario para mantener alertas estables
+            inventarioGlobal.forEach(p => {
+                if (p.stock < 10) lowStockCount++;
+                if (p.stock > 100) overStockCount++;
+            });
+
+            datosA_Mostrar.forEach(p => {
+                const statusClass = p.stock < 10 ? 'alert' : (p.stock > 100 ? 'excess' : 'optimal');
+                const statusText = p.stock < 10 ? 'ALERTA' : (p.stock > 100 ? 'EXCESO' : 'ÓPTIMO');
+                
+                // Asegurar que la ruta de la imagen sea correcta si es local
+                const imgUrl = p.img.startsWith('http') ? p.img : p.img.replace('../', '/');
+
+                const row = `
+                    <tr>
+                        <td class="sku-cell">${p.id}</td>
+                        <td>
+                            <div class="product-cell">
+                                <img src="${imgUrl}" class="product-img">
+                                <div class="product-info">
+                                    <h3>${p.nombre}</h3>
+                                    <p>Edición Limitada FW24</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="category-cell">
+                            <span>${p.gama.split(' ')[0]} /</span>
+                            ${p.gama.split(' ')[1] || 'GENERAL'}
+                        </td>
+                        <td><span class="size-badge">M</span></td>
+                        <td class="stock-cell">
+                            <div class="stock-number">${p.stock}</div>
+                            <div class="stock-label">Unidades</div>
+                        </td>
+                        <td class="status-cell">
+                            <div class="status-indicator ${statusClass}"></div>
+                            <span class="status-text ${statusClass}">${statusText}</span>
+                        </td>
+                        <td style="display: flex; gap: 16px; align-items: center; justify-content: center; padding-top: 40px;">
+                            <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')"></i>
+                            <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')"></i>
+                        </td>
+                    </tr>`;
+                tabla.innerHTML += row;
+            });
+            
+            actualizarAlertas(lowStockCount, overStockCount);
+            lucide.createIcons(); // Refresh icons for new rows
+        }
+
+        function filtrarPorStock(tipo) {
+            if (filtroStockActual === tipo) {
+                // Si ya está seleccionado, lo quitamos
+                filtroStockActual = 'all';
+                renderizarInventario(inventarioGlobal);
+            } else {
+                filtroStockActual = tipo;
+                let filtrados = [];
+                if (tipo === 'low') {
+                    filtrados = inventarioGlobal.filter(p => p.stock < 10);
+                } else if (tipo === 'over') {
+                    filtrados = inventarioGlobal.filter(p => p.stock > 100);
+                }
+                renderizarInventario(filtrados);
+            }
+        }
+
+        function actualizarAlertas(lowStock, overStock) {
+            const container = document.getElementById('stock-alerts-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (lowStock > 0) {
+                container.innerHTML += `
+                    <div class="alert-banner low-stock" onclick="filtrarPorStock('low')" style="${filtroStockActual === 'low' ? 'box-shadow: 0 0 0 2px var(--accent-red);' : ''}">
+                        <i data-lucide="alert-triangle"></i>
+                        <span><strong>Atención:</strong> Se nos está acabando el stock de ${lowStock} producto(s) (menos de 10 unidades). Haz clic para verlos.</span>
+                    </div>
+                `;
+            }
+            
+            if (overStock > 0) {
+                container.innerHTML += `
+                    <div class="alert-banner over-stock" onclick="filtrarPorStock('over')" style="${filtroStockActual === 'over' ? 'box-shadow: 0 0 0 2px var(--accent-green);' : ''}">
+                        <i data-lucide="info"></i>
+                        <span><strong>Aviso:</strong> Tenemos sobre stock en ${overStock} producto(s) (más de 100 unidades). Haz clic para verlos.</span>
+                    </div>
+                `;
+            }
+            
+            if (lowStock === 0 && overStock === 0) {
+                container.style.display = 'none';
+            } else {
+                container.style.display = 'flex';
             }
         }
 

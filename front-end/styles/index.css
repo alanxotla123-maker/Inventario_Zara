@@ -661,3 +661,31 @@ textarea.editorial-input {
 }
 .status-dot.optimal { background: #000; }
 .status-dot.alert { background: #D93025; }
+
+/* --- ALERT BANNERS --- */
+.alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    border: 1px solid var(--border-color);
+    background: #FFF;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.alert-banner:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+.alert-banner.low-stock {
+    border-left: 4px solid var(--accent-red);
+}
+.alert-banner.over-stock {
+    border-left: 4px solid var(--accent-green);
+}
+.alert-banner i {
+    width: 20px;
+}
