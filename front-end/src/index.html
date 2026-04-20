@@ -48,7 +48,7 @@
                 <a href="#">Movimientos</a>
                 <a href="#">Analítica</a>
                 <i data-lucide="bell" style="width: 24px; margin-left: 20px;"></i>
-                <i data-lucide="user" style="width: 24px;"></i>
+                <i data-lucide="user" style="width: 24px; cursor: pointer;" onclick="logout()" title="Cerrar Sesión"></i>
             </header>
 
             <!-- DASHBOARD SECTION -->
@@ -377,6 +377,16 @@
     </div>
 
     <script>
+        // Auth check
+        if (!sessionStorage.getItem('zara_auth')) {
+            window.location.href = '/src/login.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('zara_auth');
+            window.location.href = '/src/login.html';
+        }
+
         // Initialize Lucide icons
         lucide.createIcons();
 

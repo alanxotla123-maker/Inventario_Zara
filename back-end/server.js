@@ -23,6 +23,19 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(FRONTEND_DIR, 'src/index.html'));
 });
 
+// Rutas explicitas para HTML
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(FRONTEND_DIR, 'src/index.html'));
+});
+
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(FRONTEND_DIR, 'src/login.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(FRONTEND_DIR, 'src/login.html'));
+});
+
 // Inicio del Servidor
 app.listen(PORT, () => {
     console.log(`\n🚀 SERVIDOR EDITORIAL INICIADO`);

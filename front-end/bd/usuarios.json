@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "email": "admin@zara.com",
+        "password": "adminpassword",
+        "role": "admin",
+        "name": "Administrador Principal"
+    },
+    {
+        "id": 2,
+        "email": "manager@zara.com",
+        "password": "managerpassword",
+        "role": "admin",
+        "name": "Gerente de Tienda"
+    },
+    {
+        "id": 3,
+        "email": "user@zara.com",
+        "password": "userpassword",
+        "role": "user",
+        "name": "Empleado de Inventario"
+    },
+    {
+        "id": 4,
+        "email": "viewer@zara.com",
+        "password": "viewerpassword",
+        "role": "user",
+        "name": "Asistente de Ventas"
+    }
+]
