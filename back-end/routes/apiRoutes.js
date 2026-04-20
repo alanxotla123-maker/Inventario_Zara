@@ -8,6 +8,8 @@ const { upload } = require('../middleware/uploadMiddleware');
 router.get('/inventario', inventoryController.getInventory);
 router.post('/nuevo-producto', inventoryController.addProduct);
 router.post('/vender', inventoryController.sellProduct);
+router.put('/inventario/:id', inventoryController.updateProduct);
+router.delete('/inventario/:id', inventoryController.deleteProduct);
 
 // Rutas de Carga
 router.post('/upload', upload.single('imagen'), uploadController.uploadImage);

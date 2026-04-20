@@ -1,15 +1,15 @@
 [
   {
-    "id": "Z-01",
+    "id": "1",
     "nombre": "Abrigo Largo de Lana Premium",
     "gama": "Woman Outerwear",
-    "stock": 42,
+    "stock": 4234,
     "demanda": "high",
-    "temporada": "Invierno",
+    "temporada": "FW24",
     "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-02",
+    "id": "2",
     "nombre": "Camisa de Seda 100%",
     "gama": "Man Shirts",
     "stock": 12,
@@ -18,7 +18,7 @@
     "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-03",
+    "id": "3",
     "nombre": "Zapato de Tacón Piel",
     "gama": "Woman Footwear",
     "stock": 0,
@@ -27,7 +27,7 @@
     "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-04",
+    "id": "4",
     "nombre": "Vibrant Leather 100ml",
     "gama": "Home Beauty",
     "stock": 156,
@@ -36,7 +36,7 @@
     "img": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-05",
+    "id": "5",
     "nombre": "Blazer Estructurado Studio",
     "gama": "Man Tailoring",
     "stock": 28,
@@ -45,7 +45,7 @@
     "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-06",
+    "id": "6",
     "nombre": "Bolso Shopper Minimal",
     "gama": "Woman Accessories",
     "stock": 15,
@@ -54,7 +54,7 @@
     "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-07",
+    "id": "7",
     "nombre": "Gafas de Sol Carey",
     "gama": "Unisex Accessories",
     "stock": 85,
@@ -63,7 +63,7 @@
     "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop"
   },
   {
-    "id": "Z-08",
+    "id": "8",
     "nombre": "Vestido de Lino Drapeado",
     "gama": "Woman Studio",
     "stock": 5,
