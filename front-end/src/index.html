@@ -28,8 +28,11 @@
                     <li onclick="navegar('trends')" id="nav-trends">
                         <i data-lucide="trending-up"></i> Trends
                     </li>
+                    <li onclick="navegar('sales')" id="nav-sales">
+                        <i data-lucide="bar-chart-2"></i> Sales Reports
+                    </li>
                     <li onclick="navegar('reports')" id="nav-reports">
-                        <i data-lucide="bar-chart-3"></i> Reports
+                        <i data-lucide="archive"></i> Archives
                     </li>
                 </ul>
             </nav>
@@ -50,7 +53,7 @@
                 <a href="#">Movimientos</a>
                 <a href="#">Analítica</a>
                 <i data-lucide="bell" style="width: 24px; margin-left: 20px;"></i>
-                <i data-lucide="user" style="width: 24px;"></i>
+                <i data-lucide="user" style="width: 24px; cursor: pointer;" onclick="logout()" title="Cerrar Sesión"></i>
             </header>
 
             <!-- DASHBOARD SECTION -->
@@ -264,6 +267,136 @@
                 </div>
             </section>
 
+            <!-- SALES REPORTS SECTION -->
+            <section id="sales-section" style="display: none;">
+                <h1 class="editorial-title" style="margin-bottom: 40px; font-size: 52px; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 8px;">Nuevo Reporte de Ventas</h1>
+
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px;">
+                    <!-- LEFT COLUMN -->
+                    <div style="display: flex; flex-direction: column; gap: 40px;">
+                        
+                        <div class="form-row two-cols">
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">TIENDA O UBICACIÓN</label>
+                                <select class="editorial-input" style="color: #000; padding: 12px 0;">
+                                    <option>Seleccionar tienda...</option>
+                                    <option>Serrano 23, Madrid</option>
+                                    <option>Champs Élysées, Paris</option>
+                                    <option>Fifth Avenue, NY</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CATEGORÍA DE PRODUCTO</label>
+                                <select class="editorial-input" style="color: #000; padding: 12px 0;">
+                                    <option>Todas las categorías</option>
+                                    <option>Woman</option>
+                                    <option>Man</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row two-cols">
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">FECHA DE INICIO</label>
+                                <input type="date" class="editorial-input" style="color: #000; padding: 12px 0; font-size: 13px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">FECHA DE FIN</label>
+                                <input type="date" class="editorial-input" style="color: #000; padding: 12px 0; font-size: 13px;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">VENTAS TOTALES ($)</label>
+                                <input type="number" class="editorial-input" placeholder="0.00" style="color: #000; padding: 12px 0;">
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">UNIDADES VENDIDAS</label>
+                                <input type="number" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;">
+                            </div>
+                            <div>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">DEVOLUCIONES</label>
+                                <input type="number" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CARGA DE DATOS DETALLADA (CSV / EXCEL)</label>
+                            <div class="thumb-box upload-btn" style="width: 100%; aspect-ratio: auto; height: 160px; margin-top: 8px; border: 1px dashed #CCC;">
+                                <i data-lucide="file-up" style="width: 24px; margin-bottom: 12px; color: #999;"></i>
+                                <span style="font-size: 11px; color: #999;">ARRASTRA TUS ARCHIVOS AQUÍ O <strong style="color: #000; cursor: pointer;">EXAMINAR</strong></span>
+                                <span style="font-size: 9px; color: #BBB; margin-top: 8px; text-transform: none;">Archivos permitidos: .csv, .xlsx (Max. 10MB)</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-save" style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;" onclick="alert('Reporte simulado exitosamente')">
+                            SUBIR REPORTE DE VENTAS <i data-lucide="arrow-right" style="width: 16px;"></i>
+                        </button>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div style="display: flex; flex-direction: column; gap: 40px;">
+                        
+                        <div style="border: 1px solid var(--border-color); padding: 32px; background: #FFF;">
+                            <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 32px; font-weight: 500;">Últimos Reportes Cargados</h3>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 24px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">SERRANO 23, MADRID</div>
+                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 01 Oct - 15 Oct</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">HOY, 09:42</div>
+                                        <div style="font-size: 14px; font-weight: 600;">$142,500.00</div>
+                                    </div>
+                                </div>
+
+                                <div style="height: 1px; background: #EEE; width: 100%;"></div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">CHAMPS ÉLYSÉES, PARIS</div>
+                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 16 Sep - 30 Sep</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">AYER, 18:15</div>
+                                        <div style="font-size: 14px; font-weight: 600;">$218,240.00</div>
+                                    </div>
+                                </div>
+
+                                <div style="height: 1px; background: #EEE; width: 100%;"></div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">FIFTH AVENUE, NY</div>
+                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 01 Oct - 10 Oct</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">17 OCT, 14:30</div>
+                                        <div style="font-size: 14px; font-weight: 600;">$305,900.00</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="#" style="display: block; margin-top: 32px; font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; text-decoration: none; font-weight: 600;">VER TODO EL HISTORIAL DE REPORTES <i data-lucide="chevron-right" style="width: 12px; vertical-align: middle;"></i></a>
+                        </div>
+
+                        <!-- Image with Quote -->
+                        <div style="position: relative; width: 100%; aspect-ratio: 4/5;">
+                            <img src="file:///C:/Users/Alan/.gemini/antigravity/brain/fb316e09-1b1d-42e9-b50c-a471f2124afc/editorial_clothes_rack_1776720399927.png" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);">
+                            <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 32px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                                <p style="font-family: var(--font-serif); font-size: 20px; font-style: italic; color: #FFF; line-height: 1.4; margin-bottom: 12px;">"La precisión en el dato es el primer paso hacia la elegancia operativa."</p>
+                                <p style="font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6);">INTERNAL MANAGEMENT QUOTE</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
             <!-- PRODUCTS SECTION (ADD/EDIT) -->
             <section id="products-section" style="display: none;">
                 <div class="edit-header">
@@ -368,14 +501,39 @@
     </div>
 
     <script>
+        // Auth check
+        if (!sessionStorage.getItem('zara_auth')) {
+            window.location.href = '/src/login.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('zara_auth');
+            window.location.href = '/src/login.html';
+        }
+
         // Initialize Lucide icons
         lucide.createIcons();
+
+        const userRole = sessionStorage.getItem('zara_role');
+        const userName = sessionStorage.getItem('zara_name');
 
         let inventarioGlobal = [];
         let modoEdicion = false;
         let idEdicion = null;
         let filtroStockActual = 'all';
         let tallasActuales = [];
+
+        // Apply UI restrictions
+        if (userRole !== 'admin') {
+            const addBtn = document.querySelector('.add-item-btn');
+            if(addBtn) addBtn.style.display = 'none';
+            const navReports = document.getElementById('nav-reports');
+            if(navReports) navReports.style.display = 'none';
+            const navSales = document.getElementById('nav-sales');
+            if(navSales) navSales.style.display = 'none';
+            const batchBtns = document.querySelectorAll('.batch-action-btn');
+            batchBtns.forEach(btn => btn.style.display = 'none');
+        }
 
         // Al cargar la página, traer datos del TXT a través de la API
         window.onload = cargarInventario;
@@ -442,8 +600,12 @@
                             <span class="status-text ${statusClass}">${statusText}</span>
                         </td>
                         <td style="display: flex; gap: 16px; align-items: center; justify-content: center; padding-top: 40px;">
-                            <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')"></i>
-                            <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')"></i>
+                            ${userRole === 'admin' ? `
+                            <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')" title="Editar Producto"></i>
+                            <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')" title="Eliminar"></i>
+                            ` : `
+                            <i data-lucide="package-plus" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')" title="Actualizar Stock Diario"></i>
+                            `}
                         </td>
                     </tr>`;
                 tabla.innerHTML += row;
@@ -540,6 +702,26 @@
             preview.src = imgUrl;
             preview.style.display = 'block';
             placeholder.style.display = 'none';
+
+            if (userRole !== 'admin') {
+                document.getElementById('form-title').innerText = "Actualizar Stock: " + p.nombre;
+                document.getElementById('p-nombre').readOnly = true;
+                document.getElementById('p-gama').readOnly = true;
+                document.getElementById('p-demanda').disabled = true;
+                document.querySelector('.main-image-box').style.pointerEvents = 'none';
+                document.querySelectorAll('.upload-btn').forEach(b => b.style.pointerEvents = 'none');
+                document.getElementById('p-nombre').style.color = '#999';
+                document.getElementById('p-gama').style.color = '#999';
+            } else {
+                document.getElementById('form-title').innerText = p.nombre;
+                document.getElementById('p-nombre').readOnly = false;
+                document.getElementById('p-gama').readOnly = false;
+                document.getElementById('p-demanda').disabled = false;
+                document.querySelector('.main-image-box').style.pointerEvents = 'auto';
+                document.querySelectorAll('.upload-btn').forEach(b => b.style.pointerEvents = 'auto');
+                document.getElementById('p-nombre').style.color = '#000';
+                document.getElementById('p-gama').style.color = '#000';
+            }
             
             navegar('products');
         }
@@ -783,6 +965,7 @@
             document.getElementById('inventory-section').style.display = 'none';
             document.getElementById('trends-section').style.display = 'none';
             document.getElementById('reports-section').style.display = 'none';
+            document.getElementById('sales-section').style.display = 'none';
             document.getElementById('products-section').style.display = 'none';
             
             // Mostrar seleccionada
