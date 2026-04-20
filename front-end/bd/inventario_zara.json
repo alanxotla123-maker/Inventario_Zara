@@ -2,73 +2,113 @@
   {
     "id": "1",
     "nombre": "Abrigo Largo de Lana Premium",
+    "tipo": "Abrigo",
     "gama": "Woman Outerwear",
-    "stock": 4234,
     "demanda": "high",
     "temporada": "FW24",
-    "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 4234,
+    "tallas": [
+      {"talla": "S", "stock": 1000},
+      {"talla": "M", "stock": 2000},
+      {"talla": "L", "stock": 1234}
+    ]
   },
   {
     "id": "2",
     "nombre": "Camisa de Seda 100%",
+    "tipo": "Camisa",
     "gama": "Man Shirts",
-    "stock": 12,
     "demanda": "mid",
-    "temporada": "FW24",
-    "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop"
+    "temporada": "Continua",
+    "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 12,
+    "tallas": [
+      {"talla": "S", "stock": 0},
+      {"talla": "M", "stock": 12},
+      {"talla": "L", "stock": 0}
+    ]
   },
   {
     "id": "3",
     "nombre": "Zapato de Tacón Piel",
+    "tipo": "Calzado",
     "gama": "Woman Footwear",
-    "stock": 0,
     "demanda": "high",
     "temporada": "Primavera",
-    "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 0,
+    "tallas": [
+      {"talla": "36", "stock": 0},
+      {"talla": "37", "stock": 0},
+      {"talla": "38", "stock": 0}
+    ]
   },
   {
     "id": "4",
     "nombre": "Vibrant Leather 100ml",
+    "tipo": "Perfume",
     "gama": "Home Beauty",
-    "stock": 156,
     "demanda": "high",
     "temporada": "Continua",
-    "img": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 156,
+    "tallas": [
+      {"talla": "Única", "stock": 156}
+    ]
   },
   {
     "id": "5",
     "nombre": "Blazer Estructurado Studio",
+    "tipo": "Abrigo",
     "gama": "Man Tailoring",
-    "stock": 28,
     "demanda": "mid",
     "temporada": "Otoño",
-    "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 28,
+    "tallas": [
+      {"talla": "M", "stock": 18},
+      {"talla": "L", "stock": 10}
+    ]
   },
   {
     "id": "6",
     "nombre": "Bolso Shopper Minimal",
+    "tipo": "Accesorio",
     "gama": "Woman Accessories",
-    "stock": 15,
     "demanda": "low",
     "temporada": "Invierno",
-    "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 15,
+    "tallas": [
+      {"talla": "Única", "stock": 15}
+    ]
   },
   {
     "id": "7",
     "nombre": "Gafas de Sol Carey",
+    "tipo": "Accesorio",
     "gama": "Unisex Accessories",
-    "stock": 85,
     "demanda": "high",
     "temporada": "Verano",
-    "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 85,
+    "tallas": [
+      {"talla": "Única", "stock": 85}
+    ]
   },
   {
     "id": "8",
     "nombre": "Vestido de Lino Drapeado",
+    "tipo": "Vestido",
     "gama": "Woman Studio",
-    "stock": 5,
     "demanda": "high",
     "temporada": "Primavera",
-    "img": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=400&auto=format&fit=crop"
+    "img": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=400&auto=format&fit=crop",
+    "stock_total": 5,
+    "tallas": [
+      {"talla": "S", "stock": 5},
+      {"talla": "M", "stock": 0}
+    ]
   }
 ]

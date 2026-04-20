@@ -6,6 +6,8 @@
     <title>THE EDITORIAL INVENTORY | ZARA GLOBAL</title>
     <link rel="stylesheet" href="../styles/index.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -225,66 +227,44 @@
             <!-- REPORTS SECTION -->
             <section id="reports-section" style="display: none;">
                 <span class="section-label">Centro de Documentación</span>
-                <h1 class="editorial-title">Informes y Balances</h1>
+                <h1 class="editorial-title">Generador de Reportes PDF</h1>
 
-                <div class="filter-container" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 32px;">
+                <div class="filter-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; align-items: end;">
                     <div class="filter-group">
-                        <label>Tipo de Reporte</label>
-                        <select>
-                            <option>Financiero Anual</option>
-                            <option>Inventario Trimestral</option>
-                            <option>Logística y Envíos</option>
+                        <label>Tipo de Producto</label>
+                        <select id="r-tipo">
+                            <option value="Todos">Todos</option>
+                            <option value="Camisa">Camisa</option>
+                            <option value="Pantalón">Pantalón</option>
+                            <option value="Playera">Playera</option>
+                            <option value="Abrigo">Abrigo</option>
+                            <option value="Vestido">Vestido</option>
+                            <option value="Calzado">Calzado</option>
+                            <option value="Perfume">Perfume</option>
+                            <option value="Accesorio">Accesorio</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label>Periodo</label>
-                        <select>
-                            <option>Enero - Marzo 2026</option>
-                            <option>Octubre - Diciembre 2025</option>
+                        <label>Modelo / Nombre</label>
+                        <input type="text" id="r-modelo" placeholder="Buscar modelo...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Talla Específica</label>
+                        <input type="text" id="r-talla" placeholder="Ej: S, 32, Única...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Cantidad (Stock)</label>
+                        <select id="r-cantidad">
+                            <option value="Todos">Todos</option>
+                            <option value="BajoStock">Bajo Stock (< 10)</option>
+                            <option value="SinStock">Agotados (0)</option>
+                            <option value="ConStock">En Stock (> 0)</option>
                         </select>
                     </div>
-                    <div class="filter-group" style="justify-content: flex-end;">
-                        <button class="batch-action-btn" style="width: 100%;">Generar Reporte</button>
+                    <div class="filter-group" style="grid-column: span 4; justify-content: flex-end; display: flex;">
+                        <button class="batch-action-btn" onclick="generarReportePDF()" style="width: auto; padding: 12px 32px;"><i data-lucide="download" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Generar Reporte PDF</button>
                     </div>
                 </div>
-
-                <table class="inventory-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre del Archivo</th>
-                            <th>Fecha de Generación</th>
-                            <th>Tamaño</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="product-info">
-                                    <h3>Balance_Anual_2025_Final.pdf</h3>
-                                    <p>Auditoría Externa</p>
-                                </div>
-                            </td>
-                            <td class="sku-cell">15/01/2026</td>
-                            <td class="sku-cell">4.2 MB</td>
-                            <td><span style="color: var(--accent-green); font-size: 13px; font-weight: 600;">LISTO</span></td>
-                            <td><i data-lucide="download" style="width: 16px; cursor: pointer;"></i></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="product-info">
-                                    <h3>Inventario_Q1_Proyectado.xlsx</h3>
-                                    <p>Planificación de Stock</p>
-                                </div>
-                            </td>
-                            <td class="sku-cell">02/04/2026</td>
-                            <td class="sku-cell">1.8 MB</td>
-                            <td><span style="color: var(--accent-green); font-size: 13px; font-weight: 600;">LISTO</span></td>
-                            <td><i data-lucide="download" style="width: 16px; cursor: pointer;"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
             </section>
 
             <!-- SALES REPORTS SECTION -->
@@ -466,9 +446,23 @@
                                     <input type="text" id="p-id" class="editorial-input" placeholder="Autogenerado" readonly style="color: #999; cursor: not-allowed;">
                                 </div>
                                 <div>
-                                    <label>CATEGORÍA</label>
-                                    <input type="text" id="p-gama" class="editorial-input" placeholder="Ej: Woman Outerwear">
+                                    <label>TIPO</label>
+                                    <select id="p-tipo" class="editorial-input">
+                                        <option value="Camisa">Camisa</option>
+                                        <option value="Pantalón">Pantalón</option>
+                                        <option value="Playera">Playera</option>
+                                        <option value="Abrigo">Abrigo</option>
+                                        <option value="Vestido">Vestido</option>
+                                        <option value="Calzado">Calzado</option>
+                                        <option value="Perfume">Perfume</option>
+                                        <option value="Accesorio">Accesorio</option>
+                                    </select>
                                 </div>
+                            </div>
+
+                            <div class="form-row">
+                                <label>CATEGORÍA / GAMA</label>
+                                <input type="text" id="p-gama" class="editorial-input" placeholder="Ej: Woman Outerwear">
                             </div>
 
                             <div class="form-row">
@@ -476,30 +470,27 @@
                                 <textarea class="editorial-input" rows="3" placeholder="Confeccionado en materiales de alta calidad. Silueta estructurada para una versatilidad atemporal..."></textarea>
                             </div>
 
-                            <div class="form-row two-cols">
-                                <div>
-                                    <label>STOCK INICIAL</label>
-                                    <input type="number" id="p-stock" class="editorial-input" value="0">
-                                </div>
-                                <div>
-                                    <label>DEMANDA ESTIMADA</label>
-                                    <select id="p-demanda" class="editorial-input">
-                                        <option value="low">Low</option>
-                                        <option value="mid">Mid</option>
-                                        <option value="high" selected>High</option>
-                                    </select>
-                                </div>
+                            <div class="form-row">
+                                <label>DEMANDA ESTIMADA</label>
+                                <select id="p-demanda" class="editorial-input" style="width: 100%;">
+                                    <option value="low">Low</option>
+                                    <option value="mid">Mid</option>
+                                    <option value="high" selected>High</option>
+                                </select>
                             </div>
 
-                            <h3 class="section-sub-title">Gestión de Variantes</h3>
+                            <h3 class="section-sub-title">Gestión de Variantes (Tallas)</h3>
+                            <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+                                <input type="text" id="new-talla-name" placeholder="Talla (ej. M)" style="flex: 1; padding: 8px; border: 1px solid #ccc;">
+                                <input type="number" id="new-talla-stock" placeholder="Stock" style="width: 100px; padding: 8px; border: 1px solid #ccc;">
+                                <button type="button" onclick="agregarTalla()" style="padding: 8px 16px; background: #000; color: #fff; border: none; cursor: pointer; text-transform: uppercase; font-size: 12px; font-weight: 600;">Añadir</button>
+                            </div>
                             <table class="variants-table">
                                 <thead>
-                                    <tr><th>TALLA</th><th>STOCK DISPONIBLE</th><th>ESTADO</th></tr>
+                                    <tr><th>TALLA</th><th>STOCK DISPONIBLE</th><th>ESTADO</th><th></th></tr>
                                 </thead>
-                                <tbody>
-                                    <tr><td>S</td><td>12</td><td><span class="status-dot optimal"></span> EN STOCK</td></tr>
-                                    <tr><td>M</td><td>45</td><td><span class="status-dot optimal"></span> EN STOCK</td></tr>
-                                    <tr><td>L</td><td>3</td><td><span class="status-dot alert"></span> CRÍTICO</td></tr>
+                                <tbody id="variants-tbody">
+                                    <!-- Dynamic variants -->
                                 </tbody>
                             </table>
                         </form>
@@ -530,6 +521,7 @@
         let modoEdicion = false;
         let idEdicion = null;
         let filtroStockActual = 'all';
+        let tallasActuales = [];
 
         // Apply UI restrictions
         if (userRole !== 'admin') {
@@ -565,16 +557,22 @@
 
             // Calculamos los totales basados en todo el inventario para mantener alertas estables
             inventarioGlobal.forEach(p => {
-                if (p.stock < 10) lowStockCount++;
-                if (p.stock > 100) overStockCount++;
+                const stock = p.stock_total || 0;
+                if (stock < 10) lowStockCount++;
+                if (stock > 100) overStockCount++;
             });
 
             datosA_Mostrar.forEach(p => {
-                const statusClass = p.stock < 10 ? 'alert' : (p.stock > 100 ? 'excess' : 'optimal');
-                const statusText = p.stock < 10 ? 'ALERTA' : (p.stock > 100 ? 'EXCESO' : 'ÓPTIMO');
+                const stock = p.stock_total || 0;
+                const statusClass = stock < 10 ? 'alert' : (stock > 100 ? 'excess' : 'optimal');
+                const statusText = stock < 10 ? 'ALERTA' : (stock > 100 ? 'EXCESO' : 'ÓPTIMO');
                 
                 // Asegurar que la ruta de la imagen sea correcta si es local
                 const imgUrl = p.img.startsWith('http') ? p.img : p.img.replace('../', '/');
+
+                const tallasHtml = (p.tallas && p.tallas.length > 0) 
+                    ? p.tallas.map(t => `<span class="size-badge" title="Stock: ${t.stock}">${t.talla}</span>`).join(' ') 
+                    : '<span class="size-badge">Única</span>';
 
                 const row = `
                     <tr>
@@ -584,17 +582,17 @@
                                 <img src="${imgUrl}" class="product-img">
                                 <div class="product-info">
                                     <h3>${p.nombre}</h3>
-                                    <p>Edición Limitada FW24</p>
+                                    <p>${p.tipo || 'General'}</p>
                                 </div>
                             </div>
                         </td>
                         <td class="category-cell">
-                            <span>${p.gama.split(' ')[0]} /</span>
-                            ${p.gama.split(' ')[1] || 'GENERAL'}
+                            <span>${p.gama ? p.gama.split(' ')[0] : ''} /</span>
+                            ${p.gama ? (p.gama.split(' ')[1] || 'GENERAL') : 'GENERAL'}
                         </td>
-                        <td><span class="size-badge">M</span></td>
+                        <td>${tallasHtml}</td>
                         <td class="stock-cell">
-                            <div class="stock-number">${p.stock}</div>
+                            <div class="stock-number">${stock}</div>
                             <div class="stock-label">Unidades</div>
                         </td>
                         <td class="status-cell">
@@ -691,9 +689,12 @@
             
             document.getElementById('p-id').value = p.id;
             document.getElementById('p-nombre').value = p.nombre;
-            document.getElementById('p-gama').value = p.gama;
-            document.getElementById('p-stock').value = p.stock;
+            document.getElementById('p-tipo').value = p.tipo || 'Camisa';
+            document.getElementById('p-gama').value = p.gama || '';
             document.getElementById('p-demanda').value = p.demanda || 'mid';
+
+            tallasActuales = p.tallas ? JSON.parse(JSON.stringify(p.tallas)) : [];
+            renderizarTallasForm();
 
             const preview = document.getElementById('image-preview');
             const placeholder = document.getElementById('image-placeholder');
@@ -742,13 +743,57 @@
             }
         }
 
+        function renderizarTallasForm() {
+            const tbody = document.getElementById('variants-tbody');
+            tbody.innerHTML = '';
+            tallasActuales.forEach((t, i) => {
+                const stock = parseInt(t.stock || 0);
+                const statusClass = stock < 10 ? 'alert' : 'optimal';
+                const statusText = stock < 10 ? 'CRÍTICO' : 'EN STOCK';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${t.talla}</td>
+                        <td>${stock}</td>
+                        <td><span class="status-dot ${statusClass}"></span> ${statusText}</td>
+                        <td><i data-lucide="trash-2" style="width: 16px; color: var(--accent-red); cursor: pointer;" onclick="eliminarTalla(${i})"></i></td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function agregarTalla() {
+            const nameInput = document.getElementById('new-talla-name');
+            const stockInput = document.getElementById('new-talla-stock');
+            const talla = nameInput.value.trim();
+            const stock = parseInt(stockInput.value);
+
+            if (!talla || isNaN(stock)) {
+                alert("Por favor ingresa un nombre de talla y un stock válido.");
+                return;
+            }
+
+            tallasActuales.push({ talla, stock });
+            nameInput.value = '';
+            stockInput.value = '';
+            renderizarTallasForm();
+        }
+
+        function eliminarTalla(index) {
+            tallasActuales.splice(index, 1);
+            renderizarTallasForm();
+        }
+
         async function guardarProducto() {
             const fileInput = document.getElementById('file-input');
             const id = document.getElementById('p-id').value;
             const nombre = document.getElementById('p-nombre').value;
+            const tipo = document.getElementById('p-tipo').value;
             const gama = document.getElementById('p-gama').value;
-            const stock = document.getElementById('p-stock').value;
             const demanda = document.getElementById('p-demanda').value;
+            
+            let stock_total = 0;
+            tallasActuales.forEach(t => { stock_total += parseInt(t.stock || 0); });
 
             if (!nombre || (!fileInput.files[0] && !modoEdicion)) {
                 alert("Por favor completa los campos obligatorios.");
@@ -779,8 +824,10 @@
                 const productData = {
                     id,
                     nombre,
+                    tipo,
                     gama,
-                    stock,
+                    stock_total,
+                    tallas: tallasActuales,
                     demanda,
                     temporada: 'FW24'
                 };
@@ -835,6 +882,83 @@
             }
         }
 
+        function generarReportePDF() {
+            const tipoFilter = document.getElementById('r-tipo').value;
+            const modeloFilter = document.getElementById('r-modelo').value.toLowerCase();
+            const tallaFilter = document.getElementById('r-talla').value.toLowerCase();
+            const cantidadFilter = document.getElementById('r-cantidad').value;
+
+            // Filtrar datos
+            const datosFiltrados = inventarioGlobal.filter(p => {
+                // Filtro Tipo
+                if (tipoFilter !== 'Todos' && p.tipo !== tipoFilter) return false;
+                
+                // Filtro Modelo
+                if (modeloFilter && !p.nombre.toLowerCase().includes(modeloFilter)) return false;
+
+                // Filtro Cantidad (Basado en stock_total)
+                const stockTotal = p.stock_total || 0;
+                if (cantidadFilter === 'BajoStock' && (stockTotal >= 10 || stockTotal === 0)) return false;
+                if (cantidadFilter === 'SinStock' && stockTotal > 0) return false;
+                if (cantidadFilter === 'ConStock' && stockTotal === 0) return false;
+
+                // Filtro Talla
+                if (tallaFilter) {
+                    if (!p.tallas) return false;
+                    const tieneTalla = p.tallas.some(t => t.talla.toLowerCase().includes(tallaFilter));
+                    if (!tieneTalla) return false;
+                }
+
+                return true;
+            });
+
+            if (datosFiltrados.length === 0) {
+                alert("No hay productos que coincidan con los filtros seleccionados.");
+                return;
+            }
+
+            // Generar PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Título
+            doc.setFontSize(18);
+            doc.text("THE EDITORIAL INVENTORY - Reporte de Stock", 14, 22);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+
+            // Preparar datos para autoTable
+            const tableColumn = ["SKU", "Modelo / Nombre", "Tipo", "Tallas (Stock)", "Stock Total"];
+            const tableRows = [];
+
+            datosFiltrados.forEach(p => {
+                let tallasInfo = "Única";
+                if (p.tallas && p.tallas.length > 0) {
+                    tallasInfo = p.tallas.map(t => `${t.talla} (${t.stock})`).join(", ");
+                }
+                const row = [
+                    p.id,
+                    p.nombre,
+                    p.tipo || "General",
+                    tallasInfo,
+                    p.stock_total || 0
+                ];
+                tableRows.push(row);
+            });
+
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 40,
+                theme: 'grid',
+                headStyles: { fillColor: [0, 0, 0] },
+                alternateRowStyles: { fillColor: [245, 245, 245] }
+            });
+
+            doc.save(`Reporte_Inventario_${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
         function navegar(seccion) {
             // Ocultar todas
             document.getElementById('dashboard-section').style.display = 'none';
@@ -862,6 +986,8 @@
                 document.getElementById('submit-product-btn').innerText = 'SAVE CHANGES';
                 modoEdicion = false;
                 idEdicion = null;
+                tallasActuales = [];
+                renderizarTallasForm();
             }
         }
     </script>
