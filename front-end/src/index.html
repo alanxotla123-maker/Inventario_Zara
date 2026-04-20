@@ -390,10 +390,19 @@
         // Initialize Lucide icons
         lucide.createIcons();
 
+        const userRole = sessionStorage.getItem('zara_role');
+        const userName = sessionStorage.getItem('zara_name');
+
         let inventarioGlobal = [];
         let modoEdicion = false;
         let idEdicion = null;
         let filtroStockActual = 'all';
+
+        // Apply UI restrictions
+        if (userRole !== 'admin') {
+            const addBtn = document.querySelector('.add-item-btn');
+            if(addBtn) addBtn.style.display = 'none';
+        }
 
         // Al cargar la página, traer datos del TXT a través de la API
         window.onload = cargarInventario;
@@ -454,8 +463,12 @@
                             <span class="status-text ${statusClass}">${statusText}</span>
                         </td>
                         <td style="display: flex; gap: 16px; align-items: center; justify-content: center; padding-top: 40px;">
+                            ${userRole === 'admin' ? `
                             <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')"></i>
                             <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')"></i>
+                            ` : `
+                            <i data-lucide="eye" style="width: 18px; color: #BBB; cursor: not-allowed;" title="Acceso denegado"></i>
+                            `}
                         </td>
                     </tr>`;
                 tabla.innerHTML += row;

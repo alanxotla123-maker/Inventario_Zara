@@ -59,17 +59,31 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Basic authentication simulation
-            if(email === 'admin@zara.com' && password === 'admin123') {
-                sessionStorage.setItem('zara_auth', 'true');
-                window.location.href = '/';
-            } else {
-                alert('Credenciales incorrectas.\nPista: usa admin@zara.com / admin123');
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    sessionStorage.setItem('zara_auth', 'true');
+                    sessionStorage.setItem('zara_role', data.user.role);
+                    sessionStorage.setItem('zara_name', data.user.name);
+                    window.location.href = '/';
+                } else {
+                    const err = await res.json();
+                    alert(err.error || 'Credenciales incorrectas.');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert('Error de conexión con el servidor.');
             }
         });
     </script>
