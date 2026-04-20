@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZARA | Inicio de Sesión</title>
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Giant background text -->
+        <div class="bg-text">24</div>
+        
+        <div class="login-content">
+            
+            <!-- Left side: Form -->
+            <div class="login-form-section">
+                <div class="logo-area">
+                    <h1 class="zara-logo">ZARA</h1>
+                    <p class="system-subtitle">INVENTORY MANAGEMENT SYSTEM</p>
+                </div>
+                
+                <form class="login-form" id="loginForm">
+                    <div class="input-group">
+                        <label for="email">CORREO ELECTRÓNICO</label>
+                        <input type="email" id="email" name="email" placeholder="ejemplo@zara.com" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">CONTRASEÑA</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-login">ACCEDER AL SISTEMA</button>
+                    
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </form>
+            </div>
+            
+            <!-- Right side: Image -->
+            <div class="login-image-section">
+                <img src="file:///C:/Users/Alan/.gemini/antigravity/brain/fb316e09-1b1d-42e9-b50c-a471f2124afc/white_suit_editorial_1776718833964.png" alt="Winter Inventory Vol. 24" class="editorial-image">
+                <p class="image-caption">Winter Inventory Vol. 24</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="login-footer">
+            <div class="footer-left">
+                &copy; 2024 THE EDITORIAL INVENTORY. ALL RIGHTS RESERVED.
+            </div>
+            <div class="footer-right">
+                <a href="#">PRIVACIDAD</a>
+                <a href="#">TÉRMINOS</a>
+                <a href="#">SOPORTE</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    sessionStorage.setItem('zara_auth', 'true');
+                    sessionStorage.setItem('zara_role', data.user.role);
+                    sessionStorage.setItem('zara_name', data.user.name);
+                    window.location.href = '/';
+                } else {
+                    const err = await res.json();
+                    alert(err.error || 'Credenciales incorrectas.');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert('Error de conexión con el servidor.');
+            }
+        });
+    </script>
+</body>
+</html>
