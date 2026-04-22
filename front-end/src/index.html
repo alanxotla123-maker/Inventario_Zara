@@ -554,18 +554,31 @@
 
             let lowStockCount = 0;
             let overStockCount = 0;
+            let outOfStockCount = 0;
 
             // Calculamos los totales basados en todo el inventario para mantener alertas estables
             inventarioGlobal.forEach(p => {
                 const stock = p.stock_total || 0;
-                if (stock < 10) lowStockCount++;
+                if (stock === 0) outOfStockCount++;
+                else if (stock < 10) lowStockCount++;
+                
                 if (stock > 100) overStockCount++;
             });
 
             datosA_Mostrar.forEach(p => {
                 const stock = p.stock_total || 0;
-                const statusClass = stock < 10 ? 'alert' : (stock > 100 ? 'excess' : 'optimal');
-                const statusText = stock < 10 ? 'ALERTA' : (stock > 100 ? 'EXCESO' : 'ÓPTIMO');
+                let statusClass = 'optimal';
+                let statusText = 'ÓPTIMO';
+                if (stock === 0) {
+                    statusClass = 'alert';
+                    statusText = 'AGOTADO';
+                } else if (stock < 10) {
+                    statusClass = 'alert';
+                    statusText = 'ALERTA';
+                } else if (stock > 100) {
+                    statusClass = 'excess';
+                    statusText = 'EXCESO';
+                }
                 
                 // Asegurar que la ruta de la imagen sea correcta si es local
                 const imgUrl = p.img.startsWith('http') ? p.img : p.img.replace('../', '/');
@@ -611,7 +624,7 @@
                 tabla.innerHTML += row;
             });
             
-            actualizarAlertas(lowStockCount, overStockCount);
+            actualizarAlertas(lowStockCount, overStockCount, outOfStockCount);
             lucide.createIcons(); // Refresh icons for new rows
         }
 
@@ -623,21 +636,35 @@
             } else {
                 filtroStockActual = tipo;
                 let filtrados = [];
-                if (tipo === 'low') {
-                    filtrados = inventarioGlobal.filter(p => p.stock < 10);
+                if (tipo === 'out') {
+                    filtrados = inventarioGlobal.filter(p => (p.stock_total || 0) === 0);
+                } else if (tipo === 'low') {
+                    filtrados = inventarioGlobal.filter(p => (p.stock_total || 0) > 0 && (p.stock_total || 0) < 10);
                 } else if (tipo === 'over') {
-                    filtrados = inventarioGlobal.filter(p => p.stock > 100);
+                    filtrados = inventarioGlobal.filter(p => (p.stock_total || 0) > 100);
                 }
                 renderizarInventario(filtrados);
             }
         }
 
-        function actualizarAlertas(lowStock, overStock) {
+        function actualizarAlertas(lowStock, overStock, outOfStock) {
             const container = document.getElementById('stock-alerts-container');
             if (!container) return;
             
             container.innerHTML = '';
             
+            if (outOfStock > 0) {
+                container.innerHTML += `
+                    <div class="alert-banner out-of-stock" onclick="filtrarPorStock('out')" style="${filtroStockActual === 'out' ? 'box-shadow: 0 0 0 2px #DC2626;' : ''}">
+                        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                            <i data-lucide="x-circle"></i>
+                            <span><strong>Agotado:</strong> Tenemos ${outOfStock} producto(s) sin stock (0 unidades). Haz clic para verlos.</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); pedirMasStock()" style="background: #DC2626; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">¿Pedir más?</button>
+                    </div>
+                `;
+            }
+
             if (lowStock > 0) {
                 container.innerHTML += `
                     <div class="alert-banner low-stock" onclick="filtrarPorStock('low')" style="${filtroStockActual === 'low' ? 'box-shadow: 0 0 0 2px var(--accent-red);' : ''}">
@@ -656,10 +683,16 @@
                 `;
             }
             
-            if (lowStock === 0 && overStock === 0) {
+            if (lowStock === 0 && overStock === 0 && outOfStock === 0) {
                 container.style.display = 'none';
             } else {
                 container.style.display = 'flex';
+            }
+        }
+
+        function pedirMasStock() {
+            if (confirm("¿Deseas enviar una solicitud de pedido para los productos agotados?")) {
+                alert("Solicitud enviada a central de compras.");
             }
         }
 

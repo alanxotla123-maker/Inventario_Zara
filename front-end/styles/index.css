@@ -686,6 +686,11 @@ textarea.editorial-input {
 .alert-banner.over-stock {
     border-left: 4px solid var(--accent-green);
 }
+.alert-banner.out-of-stock {
+    border-left: 4px solid #991B1B;
+    background-color: #FEF2F2;
+    color: #991B1B;
+}
 .alert-banner i {
     width: 20px;
 }
