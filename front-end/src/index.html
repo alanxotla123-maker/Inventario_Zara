@@ -34,6 +34,9 @@
                     <li onclick="navegar('reports')" id="nav-reports">
                         <i data-lucide="archive"></i> Archives
                     </li>
+                    <li onclick="navegar('suppliers')" id="nav-suppliers">
+                        <i data-lucide="truck"></i> Proveedores
+                    </li>
                 </ul>
             </nav>
 
@@ -152,6 +155,7 @@
                     </div>
                     <div class="filter-actions">
                         <a href="#" class="export-link"><i data-lucide="download" style="width: 16px;"></i> Exportar</a>
+                        <button class="batch-action-btn" onclick="verTodosProductos()" style="background-color: #fff; color: #000; border: 1px solid #000;">Ver todos los productos</button>
                         <button class="batch-action-btn">Acciones en lote</button>
                     </div>
                 </div>
@@ -220,6 +224,113 @@
                             <div style="width: 40px; height: 75%; background: #000;"></div>
                             <span style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">Milan</span>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUPPLIERS SECTION -->
+            <section id="suppliers-section" style="display: none;">
+                <span class="section-label">Gestión de Compras</span>
+                <h1 class="editorial-title">Directorio de Proveedores y Pedidos</h1>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Pedidos Pendientes</span>
+                        <div class="metric-value">3</div>
+                        <div class="metric-trend" style="color: var(--accent-red);">Requieren seguimiento</div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Presupuesto Mensual</span>
+                        <div class="metric-value">€125k</div>
+                        <div class="metric-trend" style="color: var(--text-muted);">60% utilizado</div>
+                    </div>
+                    <div class="metric-card black">
+                        <span class="metric-label">Proveedores Activos</span>
+                        <div class="metric-value">12</div>
+                        <p class="metric-description">
+                            Con envíos recurrentes programados para este trimestre.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 48px; margin-top: 40px;">
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Lista de Proveedores</h2>
+                        <table class="inventory-table">
+                            <thead>
+                                <tr><th>Proveedor</th><th>Categoría</th><th>Calificación</th><th>Acción</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Footwear Dynamics</h3>
+                                            <p>Madrid, España</p>
+                                        </div>
+                                    </td>
+                                    <td>Zapatos</td>
+                                    <td><span style="color: var(--accent-green); font-weight: 600;">Excelente (4.9)</span></td>
+                                    <td><button class="batch-action-btn" onclick="abrirModalPedido('Footwear Dynamics', 'Zapatos')">Hacer Pedido</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Casual Cotton & Co.</h3>
+                                            <p>Milán, Italia</p>
+                                        </div>
+                                    </td>
+                                    <td>Camisas y Pantalones</td>
+                                    <td><span style="color: var(--text-muted); font-weight: 600;">Buena (4.5)</span></td>
+                                    <td><button class="batch-action-btn" onclick="abrirModalPedido('Casual Cotton & Co.', 'Camisas y Pantalones')">Hacer Pedido</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Elegance Tailoring</h3>
+                                            <p>Londres, Reino Unido</p>
+                                        </div>
+                                    </td>
+                                    <td>Ropa Formal</td>
+                                    <td><span style="color: var(--accent-green); font-weight: 600;">Excelente (4.8)</span></td>
+                                    <td><button class="batch-action-btn" onclick="abrirModalPedido('Elegance Tailoring', 'Ropa Formal')">Hacer Pedido</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3>Intimates Manufacturing</h3>
+                                            <p>París, Francia</p>
+                                        </div>
+                                    </td>
+                                    <td>Ropa Interior</td>
+                                    <td><span style="color: var(--accent-green); font-weight: 600;">Excelente (4.9)</span></td>
+                                    <td><button class="batch-action-btn" onclick="abrirModalPedido('Intimates Manufacturing', 'Ropa Interior')">Hacer Pedido</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="order-form-container" style="background: #F9F9F9; padding: 40px; border: 1px solid var(--border-color); display: none;">
+                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Nuevo Pedido a <br><span id="supplier-name-display" style="color: var(--accent-red);"></span></h3>
+                        <form onsubmit="enviarPedidoProveedor(event)">
+                            <div class="form-row">
+                                <label>PRODUCTO / MATERIAL</label>
+                                <input type="text" id="order-product-input" class="editorial-input" required placeholder="Ej: Rollos de Algodón Blanco">
+                            </div>
+                            <div class="form-row">
+                                <label>CANTIDAD</label>
+                                <input type="number" class="editorial-input" required placeholder="Ej: 100">
+                            </div>
+                            <div class="form-row">
+                                <label>FECHA REQUERIDA</label>
+                                <input type="date" class="editorial-input" required>
+                            </div>
+                            <div class="form-row">
+                                <label>NOTAS ADICIONALES</label>
+                                <textarea class="editorial-input" rows="3" placeholder="Especificaciones de calidad..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;">ENVIAR ORDEN</button>
+                            <button type="button" class="btn-discard" style="width: 100%; margin-top: 8px;" onclick="cerrarModalPedido()">CANCELAR</button>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -538,6 +649,8 @@
             if(navReports) navReports.style.display = 'none';
             const navSales = document.getElementById('nav-sales');
             if(navSales) navSales.style.display = 'none';
+            const navSuppliers = document.getElementById('nav-suppliers');
+            if(navSuppliers) navSuppliers.style.display = 'none';
             const batchBtns = document.querySelectorAll('.batch-action-btn');
             batchBtns.forEach(btn => btn.style.display = 'none');
         }
@@ -640,6 +753,13 @@
             
             actualizarAlertas(lowStockCount, overStockCount, outOfStockCount);
             lucide.createIcons(); // Refresh icons for new rows
+        }
+
+        function verTodosProductos() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('category-filter').value = 'Todas';
+            filtroStockActual = 'all';
+            renderizarInventario(inventarioGlobal);
         }
 
         function filtrarPorStock(tipo) {
@@ -1031,6 +1151,37 @@
             doc.save(`Reporte_Inventario_${new Date().toISOString().split('T')[0]}.pdf`);
         }
 
+        function abrirModalPedido(proveedor, categoria) {
+            document.getElementById('supplier-name-display').innerText = proveedor;
+            
+            const inputProducto = document.getElementById('order-product-input');
+            if (categoria === 'Zapatos') {
+                inputProducto.placeholder = "Ej: Lote de Zapatos Oxford Negros, Talla 42...";
+            } else if (categoria === 'Camisas y Pantalones') {
+                inputProducto.placeholder = "Ej: Lote de Camisas de Lino, Pantalones Chinos...";
+            } else if (categoria === 'Ropa Formal') {
+                inputProducto.placeholder = "Ej: Trajes de Lana Super 120s, Blazers...";
+            } else if (categoria === 'Ropa Interior') {
+                inputProducto.placeholder = "Ej: Packs de Ropa Interior Básica, Calcetines...";
+            } else {
+                inputProducto.placeholder = "Ej: Rollos de Algodón Blanco...";
+            }
+            
+            document.getElementById('order-form-container').style.display = 'block';
+        }
+
+        function cerrarModalPedido() {
+            document.getElementById('order-form-container').style.display = 'none';
+        }
+
+        function enviarPedidoProveedor(e) {
+            e.preventDefault();
+            const proveedor = document.getElementById('supplier-name-display').innerText;
+            alert(`Pedido enviado exitosamente a ${proveedor}. Serás notificado cuando se actualice el estado.`);
+            cerrarModalPedido();
+            e.target.reset();
+        }
+
         function navegar(seccion) {
             // Ocultar todas
             document.getElementById('dashboard-section').style.display = 'none';
@@ -1039,6 +1190,7 @@
             document.getElementById('reports-section').style.display = 'none';
             document.getElementById('sales-section').style.display = 'none';
             document.getElementById('products-section').style.display = 'none';
+            document.getElementById('suppliers-section').style.display = 'none';
             
             // Mostrar seleccionada
             const targetSection = document.getElementById(seccion + '-section');
