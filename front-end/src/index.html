@@ -309,26 +309,31 @@
                         </table>
                     </div>
                     
-                    <div id="order-form-container" style="background: #F9F9F9; padding: 40px; border: 1px solid var(--border-color); display: none;">
-                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Nuevo Pedido a <br><span id="supplier-name-display" style="color: var(--accent-red);"></span></h3>
-                        <form onsubmit="enviarPedidoProveedor(event)">
-                            <div class="form-row">
-                                <label>PRODUCTO / MATERIAL</label>
-                                <input type="text" id="order-product-input" class="editorial-input" required placeholder="Ej: Rollos de Algodón Blanco">
+                    <div id="order-form-container" style="background: #F9F9F9; padding: 40px; border: 1px solid var(--border-color); display: none; max-height: 800px; overflow-y: auto;">
+                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Catálogo y Pedido a <br><span id="supplier-name-display" style="color: var(--accent-red);"></span></h3>
+                        
+                        <div id="supplier-catalog" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; max-height: 400px; overflow-y: auto; padding-right: 8px;">
+                            <!-- Dynamic items injected here -->
+                        </div>
+
+                        <form onsubmit="enviarPedidoProveedor(event)" style="border-top: 1px solid #CCC; padding-top: 24px;">
+                            <h4 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Resumen del Pedido</h4>
+                            <div id="order-summary" style="font-size: 13px; color: #555; margin-bottom: 16px;">
+                                Selecciona productos del catálogo para ver el resumen.
                             </div>
-                            <div class="form-row">
-                                <label>CANTIDAD</label>
-                                <input type="number" class="editorial-input" required placeholder="Ej: 100">
+                            <div style="font-size: 18px; font-weight: 600; margin-bottom: 24px;">
+                                Total Estimado: <span id="order-total-price">$0.00</span>
                             </div>
+
                             <div class="form-row">
-                                <label>FECHA REQUERIDA</label>
+                                <label>FECHA REQUERIDA DE ENTREGA</label>
                                 <input type="date" class="editorial-input" required>
                             </div>
                             <div class="form-row">
                                 <label>NOTAS ADICIONALES</label>
-                                <textarea class="editorial-input" rows="3" placeholder="Especificaciones de calidad..."></textarea>
+                                <textarea class="editorial-input" rows="3" placeholder="Especificaciones de calidad o entrega..."></textarea>
                             </div>
-                            <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;">ENVIAR ORDEN</button>
+                            <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;" id="btn-submit-order" disabled>ENVIAR ORDEN</button>
                             <button type="button" class="btn-discard" style="width: 100%; margin-top: 8px;" onclick="cerrarModalPedido()">CANCELAR</button>
                         </form>
                     </div>
@@ -1151,23 +1156,134 @@
             doc.save(`Reporte_Inventario_${new Date().toISOString().split('T')[0]}.pdf`);
         }
 
+        let carritoProveedor = [];
+
         function abrirModalPedido(proveedor, categoria) {
             document.getElementById('supplier-name-display').innerText = proveedor;
+            carritoProveedor = [];
+            actualizarResumenPedido();
             
-            const inputProducto = document.getElementById('order-product-input');
+            let productosMostrar = inventarioGlobal;
             if (categoria === 'Zapatos') {
-                inputProducto.placeholder = "Ej: Lote de Zapatos Oxford Negros, Talla 42...";
+                productosMostrar = inventarioGlobal.filter(p => p.tipo === 'Calzado');
             } else if (categoria === 'Camisas y Pantalones') {
-                inputProducto.placeholder = "Ej: Lote de Camisas de Lino, Pantalones Chinos...";
+                productosMostrar = inventarioGlobal.filter(p => p.tipo === 'Camisa' || p.tipo === 'Pantalón' || p.tipo === 'Playera');
             } else if (categoria === 'Ropa Formal') {
-                inputProducto.placeholder = "Ej: Trajes de Lana Super 120s, Blazers...";
+                productosMostrar = inventarioGlobal.filter(p => p.tipo === 'Abrigo' || p.tipo === 'Vestido');
             } else if (categoria === 'Ropa Interior') {
-                inputProducto.placeholder = "Ej: Packs de Ropa Interior Básica, Calcetines...";
-            } else {
-                inputProducto.placeholder = "Ej: Rollos de Algodón Blanco...";
+                productosMostrar = inventarioGlobal.filter(p => p.tipo === 'Accesorio' || p.tipo === 'Ropa Interior');
             }
             
+            if (productosMostrar.length === 0) {
+                productosMostrar = inventarioGlobal.slice(0, 3);
+            }
+
+            const catalogDiv = document.getElementById('supplier-catalog');
+            catalogDiv.innerHTML = '';
+
+            productosMostrar.forEach(p => {
+                const imgUrl = p.img && p.img.startsWith('http') ? p.img : (p.img ? p.img.replace('../', '/') : '');
+                
+                let hash = 0;
+                if (p.id) {
+                    for (let i = 0; i < p.id.length; i++) hash = p.id.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const precio = 20 + (Math.abs(hash) % 80);
+
+                let optionsTallas = '';
+                if (p.tallas && p.tallas.length > 0) {
+                    optionsTallas = p.tallas.map(t => `<option value="${t.talla}">${t.talla} (Stock: ${t.stock})</option>`).join('');
+                } else {
+                    optionsTallas = `<option value="Única">Única</option>`;
+                }
+
+                catalogDiv.innerHTML += `
+                    <div style="display: flex; gap: 16px; align-items: flex-start; padding: 16px; background: #FFF; border: 1px solid #EEE;">
+                        <img src="${imgUrl}" style="width: 60px; height: 80px; object-fit: cover; background: #f0f0f0;">
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 14px; margin-bottom: 4px;">${p.nombre}</h4>
+                            <p style="font-size: 11px; color: #888; margin-bottom: 8px;">SKU: ${p.id} | Precio U.: $${precio.toFixed(2)}</p>
+                            
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="talla-${p.id}" style="padding: 6px; border: 1px solid #CCC; font-size: 12px; flex: 1;">
+                                    ${optionsTallas}
+                                </select>
+                                <input type="number" id="cant-${p.id}" placeholder="Cant." min="1" style="width: 60px; padding: 6px; border: 1px solid #CCC; font-size: 12px;">
+                                <button type="button" onclick="agregarAlPedido('${p.id}', '${p.nombre.replace(/'/g, "\\'")}', ${precio})" style="padding: 6px 12px; background: #000; color: #FFF; border: none; font-size: 11px; cursor: pointer;">Añadir</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
             document.getElementById('order-form-container').style.display = 'block';
+        }
+
+        function agregarAlPedido(id, nombre, precio) {
+            const tallaSelector = document.getElementById(`talla-${id}`);
+            const cantInput = document.getElementById(`cant-${id}`);
+            
+            const talla = tallaSelector ? tallaSelector.value : 'Única';
+            const cantidad = parseInt(cantInput.value);
+
+            if (!cantidad || cantidad <= 0) {
+                alert("Por favor ingresa una cantidad válida mayor a 0.");
+                return;
+            }
+
+            const index = carritoProveedor.findIndex(item => item.id === id && item.talla === talla);
+            if (index > -1) {
+                carritoProveedor[index].cantidad += cantidad;
+            } else {
+                carritoProveedor.push({ id, nombre, talla, cantidad, precio });
+            }
+
+            cantInput.value = '';
+            actualizarResumenPedido();
+        }
+
+        function eliminarDelPedido(index) {
+            carritoProveedor.splice(index, 1);
+            actualizarResumenPedido();
+        }
+
+        function actualizarResumenPedido() {
+            const summaryDiv = document.getElementById('order-summary');
+            const totalSpan = document.getElementById('order-total-price');
+            const btnSubmit = document.getElementById('btn-submit-order');
+
+            if (carritoProveedor.length === 0) {
+                summaryDiv.innerHTML = 'Selecciona productos del catálogo para ver el resumen.';
+                totalSpan.innerText = '$0.00';
+                btnSubmit.disabled = true;
+                btnSubmit.style.opacity = '0.5';
+                return;
+            }
+
+            let html = '<ul style="list-style: none; padding: 0; margin: 0;">';
+            let total = 0;
+
+            carritoProveedor.forEach((item, i) => {
+                const subtotal = item.cantidad * item.precio;
+                total += subtotal;
+                html += `
+                    <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #EEE; font-size: 12px;">
+                        <div>
+                            <strong>${item.cantidad}x</strong> ${item.nombre} <span style="color: #888;">(Talla: ${item.talla})</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-weight: 600;">$${subtotal.toFixed(2)}</span>
+                            <span style="cursor: pointer; color: red; font-size: 14px; font-weight: bold;" onclick="eliminarDelPedido(${i})">×</span>
+                        </div>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+
+            summaryDiv.innerHTML = html;
+            totalSpan.innerText = `$${total.toFixed(2)}`;
+            btnSubmit.disabled = false;
+            btnSubmit.style.opacity = '1';
         }
 
         function cerrarModalPedido() {
