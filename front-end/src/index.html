@@ -128,8 +128,15 @@
 
             <!-- INVENTORY SECTION -->
             <section id="inventory-section">
-                <span class="section-label">Gestión de Stock Estacional</span>
-                <h1 class="editorial-title">Detalle de Inventario y Edición</h1>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                    <div>
+                        <span class="section-label">Gestión de Stock Estacional</span>
+                        <h1 class="editorial-title" style="margin-bottom: 0;">Detalle de Inventario y Edición</h1>
+                    </div>
+                    <button id="btn-toggle-alertas" onclick="toggleAlertas()" style="background: #f9f9f9; border: 1px solid #ddd; color: #555; padding: 6px 12px; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: none;">
+                        <i data-lucide="eye-off" style="width: 14px; margin-right: 4px; vertical-align: middle;"></i> Ocultar Alertas
+                    </button>
+                </div>
 
                 <div id="stock-alerts-container" style="margin-bottom: 32px; display: flex; flex-direction: column; gap: 16px; display: none;"></div>
 
@@ -760,10 +767,33 @@
             lucide.createIcons(); // Refresh icons for new rows
         }
 
+        let alertasOcultas = false;
+
+        function toggleAlertas() {
+            alertasOcultas = !alertasOcultas;
+            const container = document.getElementById('stock-alerts-container');
+            if (container && container.innerHTML.trim() !== '') {
+                container.style.display = alertasOcultas ? 'none' : 'flex';
+            }
+            
+            const toggleBtn = document.getElementById('btn-toggle-alertas');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = alertasOcultas 
+                    ? '<i data-lucide="eye" style="width: 14px; margin-right: 4px; vertical-align: middle;"></i> Mostrar Alertas'
+                    : '<i data-lucide="eye-off" style="width: 14px; margin-right: 4px; vertical-align: middle;"></i> Ocultar Alertas';
+                lucide.createIcons();
+            }
+        }
+
         function verTodosProductos() {
             document.getElementById('search-input').value = '';
             document.getElementById('category-filter').value = 'Todas';
             filtroStockActual = 'all';
+            alertasOcultas = false; 
+            const toggleBtn = document.getElementById('btn-toggle-alertas');
+            if (toggleBtn) {
+                toggleBtn.innerHTML = '<i data-lucide="eye-off" style="width: 14px; margin-right: 4px; vertical-align: middle;"></i> Ocultar Alertas';
+            }
             renderizarInventario(inventarioGlobal);
         }
 
@@ -789,7 +819,7 @@
         function actualizarAlertas(lowStock, overStock, outOfStock) {
             const container = document.getElementById('stock-alerts-container');
             if (!container) return;
-            
+
             container.innerHTML = '';
             
             if (outOfStock > 0) {
@@ -825,7 +855,16 @@
             if (lowStock === 0 && overStock === 0 && outOfStock === 0) {
                 container.style.display = 'none';
             } else {
-                container.style.display = 'flex';
+                container.style.display = alertasOcultas ? 'none' : 'flex';
+            }
+
+            const toggleBtn = document.getElementById('btn-toggle-alertas');
+            if (toggleBtn) {
+                if (lowStock === 0 && overStock === 0 && outOfStock === 0) {
+                    toggleBtn.style.display = 'none';
+                } else {
+                    toggleBtn.style.display = 'inline-block';
+                }
             }
         }
 
