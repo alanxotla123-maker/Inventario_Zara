@@ -34,6 +34,47 @@ exports.addPedido = (req, res) => {
     res.json({ success: true, id: nextId });
 };
 
+exports.receivePedido = (req, res) => {
+    const { id } = req.params;
+    let pedidos = readPedidos();
+    const pedidoIndex = pedidos.findIndex(p => p.id === id);
+
+    if (pedidoIndex !== -1) {
+        const pedido = pedidos[pedidoIndex];
+        let productos = readData();
+
+        // Actualizar inventario
+        pedido.items.forEach(item => {
+            const prodIndex = productos.findIndex(p => p.id === item.id);
+            if (prodIndex !== -1) {
+                const producto = productos[prodIndex];
+                producto.stock_total += item.cantidad;
+
+                if (producto.tallas) {
+                    const tallaIndex = producto.tallas.findIndex(t => t.talla === item.talla);
+                    if (tallaIndex !== -1) {
+                        producto.tallas[tallaIndex].stock += item.cantidad;
+                    } else {
+                        // Si por alguna razón la talla no existe, la creamos
+                        producto.tallas.push({ talla: item.talla, stock: item.cantidad });
+                    }
+                }
+            }
+        });
+
+        // Guardar inventario
+        writeData(productos);
+
+        // Eliminar pedido de la lista de pendientes
+        pedidos.splice(pedidoIndex, 1);
+        writePedidos(pedidos);
+
+        res.json({ success: true, message: 'Stock actualizado correctamente' });
+    } else {
+        res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+};
+
 exports.addProduct = (req, res) => {
     console.log('--- Añadiendo Producto ---');
     const productos = readData();

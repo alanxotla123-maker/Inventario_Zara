@@ -1,19 +1,19 @@
 [
-  {
-    "proveedor": "Casual Cotton & Co.",
-    "fechaEntrega": "2026-04-27",
-    "notas": "",
-    "items": [
-      {
-        "id": "2",
-        "nombre": "Camisa de Seda 100%",
-        "talla": "S",
-        "cantidad": 3,
-        "precio": 70
-      }
-    ],
-    "total": 210,
-    "id": "1",
-    "fechaCreacion": "2026-04-27T17:11:54.946Z"
-  }
+    {
+        "proveedor": "Casual Cotton & Co.",
+        "fechaEntrega": "2026-04-27",
+        "notas": "",
+        "items": [
+            {
+                "id": "2",
+                "nombre": "Camisa de Seda 100%",
+                "talla": "S",
+                "cantidad": 3,
+                "precio": 70
+            }
+        ],
+        "total": 210,
+        "id": "1",
+        "fechaCreacion": "2026-04-27T17:21:23.007Z"
+    }
 ]

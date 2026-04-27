@@ -896,15 +896,41 @@
                             <div style="font-weight: 600; font-size: 14px;">${pedido.proveedor}</div>
                             <div style="font-size: 12px; color: ${colorFecha}; font-weight: ${isPasado ? 'bold' : 'normal'};">Entrega: ${pedido.fechaEntrega}</div>
                         </div>
-                        <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
+                        <div style="font-size: 12px; color: #555; margin-bottom: 12px;">
                             ${pedido.items.length} productos diferentes. Total: $${pedido.total.toFixed(2)}
                         </div>
-                        <div style="font-size: 11px; display: inline-block; padding: 2px 8px; background: #f0f0f0; border-radius: 10px;">
-                            Estado: ${estado}
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 11px; display: inline-block; padding: 2px 8px; background: #f0f0f0; border-radius: 10px;">
+                                Estado: ${estado}
+                            </div>
+                            <button onclick="recibirPedido('${pedido.id}')" style="background: #000; color: #FFF; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <i data-lucide="check-square" style="width: 14px;"></i> Verificar Llegada
+                            </button>
                         </div>
                     </div>
                 `;
             });
+            lucide.createIcons();
+        }
+
+        async function recibirPedido(id) {
+            if (confirm("¿Confirmas que el stock de este pedido ha llegado? El inventario se actualizará automáticamente.")) {
+                try {
+                    const res = await fetch(`/api/recibir-pedido/${id}`, { method: 'POST' });
+                    if (res.ok) {
+                        alert("¡Pedido recibido! El stock se ha actualizado correctamente.");
+                        // Recargar datos para que se refresque el dashboard
+                        await cargarPedidos();
+                        await cargarInventario();
+                    } else {
+                        const err = await res.json();
+                        alert("Error al procesar la recepción: " + (err.error || "Desconocido"));
+                    }
+                } catch (error) {
+                    console.error("Error en la petición:", error);
+                    alert("Error de conexión al procesar el pedido.");
+                }
+            }
         }
 
         function renderizarInventario(datosA_Mostrar) {
