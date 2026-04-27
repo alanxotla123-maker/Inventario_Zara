@@ -86,8 +86,7 @@
 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 48px;">
                     <div>
-                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Eficiencia por
-                            Categoría</h2>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Eficiencia por Categoría</h2>
                         <table class="inventory-table">
                             <thead>
                                 <tr>
@@ -121,15 +120,29 @@
                         </table>
                     </div>
                     <div style="background: #F9F9F9; padding: 40px; border: 1px solid var(--border-color);">
-                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Reducción de
-                            Excedentes</h3>
+                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Reducción de Excedentes</h3>
                         <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
                             El stock inactivo disminuyó un 22% este trimestre en las colecciones principales.
                         </p>
                         <div style="font-size: 60px; font-weight: 300; margin-bottom: 8px;">-22.4%</div>
-                        <div
-                            style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
-                            Salud de Inventario</div>
+                        <div style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Salud de Inventario</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Alertas de Inventario</h2>
+                        <div id="dashboard-alerts" style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Inject alerts here -->
+                            <p style="color: var(--text-muted);">Cargando alertas...</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Próximas Entregas de Pedidos</h2>
+                        <div id="dashboard-pedidos" style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Inject pedidos here -->
+                            <p style="color: var(--text-muted);">Cargando pedidos...</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -379,11 +392,11 @@
 
                             <div class="form-row">
                                 <label>FECHA REQUERIDA DE ENTREGA</label>
-                                <input type="date" class="editorial-input" required>
+                                <input type="date" id="pedido-fecha" class="editorial-input" required>
                             </div>
                             <div class="form-row">
                                 <label>NOTAS ADICIONALES</label>
-                                <textarea class="editorial-input" rows="3"
+                                <textarea class="editorial-input" id="pedido-notas" rows="3"
                                     placeholder="Especificaciones de calidad o entrega..."></textarea>
                             </div>
                             <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;"
@@ -612,7 +625,7 @@
 
                         <!-- Image with Quote -->
                         <div style="position: relative; width: 100%; aspect-ratio: 4/5;">
-                            <img src="file:///C:/Users/Alan/.gemini/antigravity/brain/fb316e09-1b1d-42e9-b50c-a471f2124afc/editorial_clothes_rack_1776720399927.png"
+                            <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=400&auto=format&fit=crop"
                                 style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);">
                             <div
                                 style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 32px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
@@ -791,17 +804,107 @@
             batchBtns.forEach(btn => btn.style.display = 'none');
         }
 
+        let pedidosGlobal = [];
+
         // Al cargar la página, traer datos del TXT a través de la API
-        window.onload = cargarInventario;
+        window.onload = async () => {
+            await cargarInventario();
+            await cargarPedidos();
+        };
+
+        async function cargarPedidos() {
+            try {
+                const res = await fetch('/api/pedidos');
+                pedidosGlobal = await res.json();
+                renderizarDashboardPedidos();
+            } catch (error) {
+                console.error("Error cargando los pedidos:", error);
+            }
+        }
 
         async function cargarInventario() {
             try {
                 const res = await fetch('/api/inventario');
                 inventarioGlobal = await res.json();
                 renderizarInventario(inventarioGlobal);
+                renderizarDashboardAlertas();
             } catch (error) {
                 console.error("Error cargando el inventario:", error);
             }
+        }
+
+        function renderizarDashboardAlertas() {
+            const container = document.getElementById('dashboard-alerts');
+            if (!container) return;
+
+            let outOfStock = [];
+            let lowStock = [];
+
+            inventarioGlobal.forEach(p => {
+                const stock = p.stock_total || 0;
+                if (stock === 0) outOfStock.push(p);
+                else if (stock < 10) lowStock.push(p);
+            });
+
+            container.innerHTML = '';
+
+            if (outOfStock.length === 0 && lowStock.length === 0) {
+                container.innerHTML = '<div style="padding: 16px; background: #eeffee; border: 1px solid #008800; color: #008800;"><i data-lucide="check-circle" style="vertical-align: middle; margin-right: 8px;"></i> No hay alertas. Inventario óptimo.</div>';
+            } else {
+                outOfStock.forEach(p => {
+                    container.innerHTML += `
+                        <div style="padding: 16px; background: #ffeeee; border: 1px solid #cc0000; color: #cc0000; border-radius: 4px;">
+                            <div style="font-weight: 600; font-size: 14px;"><i data-lucide="x-circle" style="vertical-align: middle; margin-right: 8px; width: 18px;"></i> Agotado: ${p.nombre}</div>
+                            <div style="font-size: 12px; margin-top: 4px; margin-left: 26px;">SKU: ${p.id}</div>
+                        </div>
+                    `;
+                });
+                lowStock.forEach(p => {
+                    container.innerHTML += `
+                        <div style="padding: 16px; background: #fff8e6; border: 1px solid #cc8800; color: #cc8800; border-radius: 4px;">
+                            <div style="font-weight: 600; font-size: 14px;"><i data-lucide="alert-triangle" style="vertical-align: middle; margin-right: 8px; width: 18px;"></i> Poco Stock: ${p.nombre} (${p.stock_total} ud.)</div>
+                            <div style="font-size: 12px; margin-top: 4px; margin-left: 26px;">SKU: ${p.id}</div>
+                        </div>
+                    `;
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function renderizarDashboardPedidos() {
+            const container = document.getElementById('dashboard-pedidos');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (pedidosGlobal.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 14px;">No hay pedidos registrados.</p>';
+                return;
+            }
+
+            // Ordenar pedidos por fecha de entrega más próxima
+            const pedidosOrdenados = [...pedidosGlobal].sort((a, b) => new Date(a.fechaEntrega) - new Date(b.fechaEntrega));
+
+            pedidosOrdenados.forEach(pedido => {
+                const isPasado = new Date(pedido.fechaEntrega) < new Date();
+                const colorFecha = isPasado ? '#cc0000' : 'var(--text-muted)';
+                const estado = isPasado ? 'Atrasado' : 'Pendiente';
+
+                container.innerHTML += `
+                    <div style="padding: 16px; background: #FFF; border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <div style="font-weight: 600; font-size: 14px;">${pedido.proveedor}</div>
+                            <div style="font-size: 12px; color: ${colorFecha}; font-weight: ${isPasado ? 'bold' : 'normal'};">Entrega: ${pedido.fechaEntrega}</div>
+                        </div>
+                        <div style="font-size: 12px; color: #555; margin-bottom: 8px;">
+                            ${pedido.items.length} productos diferentes. Total: $${pedido.total.toFixed(2)}
+                        </div>
+                        <div style="font-size: 11px; display: inline-block; padding: 2px 8px; background: #f0f0f0; border-radius: 10px;">
+                            Estado: ${estado}
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         function renderizarInventario(datosA_Mostrar) {
@@ -1453,12 +1556,49 @@
             document.getElementById('order-form-container').style.display = 'none';
         }
 
-        function enviarPedidoProveedor(e) {
+        async function enviarPedidoProveedor(e) {
             e.preventDefault();
             const proveedor = document.getElementById('supplier-name-display').innerText;
-            alert(`Pedido enviado exitosamente a ${proveedor}. Serás notificado cuando se actualice el estado.`);
-            cerrarModalPedido();
-            e.target.reset();
+            const fechaEntrega = document.getElementById('pedido-fecha').value;
+            const notas = document.getElementById('pedido-notas').value;
+
+            if (carritoProveedor.length === 0) {
+                alert("Agrega productos al pedido antes de enviarlo.");
+                return;
+            }
+
+            let totalPedido = 0;
+            carritoProveedor.forEach(item => {
+                totalPedido += item.cantidad * item.precio;
+            });
+
+            const nuevoPedido = {
+                proveedor,
+                fechaEntrega,
+                notas,
+                items: carritoProveedor,
+                total: totalPedido
+            };
+
+            try {
+                const res = await fetch('/api/nuevo-pedido', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoPedido)
+                });
+
+                if (res.ok) {
+                    alert(`Pedido enviado exitosamente a ${proveedor}. Serás notificado cuando se actualice el estado.`);
+                    cerrarModalPedido();
+                    e.target.reset();
+                    await cargarPedidos(); // Recargar pedidos para mostrarlos en dashboard
+                } else {
+                    alert("Error al guardar el pedido.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error de red al enviar el pedido.");
+            }
         }
 
         function navegar(seccion) {

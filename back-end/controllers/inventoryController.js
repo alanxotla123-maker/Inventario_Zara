@@ -1,8 +1,37 @@
-const { readData, writeData } = require('../config/database');
+const { readData, writeData, readPedidos, writePedidos } = require('../config/database');
 
 exports.getInventory = (req, res) => {
     const productos = readData();
     res.json(productos);
+};
+
+exports.getPedidos = (req, res) => {
+    const pedidos = readPedidos();
+    res.json(pedidos);
+};
+
+exports.addPedido = (req, res) => {
+    console.log('--- Añadiendo Pedido ---');
+    const pedidos = readPedidos();
+    
+    // Auto-increment ID
+    let maxId = 0;
+    pedidos.forEach(p => {
+        const numId = parseInt(p.id);
+        if (!isNaN(numId) && numId > maxId) {
+            maxId = numId;
+        }
+    });
+    const nextId = (maxId + 1).toString();
+
+    const nuevoPedido = {
+        ...req.body,
+        id: nextId,
+        fechaCreacion: new Date().toISOString()
+    };
+    pedidos.push(nuevoPedido);
+    writePedidos(pedidos);
+    res.json({ success: true, id: nextId });
 };
 
 exports.addProduct = (req, res) => {
