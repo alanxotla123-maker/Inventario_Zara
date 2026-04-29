@@ -21,10 +21,10 @@
 
             <nav>
                 <ul>
-                    <li onclick="navegar('dashboard')" id="nav-dashboard">
+                    <li onclick="navegar('dashboard')" id="nav-dashboard" class="active">
                         <i data-lucide="layout-grid"></i> Dashboard
                     </li>
-                    <li onclick="navegar('inventory')" id="nav-inventory" class="active">
+                    <li onclick="navegar('inventory')" id="nav-inventory">
                         <i data-lucide="package"></i> Inventory
                     </li>
                     <li onclick="navegar('trends')" id="nav-trends">
@@ -49,18 +49,27 @@
         </aside>
 
         <main class="main-content">
-            <header class="top-nav">
-                <a href="#" class="active">Colecciones</a>
-                <a href="#">Inventario</a>
-                <a href="#">Movimientos</a>
-                <a href="#">Analítica</a>
-                <i data-lucide="bell" style="width: 24px; margin-left: 20px;"></i>
-                <i data-lucide="user" style="width: 24px; cursor: pointer;" onclick="logout()"
-                    title="Cerrar Sesión"></i>
+            <header class="top-nav" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; gap: 24px; align-items: center;">
+                    <a href="#" onclick="navegar('dashboard')" class="active">Inicio</a>
+                    <a href="#" onclick="navegar('inventory')">Inventario</a>
+                    <a href="#" onclick="navegar('sales')">Movimientos</a>
+                    <a href="#" onclick="navegar('trends')">Analítica</a>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px; margin-left: auto;">
+                    <i data-lucide="bell" style="width: 20px; cursor: pointer;"></i>
+                    <div style="display: flex; align-items: center; gap: 8px; background: #f0f0f0; padding: 6px 12px; border-radius: 20px;">
+                        <i data-lucide="user" style="width: 16px;"></i>
+                        <span id="user-info-display" style="font-size: 12px; font-weight: 500; text-transform: uppercase;">USUARIO</span>
+                    </div>
+                    <button onclick="logout()" style="background: transparent; border: 1px solid #000; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="log-out" style="width: 14px;"></i> Cerrar Sesión
+                    </button>
+                </div>
             </header>
 
             <!-- DASHBOARD SECTION -->
-            <section id="dashboard-section" style="display: none;">
+            <section id="dashboard-section">
                 <span class="section-label">Reportes de Eficiencia</span>
                 <h1 class="editorial-title">Precisión en Inventario</h1>
 
@@ -148,7 +157,7 @@
             </section>
 
             <!-- INVENTORY SECTION -->
-            <section id="inventory-section">
+            <section id="inventory-section" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
                     <div>
                         <span class="section-label">Gestión de Stock Estacional</span>
@@ -413,45 +422,63 @@
                 <span class="section-label">Centro de Documentación</span>
                 <h1 class="editorial-title">Generador de Reportes PDF</h1>
 
-                <div class="filter-container"
-                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; align-items: end;">
-                    <div class="filter-group">
-                        <label>Tipo de Producto</label>
-                        <select id="r-tipo">
-                            <option value="Todos">Todos</option>
-                            <option value="Camisa">Camisa</option>
-                            <option value="Pantalón">Pantalón</option>
-                            <option value="Playera">Playera</option>
-                            <option value="Abrigo">Abrigo</option>
-                            <option value="Vestido">Vestido</option>
-                            <option value="Calzado">Calzado</option>
-                            <option value="Perfume">Perfume</option>
-                            <option value="Accesorio">Accesorio</option>
-                        </select>
+                <div id="pdf-filters-wrapper">
+                    <!-- Single Filter Row Template -->
+                    <div class="filter-container pdf-filter-row" style="display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 16px; margin-bottom: 16px; align-items: end; padding: 16px; background: #fff; border: 1px solid #eee;">
+                        <div class="filter-group">
+                            <label>Tipo de Producto</label>
+                            <select class="r-tipo" onchange="actualizarModelosPDF(this)">
+                                <option value="Todos">Todos</option>
+                                <option value="Camisa">Camisa</option>
+                                <option value="Pantalón">Pantalón</option>
+                                <option value="Playera">Playera</option>
+                                <option value="Abrigo">Abrigo</option>
+                                <option value="Vestido">Vestido</option>
+                                <option value="Calzado">Calzado</option>
+                                <option value="Perfume">Perfume</option>
+                                <option value="Accesorio">Accesorio</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Modelo / Nombre</label>
+                            <select class="r-modelo" onchange="actualizarTallasPDF(this)">
+                                <option value="">Todos los modelos</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Talla Específica</label>
+                            <select class="r-talla">
+                                <option value="">Todas las tallas</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Cantidad (Stock)</label>
+                            <select class="r-cantidad">
+                                <option value="Todos">Todos</option>
+                                <option value="BajoStock">Bajo Stock (< 10)</option>
+                                <option value="SinStock">Agotados (0)</option>
+                                <option value="ConStock">En Stock (> 0)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn-discard btn-remove-filter" onclick="eliminarFiltroPDF(this)" style="display: none; padding: 10px; height: 38px;">X</button>
+                        </div>
                     </div>
-                    <div class="filter-group">
-                        <label>Modelo / Nombre</label>
-                        <input type="text" id="r-modelo" placeholder="Buscar modelo...">
-                    </div>
-                    <div class="filter-group">
-                        <label>Talla Específica</label>
-                        <input type="text" id="r-talla" placeholder="Ej: S, 32, Única...">
-                    </div>
-                    <div class="filter-group">
-                        <label>Cantidad (Stock)</label>
-                        <select id="r-cantidad">
-                            <option value="Todos">Todos</option>
-                            <option value="BajoStock">Bajo Stock (< 10)</option>
-                            <option value="SinStock">Agotados (0)</option>
-                            <option value="ConStock">En Stock (> 0)</option>
-                        </select>
-                    </div>
-                    <div class="filter-group" style="grid-column: span 4; justify-content: flex-end; display: flex;">
-                        <button class="batch-action-btn" onclick="generarReportePDF()"
-                            style="width: auto; padding: 12px 32px;"><i data-lucide="download"
-                                style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Generar Reporte
-                            PDF</button>
-                    </div>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <button class="batch-action-btn" onclick="agregarFiltroPDF()" style="background: #f9f9f9; color: #000; border: 1px dashed #ccc; padding: 8px 16px;">+ Añadir otro filtro al reporte</button>
+                </div>
+
+                <div class="filter-container" style="display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="batch-action-btn" onclick="generarReporteGeneral()"
+                        style="background-color: #fff; color: #000; border: 1px solid #000; width: auto; padding: 12px 32px;">
+                        <i data-lucide="files" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Reporte General (Todo)
+                    </button>
+                    <button class="batch-action-btn" onclick="generarReportePDF()"
+                        style="background-color: #000; color: #fff; width: auto; padding: 12px 32px;">
+                        <i data-lucide="download" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Generar Reporte Filtrado
+                    </button>
                 </div>
             </section>
 
@@ -651,7 +678,7 @@
                         <p class="edit-subtitle" id="form-subtitle">Temporada FW24 — Limited Edition Curation</p>
                     </div>
                     <div class="edit-actions">
-                        <button class="btn-discard" onclick="navegar('inventory')">DISCARD</button>
+                        <button class="btn-discard" onclick="irAtras()">DISCARD</button>
                         <button class="btn-save" id="submit-product-btn" onclick="guardarProducto()">SAVE
                             CHANGES</button>
                     </div>
@@ -784,6 +811,12 @@
         const userRole = sessionStorage.getItem('zara_role');
         const userName = sessionStorage.getItem('zara_name');
 
+        // Mostrar el nombre y rol del usuario
+        const userInfoDisplay = document.getElementById('user-info-display');
+        if (userInfoDisplay && userName) {
+            userInfoDisplay.innerText = `${userName} (${userRole === 'admin' ? 'Admin' : 'Usuario'})`;
+        }
+
         let inventarioGlobal = [];
         let modoEdicion = false;
         let idEdicion = null;
@@ -828,6 +861,7 @@
                 inventarioGlobal = await res.json();
                 renderizarInventario(inventarioGlobal);
                 renderizarDashboardAlertas();
+                actualizarModelosPDF();
             } catch (error) {
                 console.error("Error cargando el inventario:", error);
             }
@@ -1371,57 +1405,157 @@
             }
         }
 
+        function actualizarModelosPDF(selectElement) {
+            const row = selectElement ? selectElement.closest('.pdf-filter-row') : document.querySelector('.pdf-filter-row');
+            const tipo = selectElement ? selectElement.value : document.querySelector('.r-tipo').value;
+            const modeloSelect = row.querySelector('.r-modelo');
+            const tallaSelect = row.querySelector('.r-talla');
+            
+            // Limpiar selects
+            modeloSelect.innerHTML = '<option value="">Todos los modelos</option>';
+            tallaSelect.innerHTML = '<option value="">Todas las tallas</option>';
+            
+            // Filtrar productos por tipo
+            let productos = inventarioGlobal;
+            if (tipo !== 'Todos') {
+                productos = inventarioGlobal.filter(p => p.tipo === tipo);
+            }
+            
+            // Obtener nombres únicos
+            const nombresUnicos = [...new Set(productos.map(p => p.nombre))];
+            
+            nombresUnicos.forEach(nombre => {
+                modeloSelect.innerHTML += `<option value="${nombre}">${nombre}</option>`;
+            });
+        }
+
+        function actualizarTallasPDF(selectElement) {
+            const row = selectElement ? selectElement.closest('.pdf-filter-row') : document.querySelector('.pdf-filter-row');
+            const nombreModelo = selectElement ? selectElement.value : document.querySelector('.r-modelo').value;
+            const tallaSelect = row.querySelector('.r-talla');
+            
+            tallaSelect.innerHTML = '<option value="">Todas las tallas</option>';
+            
+            if (!nombreModelo) return;
+            
+            // Buscar el producto
+            const producto = inventarioGlobal.find(p => p.nombre === nombreModelo);
+            
+            if (producto && producto.tallas && producto.tallas.length > 0) {
+                producto.tallas.forEach(t => {
+                    tallaSelect.innerHTML += `<option value="${t.talla}">${t.talla}</option>`;
+                });
+            } else if (producto) {
+                tallaSelect.innerHTML += `<option value="Única">Única</option>`;
+            }
+        }
+
+        function agregarFiltroPDF() {
+            const wrapper = document.getElementById('pdf-filters-wrapper');
+            const firstRow = wrapper.querySelector('.pdf-filter-row');
+            const newRow = firstRow.cloneNode(true);
+            
+            // Mostrar el botón de quitar en el clon
+            newRow.querySelector('.btn-remove-filter').style.display = 'block';
+            
+            // Resetear valores
+            newRow.querySelector('.r-tipo').value = 'Todos';
+            newRow.querySelector('.r-modelo').innerHTML = '<option value="">Todos los modelos</option>';
+            newRow.querySelector('.r-talla').innerHTML = '<option value="">Todas las tallas</option>';
+            newRow.querySelector('.r-cantidad').value = 'Todos';
+
+            wrapper.appendChild(newRow);
+        }
+
+        function eliminarFiltroPDF(btnElement) {
+            const row = btnElement.closest('.pdf-filter-row');
+            row.remove();
+        }
+
+        function generarReporteGeneral() {
+            generarPDF(inventarioGlobal, "General_Completo");
+        }
+
         function generarReportePDF() {
-            const tipoFilter = document.getElementById('r-tipo').value;
-            const modeloFilter = document.getElementById('r-modelo').value.toLowerCase();
-            const tallaFilter = document.getElementById('r-talla').value.toLowerCase();
-            const cantidadFilter = document.getElementById('r-cantidad').value;
+            const rows = document.querySelectorAll('.pdf-filter-row');
+            let datosFinales = [];
+            let idsAgregados = new Set(); // Para evitar duplicados
 
-            // Filtrar datos
-            const datosFiltrados = inventarioGlobal.filter(p => {
-                // Filtro Tipo
-                if (tipoFilter !== 'Todos' && p.tipo !== tipoFilter) return false;
+            rows.forEach(row => {
+                const tipoFilter = row.querySelector('.r-tipo').value;
+                const modeloFilter = row.querySelector('.r-modelo').value;
+                const tallaFilter = row.querySelector('.r-talla').value;
+                const cantidadFilter = row.querySelector('.r-cantidad').value;
 
-                // Filtro Modelo
-                if (modeloFilter && !p.nombre.toLowerCase().includes(modeloFilter)) return false;
+                // Filtrar datos
+                const datosFiltrados = inventarioGlobal.filter(p => {
+                    // Filtro Tipo
+                    if (tipoFilter !== 'Todos' && p.tipo !== tipoFilter) return false;
 
-                // Filtro Cantidad (Basado en stock_total)
-                const stockTotal = p.stock_total || 0;
-                if (cantidadFilter === 'BajoStock' && (stockTotal >= 10 || stockTotal === 0)) return false;
-                if (cantidadFilter === 'SinStock' && stockTotal > 0) return false;
-                if (cantidadFilter === 'ConStock' && stockTotal === 0) return false;
+                    // Filtro Modelo
+                    if (modeloFilter && p.nombre !== modeloFilter) return false;
 
-                // Filtro Talla
-                if (tallaFilter) {
-                    if (!p.tallas) return false;
-                    const tieneTalla = p.tallas.some(t => t.talla.toLowerCase().includes(tallaFilter));
-                    if (!tieneTalla) return false;
-                }
+                    // Filtro Cantidad
+                    const stockTotal = p.stock_total || 0;
+                    if (cantidadFilter === 'BajoStock' && (stockTotal >= 10 || stockTotal === 0)) return false;
+                    if (cantidadFilter === 'SinStock' && stockTotal > 0) return false;
+                    if (cantidadFilter === 'ConStock' && stockTotal === 0) return false;
 
-                return true;
+                    // Filtro Talla
+                    if (tallaFilter) {
+                        if (!p.tallas && tallaFilter !== 'Única') return false;
+                        if (p.tallas) {
+                            const tieneTalla = p.tallas.some(t => t.talla === tallaFilter);
+                            if (!tieneTalla) return false;
+                        }
+                    }
+
+                    return true;
+                });
+
+                // Combinar sin duplicar
+                datosFiltrados.forEach(p => {
+                    if (!idsAgregados.has(p.id)) {
+                        datosFinales.push(p);
+                        idsAgregados.add(p.id);
+                    }
+                });
             });
 
-            if (datosFiltrados.length === 0) {
+            if (datosFinales.length === 0) {
                 alert("No hay productos que coincidan con los filtros seleccionados.");
                 return;
             }
 
-            // Generar PDF
+            generarPDF(datosFinales, "Filtrado_Compuesto");
+        }
+
+        // Función adaptadora para generar PDF con cualquier conjunto de datos y notas extra
+        function generarPDF(datos, tipoReporte) {
+            const notasExtra = document.getElementById('r-adaptador') ? document.getElementById('r-adaptador').value : '';
+
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
             // Título
             doc.setFontSize(18);
-            doc.text("THE EDITORIAL INVENTORY - Reporte de Stock", 14, 22);
+            doc.text(`THE EDITORIAL INVENTORY - Reporte ${tipoReporte.replace('_', ' ')}`, 14, 22);
             doc.setFontSize(11);
             doc.setTextColor(100);
             doc.text("Generado el: " + new Date().toLocaleString(), 14, 30);
+
+            // Adaptador: Si hay notas extra, se agregan al reporte
+            if (notasExtra.trim() !== '') {
+                doc.setFontSize(10);
+                doc.setTextColor(50);
+                doc.text("Notas / Datos Extra: " + notasExtra, 14, 38);
+            }
 
             // Preparar datos para autoTable
             const tableColumn = ["SKU", "Modelo / Nombre", "Tipo", "Tallas (Stock)", "Stock Total"];
             const tableRows = [];
 
-            datosFiltrados.forEach(p => {
+            datos.forEach(p => {
                 let tallasInfo = "Única";
                 if (p.tallas && p.tallas.length > 0) {
                     tallasInfo = p.tallas.map(t => `${t.talla} (${t.stock})`).join(", ");
@@ -1436,16 +1570,18 @@
                 tableRows.push(row);
             });
 
+            const startY = notasExtra.trim() !== '' ? 46 : 40;
+
             doc.autoTable({
                 head: [tableColumn],
                 body: tableRows,
-                startY: 40,
+                startY: startY,
                 theme: 'grid',
                 headStyles: { fillColor: [0, 0, 0] },
                 alternateRowStyles: { fillColor: [245, 245, 245] }
             });
 
-            doc.save(`Reporte_Inventario_${new Date().toISOString().split('T')[0]}.pdf`);
+            doc.save(`Reporte_Inventario_${tipoReporte}_${new Date().toISOString().split('T')[0]}.pdf`);
         }
 
         let carritoProveedor = [];
@@ -1627,7 +1763,28 @@
             }
         }
 
+        let seccionAnterior = 'dashboard';
+
+        function irAtras() {
+            navegar(seccionAnterior);
+        }
+
         function navegar(seccion) {
+            // Guardar historial si entramos a edición/creación de productos
+            if (seccion === 'products') {
+                const secciones = ['dashboard', 'inventory', 'trends', 'reports', 'sales', 'products', 'suppliers'];
+                secciones.forEach(sec => {
+                    const el = document.getElementById(sec + '-section');
+                    // Comprobamos cuál está visible actualmente (antes de cambiar)
+                    if (el && el.style.display !== 'none' && el.style.display !== '') {
+                        seccionAnterior = sec;
+                    } else if (el && el.style.display === '' && sec === 'dashboard') {
+                        // Por si estamos en la carga inicial y dashboard no tiene display seteado
+                        seccionAnterior = sec;
+                    }
+                });
+            }
+
             // Ocultar todas
             document.getElementById('dashboard-section').style.display = 'none';
             document.getElementById('inventory-section').style.display = 'none';
@@ -1658,7 +1815,13 @@
                 tallasActuales = [];
                 renderizarTallasForm();
             }
-        }
+        } // Cierre de la función navegar
+
+        // Evitar que el botón "Atrás" del navegador saque al usuario de la sesión
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+        };
     </script>
 </body>
 

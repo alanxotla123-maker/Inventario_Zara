@@ -31,15 +31,15 @@
     "demanda": "mid",
     "temporada": "Continua",
     "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 15,
+    "stock_total": 26,
     "tallas": [
       {
         "talla": "S",
-        "stock": 3
+        "stock": 6
       },
       {
         "talla": "M",
-        "stock": 12
+        "stock": 20
       },
       {
         "talla": "L",
@@ -55,19 +55,19 @@
     "demanda": "high",
     "temporada": "Primavera",
     "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 0,
+    "stock_total": 139,
     "tallas": [
       {
         "talla": "36",
-        "stock": 0
+        "stock": 67
       },
       {
         "talla": "37",
-        "stock": 0
+        "stock": 6
       },
       {
         "talla": "38",
-        "stock": 0
+        "stock": 66
       }
     ]
   },
