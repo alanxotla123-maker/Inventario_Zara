@@ -30,7 +30,7 @@ const readVentas = () => {
         console.error('Error al leer ventas JSON:', error);
         return [];
     }
-};
+};///prueba 1
 
 const writeVentas = (data) => {
     try {
