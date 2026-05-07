@@ -251,54 +251,62 @@
                 <span class="section-label">Análisis de Mercado</span>
                 <h1 class="editorial-title">Tendencias de Temporada</h1>
 
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <span class="metric-label">Crecimiento Digital</span>
-                        <div class="metric-value">+24.5%</div>
-                        <div class="metric-trend">Impulsado por colección Studio</div>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Engagement de Marca</span>
-                        <div class="metric-value">8.2M</div>
-                        <div class="metric-trend">Menciones totales en Q1</div>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Tasa de Conversión</span>
-                        <div class="metric-value">3.1%</div>
-                        <div class="metric-trend" style="color: var(--accent-green);">+0.5% vs mes anterior</div>
-                    </div>
+                <div style="margin-bottom: 40px; padding: 24px; background: #f9f9f9; border: 1px solid #eee;">
+                    <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600; display: block; margin-bottom: 8px;">CONFIGURAR TEMPORADA</label>
+                    <select id="season-selector" class="editorial-input" style="width: 300px;" onchange="cargarTendencias()">
+                        <option value="invierno">Invierno</option>
+                        <option value="primavera">Primavera</option>
+                        <option value="verano">Verano</option>
+                        <option value="otoño">Otoño</option>
+                    </select>
                 </div>
 
-                <div
-                    style="background: #FFF; border: 1px solid var(--border-color); padding: 48px; margin-bottom: 48px;">
-                    <h2 style="font-family: var(--font-serif); font-size: 36px; margin-bottom: 40px;">Pronóstico de
-                        Ventas Regional</h2>
-                    <div
-                        style="display: flex; align-items: flex-end; gap: 40px; height: 300px; padding-bottom: 40px; border-bottom: 1px solid #EEE;">
-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 80%; background: #000;"></div>
-                            <span
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">Madrid</span>
+                <div id="tendencias-recomendacion" style="margin-bottom: 40px; padding: 32px; background: #000; color: #fff; text-align: center;">
+                    <p style="font-family: var(--font-serif); font-size: 24px; font-style: italic; margin-bottom: 0;">Cargando recomendaciones...</p>
+                </div>
+
+                <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Productos Más Vendidos y Predicción</h2>
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th style="text-align: center;">Unidades Vendidas</th>
+                            <th style="text-align: center;">Stock Actual</th>
+                            <th style="text-align: center;">Días para agotarse</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tendencias-tbody">
+                        <tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 48px; border-top: 1px solid #eee; padding-top: 40px;">
+                    <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Análisis Sell-Through Automático</h2>
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Rotación (Sell-Through)</th>
+                                <th>Sugerencia del Sistema</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sell-through-tbody">
+                            <tr><td colspan="3" style="text-align: center; color: #888;">Cargando análisis...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Predicción por Clima</h2>
+                        <div id="clima-container" style="background: #000; color: #fff; padding: 32px;">
+                            <p style="font-size: 16px; margin-bottom: 0;">Cargando clima...</p>
                         </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 65%; background: #000; opacity: 0.6;"></div>
-                            <span
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">Paris</span>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 95%; background: #000;"></div>
-                            <span
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">London</span>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 45%; background: #000; opacity: 0.3;"></div>
-                            <span
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">Berlin</span>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                            <div style="width: 40px; height: 75%; background: #000;"></div>
-                            <span
-                                style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;">Milan</span>
+                    </div>
+                    <div>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Mapas de Calor (Rotación)</h2>
+                        <div id="heatmap-container" style="background: #f9f9f9; padding: 24px; border: 1px solid #eee;">
+                            <p style="font-size: 14px; margin-bottom: 0; color: #888;">Cargando mapa...</p>
                         </div>
                     </div>
                 </div>
@@ -788,6 +796,37 @@
                     </div>
                 </div>
             </section>
+
+            <!-- RETURN MODAL -->
+            <div id="return-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+                <div style="background: #fff; padding: 32px; width: 400px; max-width: 90%;">
+                    <h2 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Procesar Devolución</h2>
+                    <form onsubmit="event.preventDefault(); enviarDevolucion();">
+                        <input type="hidden" id="ret-id">
+                        <div class="form-row">
+                            <label>CANTIDAD</label>
+                            <input type="number" id="ret-qty" class="editorial-input" min="1" value="1" required>
+                        </div>
+                        <div class="form-row">
+                            <label>TALLA (Opcional)</label>
+                            <input type="text" id="ret-talla" class="editorial-input" placeholder="Ej: M">
+                        </div>
+                        <div class="form-row">
+                            <label>MOTIVO</label>
+                            <input type="text" id="ret-motivo" class="editorial-input" placeholder="Ej: Talla incorrecta" required>
+                        </div>
+                        <div class="form-row">
+                            <label>ESTADO DEL PRODUCTO</label>
+                            <select id="ret-estado" class="editorial-input">
+                                <option value="perfecto">Perfecto (Reintegrar a Stock)</option>
+                                <option value="merma">Tarado / Dañado (Merma)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;">PROCESAR DEVOLUCIÓN</button>
+                        <button type="button" class="btn-discard" style="width: 100%; margin-top: 8px;" onclick="cerrarModalDevolucion()">CANCELAR</button>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -1039,8 +1078,10 @@
                             ${userRole === 'admin' ? `
                             <i data-lucide="edit" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')" title="Editar Producto"></i>
                             <i data-lucide="trash-2" style="width: 18px; color: var(--accent-red); cursor: pointer;" onclick="eliminarProducto('${p.id}')" title="Eliminar"></i>
+                            <i data-lucide="corner-down-left" style="width: 18px; color: #000; cursor: pointer;" onclick="abrirModalDevolucion('${p.id}')" title="Procesar Devolución"></i>
                             ` : `
                             <i data-lucide="package-plus" style="width: 18px; color: #666; cursor: pointer;" onclick="prepararEdicion('${p.id}')" title="Actualizar Stock Diario"></i>
+                            <i data-lucide="corner-down-left" style="width: 18px; color: #000; cursor: pointer;" onclick="abrirModalDevolucion('${p.id}')" title="Procesar Devolución"></i>
                             `}
                         </td>
                     </tr>`;
@@ -2085,6 +2126,151 @@
             }
         }
 
+        async function cargarTendencias() {
+            try {
+                const temporada = document.getElementById('season-selector').value || 'invierno';
+                const res = await fetch('/api/tendencias?temporada=' + temporada);
+                const data = await res.json();
+                
+                const recContainer = document.getElementById('tendencias-recomendacion');
+                if (recContainer) {
+                    recContainer.innerHTML = `<p style="font-family: var(--font-serif); font-size: 24px; font-style: italic; margin-bottom: 0;">${data.recomendacion}</p>`;
+                }
+
+                const tbody = document.getElementById('tendencias-tbody');
+                if (tbody) {
+                    tbody.innerHTML = '';
+                    if (data.prediccionStock && data.prediccionStock.length > 0) {
+                        data.prediccionStock.forEach(p => {
+                            let diasBadge = '';
+                            if (p.diasParaAgotarse === 'Infinito' || p.diasParaAgotarse > 60) {
+                                diasBadge = `<span style="color: #008800; font-weight: bold;">+60 días</span>`;
+                            } else if (p.diasParaAgotarse < 15) {
+                                diasBadge = `<span style="color: #cc0000; font-weight: bold;">¡Pronto! (${p.diasParaAgotarse} días)</span>`;
+                            } else {
+                                diasBadge = `<span style="color: #cc8800; font-weight: bold;">${p.diasParaAgotarse} días</span>`;
+                            }
+
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td>
+                                        <div class="product-info">
+                                            <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 4px;">${p.nombre}</h3>
+                                            <p style="font-size: 11px; color: #888;">SKU: ${p.id}</p>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; font-size: 16px;">${p.cantidad}</td>
+                                    <td style="text-align: center; font-size: 16px;">${p.stockActual}</td>
+                                    <td style="text-align: center;">${diasBadge}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">No hay datos de ventas para mostrar.</td></tr>';
+                    }
+                }
+                
+
+                // Fetch other intelligence components
+                cargarInteligenciaExtra();
+            } catch (e) {
+                console.error("Error cargando tendencias", e);
+            }
+        }
+
+        async function cargarInteligenciaExtra() {
+            try {
+                // Sell-Through
+                const resST = await fetch('/api/sell-through');
+                const dataST = await resST.json();
+                const tbodyST = document.getElementById('sell-through-tbody');
+                if (tbodyST) {
+                    tbodyST.innerHTML = '';
+                    dataST.forEach(p => {
+                        let sugColor = '#000';
+                        if (p.sugerencia.includes('Reabastecimiento')) sugColor = '#008800';
+                        if (p.sugerencia.includes('Redistribuir')) sugColor = '#cc8800';
+                        tbodyST.innerHTML += `
+                            <tr>
+                                <td>${p.nombre} <br><span style="font-size: 10px; color:#888;">SKU: ${p.id}</span></td>
+                                <td style="font-weight: 600;">${p.sellThrough}</td>
+                                <td style="color: ${sugColor}; font-weight: 500;">${p.sugerencia}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // Clima
+                const resClima = await fetch('/api/clima');
+                const dataClima = await resClima.json();
+                const climaCont = document.getElementById('clima-container');
+                if (climaCont) {
+                    climaCont.innerHTML = `
+                        <p style="font-size: 16px; margin-bottom: 8px; line-height: 1.5;">${dataClima.recomendacion}</p>
+                        <p style="font-size: 12px; color: #ccc; text-transform: uppercase;">Temperatura actual: ${dataClima.temp}°C</p>
+                    `;
+                }
+
+                // Heatmap
+                const resHeat = await fetch('/api/heatmap');
+                const dataHeat = await resHeat.json();
+                const heatCont = document.getElementById('heatmap-container');
+                if (heatCont) {
+                    heatCont.innerHTML = '';
+                    dataHeat.forEach(z => {
+                        heatCont.innerHTML += `
+                            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #ddd;">
+                                <span style="font-weight: 600;">${z.zona}</span>
+                                <span>Tráfico: ${z.trafico_estimado} | Rotación: <span style="color: #008800;">${z.rotacion}</span></span>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error("Error cargando inteligencia extra", error);
+            }
+        }
+
+        function abrirModalDevolucion(id) {
+            document.getElementById('ret-id').value = id;
+            document.getElementById('ret-qty').value = 1;
+            document.getElementById('ret-talla').value = '';
+            document.getElementById('ret-motivo').value = '';
+            document.getElementById('ret-estado').value = 'perfecto';
+            document.getElementById('return-modal').style.display = 'flex';
+        }
+
+        function cerrarModalDevolucion() {
+            document.getElementById('return-modal').style.display = 'none';
+        }
+
+        async function enviarDevolucion() {
+            const id = document.getElementById('ret-id').value;
+            const cantidad = document.getElementById('ret-qty').value;
+            const talla = document.getElementById('ret-talla').value;
+            const motivo = document.getElementById('ret-motivo').value;
+            const estado = document.getElementById('ret-estado').value;
+
+            try {
+                const res = await fetch('/api/devoluciones', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, cantidad, talla, motivo, estado })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(data.mensaje);
+                    cerrarModalDevolucion();
+                    cargarInventario(); // Recargar el inventario si el stock cambió
+                } else {
+                    alert("Error procesando devolución: " + data.error);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error de red.");
+            }
+        }
+
         function navegar(seccion) {
             // Guardar historial si entramos a edición/creación de productos
             if (seccion === 'products') {
@@ -2136,6 +2322,10 @@
 
             if (seccion === 'analitica') {
                 cargarAnalitica();
+            }
+
+            if (seccion === 'trends') {
+                cargarTendencias();
             }
 
             // Actualizar menú lateral
