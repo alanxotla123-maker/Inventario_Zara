@@ -2,8 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const JSON_PATH = path.resolve(__dirname, '../../front-end/bd/inventario_zara.json');
-const PEDIDOS_PATH = path.resolve(__dirname, '../../front-end/bd/pedidos_zara.json');
-
+const VENTAS_JSON_PATH = path.resolve(__dirname, '../../front-end/bd/ventas.json');
 
 const readData = () => {
     try {
@@ -23,22 +22,22 @@ const writeData = (data) => {
     }
 };
 
-const readPedidos = () => {
+const readVentas = () => {
     try {
-        const data = fs.readFileSync(PEDIDOS_PATH, 'utf8');
+        const data = fs.readFileSync(VENTAS_JSON_PATH, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error('Error al leer JSON de pedidos:', error);
+        console.error('Error al leer ventas JSON:', error);
         return [];
     }
-};
+};///prueba 1
 
-const writePedidos = (data) => {
+const writeVentas = (data) => {
     try {
-        fs.writeFileSync(PEDIDOS_PATH, JSON.stringify(data, null, 2));
+        fs.writeFileSync(VENTAS_JSON_PATH, JSON.stringify(data, null, 2));
     } catch (error) {
-        console.error('Error al escribir JSON de pedidos:', error);
+        console.error('Error al escribir ventas JSON:', error);
     }
 };
 
-module.exports = { readData, writeData, JSON_PATH, readPedidos, writePedidos, PEDIDOS_PATH };
+module.exports = { readData, writeData, JSON_PATH, readVentas, writeVentas };

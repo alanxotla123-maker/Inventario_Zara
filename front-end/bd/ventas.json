@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1778125176293",
+    "fecha": "2026-05-07T03:39:36.293Z",
+    "productoId": "7",
+    "productoNombre": "Gafas de Sol Carey",
+    "cantidad": 46,
+    "devoluciones": 0,
+    "cantidadNeta": 46,
+    "precioUnitario": 195.99,
+    "total": 9015.54
+  },
+  {
+    "id": "1778124163415",
+    "fecha": "2026-05-07T03:22:43.415Z",
+    "productoId": "1",
+    "productoNombre": "Abrigo Largo de Lana Premium",
+    "cantidad": 7,
+    "devoluciones": 0,
+    "cantidadNeta": 7,
+    "precioUnitario": 99.99000000000001,
+    "total": 699.9300000000001
+  },
+  {
+    "id": "1778123306072",
+    "fecha": "2026-05-07T03:08:26.072Z",
+    "productoId": "1",
+    "productoNombre": "Abrigo Largo de Lana Premium",
+    "cantidad": 5,
+    "devoluciones": 1,
+    "cantidadNeta": 4,
+    "precioUnitario": 99.99000000000001,
+    "total": 399.96000000000004
+  },
+  {
+    "id": "1778122768779",
+    "fecha": "2026-05-07T02:59:28.779Z",
+    "productoId": "1",
+    "productoNombre": "Abrigo Largo de Lana Premium",
+    "cantidad": 20,
+    "precioUnitario": 99.99000000000001,
+    "total": 1999.8000000000002
+  }
+]

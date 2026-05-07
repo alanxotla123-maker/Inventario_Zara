@@ -15,10 +15,8 @@ router.post('/vender', inventoryController.sellProduct);
 router.put('/inventario/:id', inventoryController.updateProduct);
 router.delete('/inventario/:id', inventoryController.deleteProduct);
 
-// Rutas de Pedidos
-router.get('/pedidos', inventoryController.getPedidos);
-router.post('/nuevo-pedido', inventoryController.addPedido);
-router.post('/recibir-pedido/:id', inventoryController.receivePedido);
+// Rutas de Ventas
+router.get('/ventas', inventoryController.getVentas);
 
 // Rutas de Carga
 router.post('/upload', upload.single('imagen'), uploadController.uploadImage);

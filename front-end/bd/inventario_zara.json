@@ -7,21 +7,22 @@
     "demanda": "high",
     "temporada": "FW24",
     "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 1100,
+    "stock_total": 4193,
     "tallas": [
       {
         "talla": "S",
-        "stock": 100
+        "stock": 959
       },
       {
         "talla": "M",
-        "stock": 0
+        "stock": 2000
       },
       {
         "talla": "L",
-        "stock": 1000
+        "stock": 1234
       }
-    ]
+    ],
+    "precio": 99.99
   },
   {
     "id": "2",
@@ -35,17 +36,18 @@
     "tallas": [
       {
         "talla": "S",
-        "stock": 6
+        "stock": 0
       },
       {
         "talla": "M",
-        "stock": 20
+        "stock": 12
       },
       {
         "talla": "L",
         "stock": 0
       }
-    ]
+    ],
+    "precio": 149.99
   },
   {
     "id": "3",
@@ -59,17 +61,18 @@
     "tallas": [
       {
         "talla": "36",
-        "stock": 67
+        "stock": 0
       },
       {
         "talla": "37",
-        "stock": 6
+        "stock": 0
       },
       {
         "talla": "38",
-        "stock": 66
+        "stock": 0
       }
-    ]
+    ],
+    "precio": 137.99
   },
   {
     "id": "4",
@@ -85,7 +88,8 @@
         "talla": "Única",
         "stock": 156
       }
-    ]
+    ],
+    "precio": 134.99
   },
   {
     "id": "5",
@@ -105,7 +109,8 @@
         "talla": "L",
         "stock": 10
       }
-    ]
+    ],
+    "precio": 157.99
   },
   {
     "id": "6",
@@ -121,7 +126,8 @@
         "talla": "Única",
         "stock": 15
       }
-    ]
+    ],
+    "precio": 74.99000000000001
   },
   {
     "id": "7",
@@ -131,13 +137,14 @@
     "demanda": "high",
     "temporada": "Verano",
     "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 85,
+    "stock_total": 39,
     "tallas": [
       {
         "talla": "Única",
-        "stock": 85
+        "stock": 39
       }
-    ]
+    ],
+    "precio": 195.99
   },
   {
     "id": "8",
@@ -157,6 +164,7 @@
         "talla": "M",
         "stock": 0
       }
-    ]
+    ],
+    "precio": 174.99
   }
 ]
