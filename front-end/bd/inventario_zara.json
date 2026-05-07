@@ -7,12 +7,22 @@
     "demanda": "high",
     "temporada": "FW24",
     "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 4234,
+    "stock_total": 4193,
     "tallas": [
-      {"talla": "S", "stock": 1000},
-      {"talla": "M", "stock": 2000},
-      {"talla": "L", "stock": 1234}
-    ]
+      {
+        "talla": "S",
+        "stock": 959
+      },
+      {
+        "talla": "M",
+        "stock": 2000
+      },
+      {
+        "talla": "L",
+        "stock": 1234
+      }
+    ],
+    "precio": 99.99000000000001
   },
   {
     "id": "2",
@@ -24,10 +34,20 @@
     "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop",
     "stock_total": 12,
     "tallas": [
-      {"talla": "S", "stock": 0},
-      {"talla": "M", "stock": 12},
-      {"talla": "L", "stock": 0}
-    ]
+      {
+        "talla": "S",
+        "stock": 0
+      },
+      {
+        "talla": "M",
+        "stock": 12
+      },
+      {
+        "talla": "L",
+        "stock": 0
+      }
+    ],
+    "precio": 149.99
   },
   {
     "id": "3",
@@ -39,10 +59,20 @@
     "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop",
     "stock_total": 0,
     "tallas": [
-      {"talla": "36", "stock": 0},
-      {"talla": "37", "stock": 0},
-      {"talla": "38", "stock": 0}
-    ]
+      {
+        "talla": "36",
+        "stock": 0
+      },
+      {
+        "talla": "37",
+        "stock": 0
+      },
+      {
+        "talla": "38",
+        "stock": 0
+      }
+    ],
+    "precio": 137.99
   },
   {
     "id": "4",
@@ -54,8 +84,12 @@
     "img": "https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=400&auto=format&fit=crop",
     "stock_total": 156,
     "tallas": [
-      {"talla": "Única", "stock": 156}
-    ]
+      {
+        "talla": "Única",
+        "stock": 156
+      }
+    ],
+    "precio": 134.99
   },
   {
     "id": "5",
@@ -67,9 +101,16 @@
     "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop",
     "stock_total": 28,
     "tallas": [
-      {"talla": "M", "stock": 18},
-      {"talla": "L", "stock": 10}
-    ]
+      {
+        "talla": "M",
+        "stock": 18
+      },
+      {
+        "talla": "L",
+        "stock": 10
+      }
+    ],
+    "precio": 157.99
   },
   {
     "id": "6",
@@ -81,8 +122,12 @@
     "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop",
     "stock_total": 15,
     "tallas": [
-      {"talla": "Única", "stock": 15}
-    ]
+      {
+        "talla": "Única",
+        "stock": 15
+      }
+    ],
+    "precio": 74.99000000000001
   },
   {
     "id": "7",
@@ -92,10 +137,14 @@
     "demanda": "high",
     "temporada": "Verano",
     "img": "https://images.unsplash.com/photo-1511499767390-903390e6fbc1?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 85,
+    "stock_total": 39,
     "tallas": [
-      {"talla": "Única", "stock": 85}
-    ]
+      {
+        "talla": "Única",
+        "stock": 39
+      }
+    ],
+    "precio": 195.99
   },
   {
     "id": "8",
@@ -107,8 +156,15 @@
     "img": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=400&auto=format&fit=crop",
     "stock_total": 5,
     "tallas": [
-      {"talla": "S", "stock": 5},
-      {"talla": "M", "stock": 0}
-    ]
+      {
+        "talla": "S",
+        "stock": 5
+      },
+      {
+        "talla": "M",
+        "stock": 0
+      }
+    ],
+    "precio": 174.99
   }
 ]

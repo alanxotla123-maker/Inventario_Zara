@@ -8,6 +8,37 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #editorial-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: #fff;
+            padding: 16px 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        #editorial-notification.show {
+            opacity: 1;
+            visibility: visible;
+            bottom: 40px;
+        }
+        #editorial-notification.error {
+            background: #d32f2f;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -48,12 +79,19 @@
 
         <main class="main-content">
             <header class="top-nav">
-                <a href="#" class="active">Colecciones</a>
-                <a href="#">Inventario</a>
-                <a href="#">Movimientos</a>
-                <a href="#">Analítica</a>
-                <i data-lucide="bell" style="width: 24px; margin-left: 20px;"></i>
-                <i data-lucide="user" style="width: 24px; cursor: pointer;" onclick="logout()" title="Cerrar Sesión"></i>
+                <a href="#" class="top-link active" onclick="navegar('dashboard')">Colecciones</a>
+                <a href="#" class="top-link" onclick="navegar('inventory')">Inventario</a>
+                <a href="#" class="top-link" onclick="navegar('movimientos')">Movimientos</a>
+                <a href="#" class="top-link" onclick="navegar('analitica')">Analítica</a>
+                <div style="position: relative; display: inline-block;">
+                    <i data-lucide="bell" style="width: 24px; margin-left: 20px; cursor: pointer;" onclick="toggleNotifications()"></i>
+                    <div id="notif-badge" style="display: none; position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px;">!</div>
+                    <div id="notif-dropdown" style="display: none; position: absolute; top: 30px; right: 0; background: white; border: 1px solid #ccc; width: 280px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; padding: 15px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 12px; border-bottom: 1px solid #eee; padding-bottom: 5px; text-transform: uppercase;">Alertas de Stock</h4>
+                        <div id="notif-list" style="font-size: 11px; color: #555; max-height: 200px; overflow-y: auto;">Sin alertas pendientes</div>
+                    </div>
+                </div>
+                <i data-lucide="user" style="width: 24px; cursor: pointer; margin-left: 20px;" onclick="logout()" title="Cerrar Sesión"></i>
             </header>
 
             <!-- DASHBOARD SECTION -->
@@ -63,62 +101,43 @@
 
                 <div class="metrics-grid">
                     <div class="metric-card">
-                        <span class="metric-label">Tasa de Rotación</span>
-                        <div class="metric-value">8.4</div>
-                        <div class="metric-trend" style="color: var(--accent-green);">+12% vs año ant.</div>
+                        <span class="metric-label">Ingresos Totales</span>
+                        <div class="metric-value" id="dash-ingresos">$0.00</div>
+                        <div class="metric-trend" style="color: var(--accent-green);">Basado en ventas netas</div>
                     </div>
                     <div class="metric-card">
-                        <span class="metric-label">Plazo de Entrega Prom.</span>
-                        <div class="metric-value">14<span style="font-size: 20px;">días</span></div>
-                        <div class="metric-trend" style="color: var(--text-muted);">-2.5d objetivo</div>
+                        <span class="metric-label">Unidades Vendidas</span>
+                        <div class="metric-value" id="dash-vendidas">0</div>
+                        <div class="metric-trend" style="color: var(--text-muted);">Piezas entregadas</div>
                     </div>
                     <div class="metric-card black">
-                        <span class="metric-label">Ahorros de Gestión</span>
-                        <div class="metric-value">€4.2M</div>
+                        <span class="metric-label">Tasa de Devolución</span>
+                        <div class="metric-value" id="dash-devoluciones">0%</div>
                         <p class="metric-description">
-                            Costes operativos reducidos en un 18.4% mediante asignación predictiva de stock.
+                            Porcentaje de productos retornados sobre el total de unidades operadas.
                         </p>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 48px;">
                     <div>
-                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Eficiencia por Categoría</h2>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Eficiencia por Producto</h2>
                         <table class="inventory-table">
                             <thead>
-                                <tr><th>Categoría</th><th>Rotación</th><th>Índice Desperdicio</th></tr>
+                                <tr><th>Categoría / Producto</th><th>Unidades Vendidas</th><th>Ingresos</th></tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="product-info">
-                                            <h3>Abrigos y Chaquetas</h3>
-                                            <p>Colección Invierno '24</p>
-                                        </div>
-                                    </td>
-                                    <td>12.2x</td>
-                                    <td><span style="color: var(--accent-green); font-weight: 600;">Bajo</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="product-info">
-                                            <h3>Ropa de Noche</h3>
-                                            <p>Special Edition Studio</p>
-                                        </div>
-                                    </td>
-                                    <td>6.1x</td>
-                                    <td><span style="color: var(--text-muted); font-weight: 600;">Moderado</span></td>
-                                </tr>
+                            <tbody id="dash-category-tbody">
+                                <!-- Dinámico -->
                             </tbody>
                         </table>
                     </div>
                     <div style="background: #F9F9F9; padding: 40px; border: 1px solid var(--border-color);">
-                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Reducción de Excedentes</h3>
+                        <h3 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Salud del Inventario</h3>
                         <p style="font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
-                            El stock inactivo disminuyó un 22% este trimestre en las colecciones principales.
+                            Porcentaje del catálogo con niveles de stock óptimos (mayor a 10 unidades).
                         </p>
-                        <div style="font-size: 60px; font-weight: 300; margin-bottom: 8px;">-22.4%</div>
-                        <div style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Salud de Inventario</div>
+                        <div style="font-size: 60px; font-weight: 300; margin-bottom: 8px;" id="dash-health-value">0%</div>
+                        <div style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Índice de Disponibilidad</div>
                     </div>
                 </div>
             </section>
@@ -267,6 +286,28 @@
                 </div>
             </section>
 
+            <!-- MOVIMIENTOS SECTION -->
+            <section id="movimientos-section" style="display: none;">
+                <span class="section-label">Bitácora de Operaciones</span>
+                <h1 class="editorial-title">Historial de Movimientos</h1>
+                <div style="background: #FFF; border: 1px solid var(--border-color); padding: 32px;">
+                    <div id="movimientos-container" style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- JS will populate this -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALITICA SECTION -->
+            <section id="analitica-section" style="display: none;">
+                <span class="section-label">Inteligencia de Negocio</span>
+                <h1 class="editorial-title">Analítica de Ventas</h1>
+                <div style="background: #FFF; border: 1px solid var(--border-color); padding: 48px; display: flex; justify-content: center; align-items: center; min-height: 400px;">
+                    <div style="width: 400px; height: 400px;">
+                        <canvas id="salesPieChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
             <!-- SALES REPORTS SECTION -->
             <section id="sales-section" style="display: none;">
                 <h1 class="editorial-title" style="margin-bottom: 40px; font-size: 52px; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 8px;">Nuevo Reporte de Ventas</h1>
@@ -286,11 +327,9 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CATEGORÍA DE PRODUCTO</label>
-                                <select class="editorial-input" style="color: #000; padding: 12px 0;">
-                                    <option>Todas las categorías</option>
-                                    <option>Woman</option>
-                                    <option>Man</option>
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">PRODUCTO VENDIDO</label>
+                                <select id="sales-producto" class="editorial-input" style="color: #000; padding: 12px 0;">
+                                    <option value="">Seleccionar producto...</option>
                                 </select>
                             </div>
                         </div>
@@ -309,15 +348,15 @@
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
                             <div>
                                 <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">VENTAS TOTALES ($)</label>
-                                <input type="number" class="editorial-input" placeholder="0.00" style="color: #000; padding: 12px 0;">
+                                <input type="text" id="sales-total" class="editorial-input" placeholder="0.00" readonly style="color: #000; padding: 12px 0; background: #f9f9f9; cursor: not-allowed; border: 1px solid #eee;">
                             </div>
                             <div>
                                 <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">UNIDADES VENDIDAS</label>
-                                <input type="number" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;">
+                                <input type="number" id="sales-cantidad" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;" min="1">
                             </div>
                             <div>
                                 <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">DEVOLUCIONES</label>
-                                <input type="number" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;">
+                                <input type="number" id="sales-devoluciones" class="editorial-input" placeholder="0" style="color: #000; padding: 12px 0;" min="0">
                             </div>
                         </div>
 
@@ -330,7 +369,7 @@
                             </div>
                         </div>
 
-                        <button class="btn-save" style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;" onclick="alert('Reporte simulado exitosamente')">
+                        <button class="btn-save" style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;" onclick="registrarVentaEnLote()">
                             SUBIR REPORTE DE VENTAS <i data-lucide="arrow-right" style="width: 16px;"></i>
                         </button>
 
@@ -342,46 +381,9 @@
                         <div style="border: 1px solid var(--border-color); padding: 32px; background: #FFF;">
                             <h3 style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 32px; font-weight: 500;">Últimos Reportes Cargados</h3>
                             
-                            <div style="display: flex; flex-direction: column; gap: 24px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">SERRANO 23, MADRID</div>
-                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 01 Oct - 15 Oct</div>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">HOY, 09:42</div>
-                                        <div style="font-size: 14px; font-weight: 600;">$142,500.00</div>
-                                    </div>
-                                </div>
-
-                                <div style="height: 1px; background: #EEE; width: 100%;"></div>
-
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">CHAMPS ÉLYSÉES, PARIS</div>
-                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 16 Sep - 30 Sep</div>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">AYER, 18:15</div>
-                                        <div style="font-size: 14px; font-weight: 600;">$218,240.00</div>
-                                    </div>
-                                </div>
-
-                                <div style="height: 1px; background: #EEE; width: 100%;"></div>
-
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">FIFTH AVENUE, NY</div>
-                                        <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">Período: 01 Oct - 10 Oct</div>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">17 OCT, 14:30</div>
-                                        <div style="font-size: 14px; font-weight: 600;">$305,900.00</div>
-                                    </div>
-                                </div>
+                            <div id="sales-history-container" style="display: flex; flex-direction: column; gap: 24px; max-height: 400px; overflow-y: auto;">
+                                <div style="font-size: 12px; color: #888;">Cargando historial...</div>
                             </div>
-
-                            <a href="#" style="display: block; margin-top: 32px; font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #999; text-decoration: none; font-weight: 600;">VER TODO EL HISTORIAL DE REPORTES <i data-lucide="chevron-right" style="width: 12px; vertical-align: middle;"></i></a>
                         </div>
 
                         <!-- Image with Quote -->
@@ -634,9 +636,13 @@
 
         function actualizarAlertas(lowStock, overStock) {
             const container = document.getElementById('stock-alerts-container');
+            const notifBadge = document.getElementById('notif-badge');
+            const notifList = document.getElementById('notif-list');
+            
             if (!container) return;
             
             container.innerHTML = '';
+            let notifHtml = '';
             
             if (lowStock > 0) {
                 container.innerHTML += `
@@ -645,6 +651,9 @@
                         <span><strong>Atención:</strong> Se nos está acabando el stock de ${lowStock} producto(s) (menos de 10 unidades). Haz clic para verlos.</span>
                     </div>
                 `;
+                notifHtml += `<div style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong style="color: red;">Alerta:</strong> ${lowStock} producto(s) con bajo stock.
+                </div>`;
             }
             
             if (overStock > 0) {
@@ -654,12 +663,26 @@
                         <span><strong>Aviso:</strong> Tenemos sobre stock en ${overStock} producto(s) (más de 100 unidades). Haz clic para verlos.</span>
                     </div>
                 `;
+                notifHtml += `<div style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong style="color: green;">Aviso:</strong> ${overStock} producto(s) con sobre stock.
+                </div>`;
             }
             
             if (lowStock === 0 && overStock === 0) {
                 container.style.display = 'none';
+                if(notifBadge) notifBadge.style.display = 'none';
+                if(notifList) notifList.innerHTML = 'Sin alertas pendientes.';
             } else {
                 container.style.display = 'flex';
+                if(notifBadge) notifBadge.style.display = 'block';
+                if(notifList) notifList.innerHTML = notifHtml;
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notif-dropdown');
+            if(dropdown) {
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
             }
         }
 
@@ -870,6 +893,162 @@
             }
         }
 
+        function mostrarNotificacionEditorial(mensaje, esError = false) {
+            let notif = document.getElementById('editorial-notification');
+            if (!notif) {
+                notif = document.createElement('div');
+                notif.id = 'editorial-notification';
+                document.body.appendChild(notif);
+            }
+            notif.className = esError ? 'error show' : 'show';
+            notif.innerHTML = `<i data-lucide="${esError ? 'alert-circle' : 'check-circle'}" style="width: 18px;"></i> ${mensaje}`;
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 4000);
+        }
+
+        async function cargarHistorialVentas() {
+            try {
+                const res = await fetch('/api/ventas');
+                const ventas = await res.json();
+                const container = document.getElementById('sales-history-container');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (ventas.length === 0) {
+                    container.innerHTML = '<div style="font-size: 12px; color: #888;">No hay reportes recientes.</div>';
+                    return;
+                }
+
+                ventas.slice(0, 10).forEach(v => {
+                    const fechaObj = new Date(v.fecha);
+                    const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const el = document.createElement('div');
+                    el.style.display = 'flex';
+                    el.style.justifyContent = 'space-between';
+                    el.style.alignItems = 'center';
+                    el.innerHTML = `
+                        <div style="flex: 1;">
+                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${v.productoNombre} (x${v.cantidad})</div>
+                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${v.productoId}</div>
+                        </div>
+                        <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
+                            <div>
+                                <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">${fechaStr}</div>
+                                <div style="font-size: 14px; font-weight: 600;">$${v.total.toFixed(2)}</div>
+                            </div>
+                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${v.id}')" title="Descargar PDF"></i>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                    
+                    const divLine = document.createElement('div');
+                    divLine.style.height = '1px';
+                    divLine.style.background = '#EEE';
+                    divLine.style.width = '100%';
+                    container.appendChild(divLine);
+                });
+                // Guardar globalmente para el PDF
+                window.ventasGlobales = ventas;
+                lucide.createIcons();
+            } catch(e) {
+                console.error("Error cargando ventas", e);
+            }
+        }
+
+        function descargarVentaPDF(id) {
+            const venta = (window.ventasGlobales || []).find(v => v.id === id);
+            if(!venta) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.text("THE EDITORIAL INVENTORY - Ticket de Venta", 14, 22);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            const fechaObj = new Date(venta.fecha);
+            doc.text("Fecha: " + fechaObj.toLocaleString(), 14, 30);
+            doc.text("ID Transacción: " + venta.id, 14, 36);
+
+            doc.autoTable({
+                head: [["Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
+                body: [
+                    [
+                        venta.productoNombre, 
+                        venta.productoId, 
+                        venta.cantidad, 
+                        venta.devoluciones || 0, 
+                        venta.cantidadNeta !== undefined ? venta.cantidadNeta : venta.cantidad, 
+                        "$" + venta.precioUnitario.toFixed(2), 
+                        "$" + venta.total.toFixed(2)
+                    ]
+                ],
+                startY: 45,
+                theme: 'grid',
+                headStyles: { fillColor: [0, 0, 0] },
+            });
+
+            doc.save(`Ticket_Venta_${venta.id}.pdf`);
+        }
+
+        async function registrarVentaEnLote() {
+            const selectProducto = document.getElementById('sales-producto');
+            const inputCantidad = document.getElementById('sales-cantidad');
+            const inputDevoluciones = document.getElementById('sales-devoluciones');
+            
+            const id = selectProducto.value;
+            const cantidad = parseInt(inputCantidad.value);
+            const devoluciones = parseInt(inputDevoluciones.value) || 0;
+
+            if (!id) {
+                mostrarNotificacionEditorial("Por favor selecciona un producto.", true);
+                return;
+            }
+            if (!cantidad || cantidad <= 0) {
+                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida a vender.", true);
+                return;
+            }
+            if (devoluciones > cantidad) {
+                mostrarNotificacionEditorial("Las devoluciones no pueden superar las unidades vendidas.", true);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/vender', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ id, cantidad, devoluciones })
+                });
+
+                if (res.ok) {
+                    const neto = cantidad - devoluciones;
+                    mostrarNotificacionEditorial(`¡Reporte registrado! Venta neta: ${neto} unidades.`);
+                    await cargarInventario();
+                    await cargarHistorialVentas();
+                    
+                    // Actualizar dropdown
+                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
+                    inventarioGlobal.forEach(p => {
+                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio||0).toFixed(2)}</option>`;
+                    });
+                    inputCantidad.value = '';
+                    inputDevoluciones.value = '';
+                    document.getElementById('sales-total').value = '0.00';
+                } else {
+                    const err = await res.json();
+                    mostrarNotificacionEditorial("Error al registrar venta: " + err.error, true);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                mostrarNotificacionEditorial("Error de conexión", true);
+            }
+        }
+
         async function vender(id) {
             const res = await fetch('/api/vender', {
                 method: 'POST',
@@ -959,6 +1138,175 @@
             doc.save(`Reporte_Inventario_${new Date().toISOString().split('T')[0]}.pdf`);
         }
 
+        let chartInstance = null;
+        async function cargarAnalitica() {
+            try {
+                const res = await fetch('/api/ventas');
+                const ventas = await res.json();
+                
+                // Agrupar ventas por producto
+                const productosAgrupados = {};
+                ventas.forEach(v => {
+                    if(!productosAgrupados[v.productoNombre]) {
+                        productosAgrupados[v.productoNombre] = 0;
+                    }
+                    productosAgrupados[v.productoNombre] += (v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad);
+                });
+
+                const labels = Object.keys(productosAgrupados);
+                const data = Object.values(productosAgrupados);
+
+                const ctx = document.getElementById('salesPieChart').getContext('2d');
+                if(chartInstance) {
+                    chartInstance.destroy();
+                }
+                
+                chartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Unidades Vendidas',
+                            data: data,
+                            backgroundColor: [
+                                '#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#E5E5E5', '#1A1A1A'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: { font: { family: 'Inter', size: 11 } }
+                            }
+                        }
+                    }
+                });
+            } catch(e) {
+                console.error("Error en analitica", e);
+            }
+        }
+
+        async function cargarMovimientos() {
+            try {
+                const res = await fetch('/api/ventas');
+                const ventas = await res.json();
+                const container = document.getElementById('movimientos-container');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (ventas.length === 0) {
+                    container.innerHTML = '<div style="font-size: 13px; color: #888;">No hay movimientos recientes.</div>';
+                    return;
+                }
+
+                ventas.forEach(v => {
+                    const fechaObj = new Date(v.fecha);
+                    const fechaStr = fechaObj.toLocaleString();
+                    const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+                    
+                    container.innerHTML += `
+                        <div style="display: flex; gap: 16px; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid #eee;">
+                            <div style="padding: 8px; background: #f0f0f0; border-radius: 50%;">
+                                <i data-lucide="arrow-right-left" style="width: 16px; color: #555;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 13px; margin-bottom: 4px;">
+                                    Se realizó un reporte de venta de la prenda <strong>${v.productoNombre}</strong> (SKU: ${v.productoId}). 
+                                    Se reportaron ${v.cantidad} unidades vendidas y ${v.devoluciones || 0} devoluciones. 
+                                    Se restaron <strong>${neto}</strong> piezas netas del inventario.
+                                </div>
+                                <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px;">
+                                    ${fechaStr} | TOTAL TRANSACCIÓN: $${v.total.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                lucide.createIcons();
+            } catch(e) {
+                console.error("Error cargando movimientos", e);
+            }
+        }
+
+        async function cargarDashboard() {
+            try {
+                if(inventarioGlobal.length === 0) await cargarInventario();
+                
+                const res = await fetch('/api/ventas');
+                const ventas = await res.json();
+                
+                let ingresosTotales = 0;
+                let unidadesVendidas = 0;
+                let totalDevoluciones = 0;
+                let ventasPorProducto = {};
+
+                ventas.forEach(v => {
+                    const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+                    ingresosTotales += v.total;
+                    unidadesVendidas += neto;
+                    totalDevoluciones += (v.devoluciones || 0);
+
+                    if(!ventasPorProducto[v.productoNombre]) {
+                        ventasPorProducto[v.productoNombre] = { unidades: 0, ingresos: 0, id: v.productoId };
+                    }
+                    ventasPorProducto[v.productoNombre].unidades += neto;
+                    ventasPorProducto[v.productoNombre].ingresos += v.total;
+                });
+
+                document.getElementById('dash-ingresos').innerText = '$' + ingresosTotales.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('dash-vendidas').innerText = unidadesVendidas;
+                
+                const totalGross = unidadesVendidas + totalDevoluciones;
+                const tasaDev = totalGross > 0 ? ((totalDevoluciones / totalGross) * 100).toFixed(1) : 0;
+                document.getElementById('dash-devoluciones').innerText = tasaDev + '%';
+
+                const arrProductos = Object.keys(ventasPorProducto).map(k => ({
+                    nombre: k,
+                    unidades: ventasPorProducto[k].unidades,
+                    ingresos: ventasPorProducto[k].ingresos,
+                    id: ventasPorProducto[k].id
+                }));
+                arrProductos.sort((a,b) => b.unidades - a.unidades);
+
+                const tbody = document.getElementById('dash-category-tbody');
+                if(tbody) {
+                    tbody.innerHTML = '';
+                    arrProductos.slice(0, 5).forEach(p => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 4px;">${p.nombre}</h3>
+                                        <p style="font-size: 11px; color: #888;">SKU: ${p.id}</p>
+                                    </div>
+                                </td>
+                                <td>${p.unidades}</td>
+                                <td><span style="font-weight: 600;">$${p.ingresos.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></td>
+                            </tr>
+                        `;
+                    });
+                    if(arrProductos.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #888; padding: 20px;">Sin ventas registradas</td></tr>';
+                    }
+                }
+
+                let stockSuficiente = 0;
+                inventarioGlobal.forEach(p => {
+                    if(p.stock_total > 10) stockSuficiente++;
+                });
+                const healthPercent = inventarioGlobal.length > 0 ? Math.round((stockSuficiente / inventarioGlobal.length) * 100) : 0;
+                const healthVal = document.getElementById('dash-health-value');
+                if(healthVal) healthVal.innerText = healthPercent + '%';
+
+            } catch(e) {
+                console.error("Error cargando dashboard", e);
+            }
+        }
+
         function navegar(seccion) {
             // Ocultar todas
             document.getElementById('dashboard-section').style.display = 'none';
@@ -967,15 +1315,48 @@
             document.getElementById('reports-section').style.display = 'none';
             document.getElementById('sales-section').style.display = 'none';
             document.getElementById('products-section').style.display = 'none';
+            document.getElementById('movimientos-section').style.display = 'none';
+            document.getElementById('analitica-section').style.display = 'none';
             
             // Mostrar seleccionada
             const targetSection = document.getElementById(seccion + '-section');
             if (targetSection) targetSection.style.display = 'block';
 
-            // Actualizar menú
+            if (seccion === 'sales') {
+                const selectProducto = document.getElementById('sales-producto');
+                if (selectProducto) {
+                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
+                    inventarioGlobal.forEach(p => {
+                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio||0).toFixed(2)}</option>`;
+                    });
+                }
+                cargarHistorialVentas();
+            }
+
+            if (seccion === 'dashboard') {
+                cargarDashboard();
+            }
+
+            if (seccion === 'movimientos') {
+                cargarMovimientos();
+            }
+
+            if (seccion === 'analitica') {
+                cargarAnalitica();
+            }
+
+            // Actualizar menú lateral
             document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
             const navItem = document.getElementById('nav-' + seccion);
             if (navItem) navItem.classList.add('active');
+
+            // Actualizar menú superior
+            document.querySelectorAll('.top-link').forEach(link => link.classList.remove('active'));
+            // Match based on section mapping (if applicable)
+            if(seccion === 'dashboard') document.querySelector('.top-nav a:nth-child(1)').classList.add('active');
+            if(seccion === 'inventory') document.querySelector('.top-nav a:nth-child(2)').classList.add('active');
+            if(seccion === 'movimientos') document.querySelector('.top-nav a:nth-child(3)').classList.add('active');
+            if(seccion === 'analitica') document.querySelector('.top-nav a:nth-child(4)').classList.add('active');
 
             // Resetear el formulario al salir del section de products
             if (seccion !== 'products') {
@@ -990,6 +1371,40 @@
                 renderizarTallasForm();
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar dashboard por defecto si es la pantalla activa
+            cargarDashboard();
+
+            const selectProducto = document.getElementById('sales-producto');
+            const inputCantidad = document.getElementById('sales-cantidad');
+            const inputDevoluciones = document.getElementById('sales-devoluciones');
+            const inputTotal = document.getElementById('sales-total');
+
+            function calcularTotalVenta() {
+                if(!selectProducto || !inputCantidad || !inputTotal) return;
+                const prodId = selectProducto.value;
+                const qty = parseInt(inputCantidad.value) || 0;
+                const dev = parseInt(inputDevoluciones ? inputDevoluciones.value : 0) || 0;
+                
+                if(prodId && qty > 0) {
+                    const prod = inventarioGlobal.find(p => p.id === prodId);
+                    if(prod) {
+                        const precio = prod.precio || 0;
+                        const neto = Math.max(0, qty - dev);
+                        inputTotal.value = (precio * neto).toFixed(2);
+                    } else {
+                        inputTotal.value = '0.00';
+                    }
+                } else {
+                    inputTotal.value = '0.00';
+                }
+            }
+
+            if(selectProducto) selectProducto.addEventListener('change', calcularTotalVenta);
+            if(inputCantidad) inputCantidad.addEventListener('input', calcularTotalVenta);
+            if(inputDevoluciones) inputDevoluciones.addEventListener('input', calcularTotalVenta);
+        });
     </script>
 </body>
 </html>
