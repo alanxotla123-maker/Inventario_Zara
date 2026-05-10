@@ -1,4 +1,65 @@
-const { readData, writeData, readVentas, writeVentas } = require('../config/database');
+const { readData, writeData, readVentas, writeVentas, readPedidos, writePedidos } = require('../config/database');
+
+exports.getPedidos = (req, res) => {
+    const pedidos = readPedidos();
+    res.json(pedidos);
+};
+
+exports.addPedido = (req, res) => {
+    const pedidos = readPedidos();
+    const nuevoPedido = {
+        ...req.body,
+        id: Date.now().toString(),
+        fechaRegistro: new Date().toISOString()
+    };
+    pedidos.unshift(nuevoPedido);
+    writePedidos(pedidos);
+    res.json({ success: true, id: nuevoPedido.id });
+};
+
+exports.recibirPedido = (req, res) => {
+    const { id } = req.params;
+    const pedidos = readPedidos();
+    const productos = readData();
+    const index = pedidos.findIndex(p => p.id === id);
+
+    if (index !== -1) {
+        const pedido = pedidos[index];
+        
+        // Actualizar stock de cada item en el pedido
+        pedido.items.forEach(item => {
+            const prodIndex = productos.findIndex(p => p.id === item.id);
+            if (prodIndex !== -1) {
+                const producto = productos[prodIndex];
+                
+                // Actualizar talla específica si existe
+                if (item.talla && producto.tallas) {
+                    const tallaIndex = producto.tallas.findIndex(t => t.talla === item.talla);
+                    if (tallaIndex !== -1) {
+                        producto.tallas[tallaIndex].stock += item.cantidad;
+                    } else {
+                        // Si la talla no existe, la creamos (opcional, dependiendo del flujo)
+                        producto.tallas.push({ talla: item.talla, stock: item.cantidad });
+                    }
+                }
+                
+                // Actualizar stock total
+                producto.stock_total = (producto.stock_total || 0) + item.cantidad;
+            }
+        });
+
+        // Eliminar pedido de la lista de pendientes (o marcarlo como completado)
+        // En este caso el frontend parece esperar que se elimine o recargue la lista
+        pedidos.splice(index, 1);
+        
+        writeData(productos);
+        writePedidos(pedidos);
+        
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+};
 
 exports.getInventory = (req, res) => {
     const productos = readData();
@@ -217,30 +278,57 @@ exports.addProduct = (req, res) => {
 };
 
 exports.sellProduct = (req, res) => {
-    const { id, talla, cantidad, devoluciones } = req.body;
-    const qtyVendidas = parseInt(cantidad) || 1;
-    const dev = parseInt(devoluciones) || 0;
-    const qty = Math.max(0, qtyVendidas - dev); // Cantidad neta
-
+    const items = Array.isArray(req.body) ? req.body : [req.body];
     const productos = readData();
-    const index = productos.findIndex(p => p.id === id);
+    const ventas = readVentas();
+    const resultados = [];
+    let errorOccurred = false;
 
-    if (index !== -1) {
-        const producto = productos[index];
-        let success = false;
+    // Validate all items first to ensure we have stock for everything (simple validation)
+    for (const item of items) {
+        const { id, talla, cantidad, devoluciones } = item;
+        const qtyVendidas = parseInt(cantidad) || 1;
+        const dev = parseInt(devoluciones) || 0;
+        const qty = Math.max(0, qtyVendidas - dev);
 
-        // If a specific size is provided, decrement that size
+        const prodIndex = productos.findIndex(p => p.id === id);
+        if (prodIndex === -1) {
+            errorOccurred = true;
+            return res.status(404).json({ error: `Producto con ID ${id} no encontrado` });
+        }
+
+        const producto = productos[prodIndex];
         if (talla && producto.tallas) {
             const tallaIndex = producto.tallas.findIndex(t => t.talla === talla);
-            if (tallaIndex !== -1 && producto.tallas[tallaIndex].stock >= qty) {
-                producto.tallas[tallaIndex].stock -= qty;
-                producto.stock_total -= qty;
-                success = true;
-            } else {
-                return res.status(400).json({ error: 'No hay stock suficiente de esa talla' });
+            if (tallaIndex === -1 || producto.tallas[tallaIndex].stock < qty) {
+                errorOccurred = true;
+                return res.status(400).json({ error: `No hay stock suficiente de ${producto.nombre} en talla ${talla}` });
             }
-        } else if (producto.stock_total >= qty) {
-            // Fallback for items without specific size selected but with stock
+        } else if (producto.stock_total < qty) {
+            errorOccurred = true;
+            return res.status(400).json({ error: `No hay stock suficiente de ${producto.nombre}` });
+        }
+    }
+
+    if (errorOccurred) return;
+
+    // Process sales
+    const saleGroupId = Date.now().toString();
+    
+    for (const item of items) {
+        const { id, talla, cantidad, devoluciones } = item;
+        const qtyVendidas = parseInt(cantidad) || 1;
+        const dev = parseInt(devoluciones) || 0;
+        const qty = Math.max(0, qtyVendidas - dev);
+
+        const producto = productos.find(p => p.id === id);
+        
+        // Update stock
+        if (talla && producto.tallas) {
+            const tallaIndex = producto.tallas.findIndex(t => t.talla === talla);
+            producto.tallas[tallaIndex].stock -= qty;
+            producto.stock_total -= qty;
+        } else {
             producto.stock_total -= qty;
             if (producto.tallas && producto.tallas.length > 0) {
                 let remainingQty = qty;
@@ -253,36 +341,29 @@ exports.sellProduct = (req, res) => {
                     }
                 }
             }
-            success = true;
-        } else {
-            return res.status(400).json({ error: 'No hay stock suficiente' });
         }
 
-        if (success) {
-            writeData(productos);
-
-            // Registrar Venta
-            const ventas = readVentas();
-            const precioVenta = producto.precio || 0;
-            const totalVenta = precioVenta * qty; // qty es la cantidad neta
-            ventas.unshift({
-                id: Date.now().toString(),
-                fecha: new Date().toISOString(),
-                productoId: producto.id,
-                productoNombre: producto.nombre,
-                cantidad: qtyVendidas,
-                devoluciones: dev,
-                cantidadNeta: qty,
-                precioUnitario: precioVenta,
-                total: totalVenta
-            });
-            writeVentas(ventas);
-
-            return res.json({ success: true });
-        }
-    } else {
-        res.status(404).json({ error: 'Producto no encontrado' });
+        // Record Sale
+        const precioVenta = producto.precio || 0;
+        const totalVenta = precioVenta * qty;
+        ventas.unshift({
+            id: saleGroupId + '-' + id,
+            saleGroupId: saleGroupId,
+            fecha: new Date().toISOString(),
+            productoId: producto.id,
+            productoNombre: producto.nombre,
+            cantidad: qtyVendidas,
+            devoluciones: dev,
+            cantidadNeta: qty,
+            precioUnitario: precioVenta,
+            total: totalVenta
+        });
     }
+
+    writeData(productos);
+    writeVentas(ventas);
+
+    return res.json({ success: true, saleGroupId });
 };
 
 exports.updateProduct = (req, res) => {

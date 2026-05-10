@@ -25,6 +25,11 @@ router.get('/clima', inventoryController.getWeatherPredictions);
 router.post('/devoluciones', inventoryController.processReturn);
 router.get('/heatmap', inventoryController.getHeatmap);
 
+// Rutas de Pedidos y Proveedores
+router.get('/pedidos', inventoryController.getPedidos);
+router.post('/nuevo-pedido', inventoryController.addPedido);
+router.post('/recibir-pedido/:id', inventoryController.recibirPedido);
+
 // Rutas de Carga
 router.post('/upload', upload.single('imagen'), uploadController.uploadImage);
 
