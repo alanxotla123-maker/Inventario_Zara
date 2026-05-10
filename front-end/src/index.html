@@ -459,7 +459,7 @@
                 <div id="pdf-filters-wrapper">
                     <!-- Single Filter Row Template -->
                     <div class="filter-container pdf-filter-row"
-                        style="display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 16px; margin-bottom: 16px; align-items: end; padding: 16px; background: #fff; border: 1px solid #eee;">
+                        style="display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; padding: 24px; background: #fcfcfc; border: 1px solid #eee;">
                         <div class="filter-group">
                             <label>Tipo de Producto</label>
                             <select class="r-tipo" onchange="actualizarModelosPDF(this)">
@@ -618,20 +618,36 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <label
-                                style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CARGA
-                                DE DATOS DETALLADA (CSV / EXCEL)</label>
-                            <div class="thumb-box upload-btn"
-                                style="width: 100%; aspect-ratio: auto; height: 160px; margin-top: 8px; border: 1px dashed #CCC;">
-                                <i data-lucide="file-up" style="width: 24px; margin-bottom: 12px; color: #999;"></i>
-                                <span style="font-size: 11px; color: #999;">ARRASTRA TUS ARCHIVOS AQUÍ O <strong
-                                        style="color: #000; cursor: pointer;">EXAMINAR</strong></span>
-                                <span
-                                    style="font-size: 9px; color: #BBB; margin-top: 8px; text-transform: none;">Archivos
-                                    permitidos: .csv, .xlsx (Max. 10MB)</span>
+                        <div class="form-row" style="display: flex; gap: 16px; align-items: flex-end;">
+                            <div style="flex: 1;">
+                                <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">AÑADIR PRODUCTO AL REPORTE</label>
+                                <button class="batch-action-btn" onclick="añadirProductoAVenta()" style="width: 100%; height: 45px; margin-top: 8px; background: #f0f0f0; border: 1px solid #ccc; font-weight: 600;">
+                                    + AÑADIR PRODUCTO
+                                </button>
                             </div>
                         </div>
+
+                        <div style="border-top: 1px solid #eee; padding-top: 24px;">
+                            <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600; margin-bottom: 16px; display: block;">PRODUCTOS EN ESTE REPORTE</label>
+                            <table class="inventory-table" style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Devol.</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-cart-tbody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: #999; padding: 20px;">No hay productos añadidos.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
 
                         <button class="btn-save"
                             style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;"
@@ -1455,37 +1471,62 @@
                     return;
                 }
 
-                ventas.slice(0, 10).forEach(v => {
-                    const fechaObj = new Date(v.fecha);
+                // Agrupar por saleGroupId o fecha si no existe
+                const grupos = {};
+                ventas.forEach(v => {
+                    const key = v.saleGroupId || v.id;
+                    if (!grupos[key]) {
+                        grupos[key] = {
+                            id: key,
+                            isGroup: !!v.saleGroupId,
+                            fecha: v.fecha,
+                            items: [],
+                            total: 0
+                        };
+                    }
+                    grupos[key].items.push(v);
+                    grupos[key].total += v.total;
+                });
+
+                const listaGrupos = Object.values(grupos).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                listaGrupos.slice(0, 10).forEach(g => {
+                    const fechaObj = new Date(g.fecha);
                     const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                     const el = document.createElement('div');
+                    el.className = 'history-item';
                     el.style.display = 'flex';
                     el.style.justifyContent = 'space-between';
                     el.style.alignItems = 'center';
+                    el.style.padding = '16px 0';
+                    el.style.borderBottom = '1px solid #EEE';
+
+                    let itemsHtml = '';
+                    if (g.items.length === 1) {
+                        itemsHtml = `<div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${g.items[0].productoNombre} (x${g.items[0].cantidad})</div>
+                                     <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${g.items[0].productoId}</div>`;
+                    } else {
+                        itemsHtml = `<div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">REPORTE MULTI-PRODUCTO (${g.items.length} ítems)</div>
+                                     <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">${g.items.map(i => i.productoNombre).join(', ').substring(0, 50)}...</div>`;
+                    }
+
                     el.innerHTML = `
                         <div style="flex: 1;">
-                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${v.productoNombre} (x${v.cantidad})</div>
-                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${v.productoId}</div>
+                            ${itemsHtml}
                         </div>
                         <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
                             <div>
                                 <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">${fechaStr}</div>
-                                <div style="font-size: 14px; font-weight: 600;">$${v.total.toFixed(2)}</div>
+                                <div style="font-size: 14px; font-weight: 600;">$${g.total.toFixed(2)}</div>
                             </div>
-                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${v.id}')" title="Descargar PDF"></i>
+                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${g.id}')" title="Descargar PDF"></i>
                         </div>
                     `;
                     container.appendChild(el);
-
-                    const divLine = document.createElement('div');
-                    divLine.style.height = '1px';
-                    divLine.style.background = '#EEE';
-                    divLine.style.width = '100%';
-                    container.appendChild(divLine);
                 });
-                // Guardar globalmente para el PDF
-                window.ventasGlobales = ventas;
+                // Guardar grupos para el PDF
+                window.ventasGrupos = grupos;
                 lucide.createIcons();
             } catch (e) {
                 console.error("Error cargando ventas", e);
@@ -1493,42 +1534,48 @@
         }
 
         function descargarVentaPDF(id) {
-            const venta = (window.ventasGlobales || []).find(v => v.id === id);
-            if (!venta) return;
+            const grupo = window.ventasGrupos ? window.ventasGrupos[id] : null;
+            if (!grupo) return;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
             doc.setFontSize(18);
-            doc.text("THE EDITORIAL INVENTORY - Ticket de Venta", 14, 22);
+            doc.text("THE EDITORIAL INVENTORY - Reporte de Venta", 14, 22);
             doc.setFontSize(11);
             doc.setTextColor(100);
-            const fechaObj = new Date(venta.fecha);
+            const fechaObj = new Date(grupo.fecha);
             doc.text("Fecha: " + fechaObj.toLocaleString(), 14, 30);
-            doc.text("ID Transacción: " + venta.id, 14, 36);
+            doc.text("ID Operación: " + grupo.id, 14, 36);
+
+            const tableRows = grupo.items.map(v => [
+                v.productoNombre,
+                v.productoId,
+                v.cantidad,
+                v.devoluciones || 0,
+                v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad,
+                "$" + v.precioUnitario.toFixed(2),
+                "$" + v.total.toFixed(2)
+            ]);
 
             doc.autoTable({
                 head: [["Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
-                body: [
-                    [
-                        venta.productoNombre,
-                        venta.productoId,
-                        venta.cantidad,
-                        venta.devoluciones || 0,
-                        venta.cantidadNeta !== undefined ? venta.cantidadNeta : venta.cantidad,
-                        "$" + venta.precioUnitario.toFixed(2),
-                        "$" + venta.total.toFixed(2)
-                    ]
-                ],
+                body: tableRows,
                 startY: 45,
                 theme: 'grid',
                 headStyles: { fillColor: [0, 0, 0] },
+                foot: [[
+                    { content: 'TOTAL REPORTE', colSpan: 6, styles: { halign: 'right', fontStyle: 'bold' } },
+                    { content: "$" + grupo.total.toFixed(2), styles: { fontStyle: 'bold' } }
+                ]]
             });
 
-            doc.save(`Ticket_Venta_${venta.id}.pdf`);
+            doc.save(`Reporte_Venta_${grupo.id}.pdf`);
         }
 
-        async function registrarVentaEnLote() {
+        let productosVentaActual = [];
+
+        function añadirProductoAVenta() {
             const selectProducto = document.getElementById('sales-producto');
             const inputCantidad = document.getElementById('sales-cantidad');
             const inputDevoluciones = document.getElementById('sales-devoluciones');
@@ -1542,7 +1589,7 @@
                 return;
             }
             if (!cantidad || cantidad <= 0) {
-                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida a vender.", true);
+                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida.", true);
                 return;
             }
             if (devoluciones > cantidad) {
@@ -1550,27 +1597,91 @@
                 return;
             }
 
+            const p = inventarioGlobal.find(item => item.id === id);
+            const precio = p.precio || 0;
+            const total = precio * (cantidad - devoluciones);
+
+            productosVentaActual.push({
+                id,
+                nombre: p.nombre,
+                cantidad,
+                devoluciones,
+                precio,
+                total
+            });
+
+            renderizarCarritoVentas();
+
+            // Limpiar inputs parciales
+            inputCantidad.value = '';
+            inputDevoluciones.value = '';
+            document.getElementById('sales-total').value = '0.00';
+        }
+
+        function renderizarCarritoVentas() {
+            const tbody = document.getElementById('sales-cart-tbody');
+            const totalInput = document.getElementById('sales-total');
+            
+            if (productosVentaActual.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 20px;">No hay productos añadidos.</td></tr>';
+                totalInput.value = '0.00';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            let granTotal = 0;
+
+            productosVentaActual.forEach((item, index) => {
+                granTotal += item.total;
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.nombre}</strong><br><small>${item.id}</small></td>
+                        <td style="text-align: center;">${item.cantidad}</td>
+                        <td style="text-align: center;">${item.devoluciones}</td>
+                        <td style="text-align: right; font-weight: 600;">$${item.total.toFixed(2)}</td>
+                        <td style="text-align: center;">
+                            <i data-lucide="trash-2" style="width: 14px; color: var(--accent-red); cursor: pointer;" onclick="eliminarDelCarrito(${index})"></i>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            totalInput.value = granTotal.toFixed(2);
+            lucide.createIcons();
+        }
+
+        function eliminarDelCarrito(index) {
+            productosVentaActual.splice(index, 1);
+            renderizarCarritoVentas();
+        }
+
+        async function registrarVentaEnLote() {
+            if (productosVentaActual.length === 0) {
+                mostrarNotificacionEditorial("No hay productos añadidos al reporte.", true);
+                return;
+            }
+
             try {
                 const res = await fetch('/api/vender', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, cantidad, devoluciones })
+                    body: JSON.stringify(productosVentaActual)
                 });
 
                 if (res.ok) {
-                    const neto = cantidad - devoluciones;
-                    mostrarNotificacionEditorial(`¡Reporte registrado! Venta neta: ${neto} unidades.`);
+                    mostrarNotificacionEditorial(`¡Reporte de ventas registrado con éxito!`);
                     await cargarInventario();
                     await cargarHistorialVentas();
 
-                    // Actualizar dropdown
+                    productosVentaActual = [];
+                    renderizarCarritoVentas();
+                    
+                    // Resetear dropdown de productos por si acaso cambió el stock
+                    const selectProducto = document.getElementById('sales-producto');
                     selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
                     inventarioGlobal.forEach(p => {
                         selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
                     });
-                    inputCantidad.value = '';
-                    inputDevoluciones.value = '';
-                    document.getElementById('sales-total').value = '0.00';
                 } else {
                     const err = await res.json();
                     mostrarNotificacionEditorial("Error al registrar venta: " + err.error, true);
@@ -2022,24 +2133,50 @@
                     return;
                 }
 
+                // Agrupar por saleGroupId o fecha
+                const grupos = {};
                 ventas.forEach(v => {
-                    const fechaObj = new Date(v.fecha);
+                    const key = v.saleGroupId || v.id;
+                    if (!grupos[key]) {
+                        grupos[key] = {
+                            id: key,
+                            fecha: v.fecha,
+                            items: [],
+                            total: 0
+                        };
+                    }
+                    grupos[key].items.push(v);
+                    grupos[key].total += v.total;
+                });
+
+                const listaGrupos = Object.values(grupos).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                listaGrupos.forEach(g => {
+                    const fechaObj = new Date(g.fecha);
                     const fechaStr = fechaObj.toLocaleString();
-                    const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+                    
+                    let detalleHtml = '';
+                    if (g.items.length === 1) {
+                        const v = g.items[0];
+                        const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+                        detalleHtml = `Reporte de venta: <strong>${v.productoNombre}</strong>. Se reportaron ${v.cantidad} unidades y ${v.devoluciones || 0} devoluciones. Neto: <strong>${neto}</strong> piezas.`;
+                    } else {
+                        detalleHtml = `Reporte multi-producto: <strong>${g.items.length} prendas registradas</strong>. Total de la operación: $${g.total.toFixed(2)}.`;
+                        const subItems = g.items.map(v => `<li>${v.productoNombre} (x${v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad})</li>`).join('');
+                        detalleHtml += `<ul style="margin-top: 8px; font-size: 11px; color: #666; padding-left: 20px;">${subItems}</ul>`;
+                    }
 
                     container.innerHTML += `
-                        <div style="display: flex; gap: 16px; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid #eee;">
-                            <div style="padding: 8px; background: #f0f0f0; border-radius: 50%;">
-                                <i data-lucide="arrow-right-left" style="width: 16px; color: #555;"></i>
+                        <div style="display: flex; gap: 16px; align-items: flex-start; padding-bottom: 24px; border-bottom: 1px solid #eee; margin-bottom: 16px;">
+                            <div style="padding: 10px; background: #000; color: #FFF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="package-check" style="width: 16px;"></i>
                             </div>
-                            <div>
-                                <div style="font-size: 13px; margin-bottom: 4px;">
-                                    Se realizó un reporte de venta de la prenda <strong>${v.productoNombre}</strong> (SKU: ${v.productoId}). 
-                                    Se reportaron ${v.cantidad} unidades vendidas y ${v.devoluciones || 0} devoluciones. 
-                                    Se restaron <strong>${neto}</strong> piezas netas del inventario.
+                            <div style="flex: 1;">
+                                <div style="font-size: 14px; margin-bottom: 8px; line-height: 1.5; color: #333;">
+                                    ${detalleHtml}
                                 </div>
-                                <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px;">
-                                    ${fechaStr} | TOTAL TRANSACCIÓN: $${v.total.toFixed(2)}
+                                <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                                    ${fechaStr} | ID: ${g.id}
                                 </div>
                             </div>
                         </div>
@@ -2302,6 +2439,8 @@
             if (targetSection) targetSection.style.display = 'block';
 
             if (seccion === 'sales') {
+                productosVentaActual = [];
+                renderizarCarritoVentas();
                 const selectProducto = document.getElementById('sales-producto');
                 if (selectProducto) {
                     selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
