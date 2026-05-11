@@ -12,6 +12,7 @@ router.post('/login', authController.login);
 router.get('/inventario', inventoryController.getInventory);
 router.post('/nuevo-producto', inventoryController.addProduct);
 router.post('/vender', inventoryController.sellProduct);
+router.post('/vender-lote', inventoryController.sellProductBatch);
 router.put('/inventario/:id', inventoryController.updateProduct);
 router.delete('/inventario/:id', inventoryController.deleteProduct);
 

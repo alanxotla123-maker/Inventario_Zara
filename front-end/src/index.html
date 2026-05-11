@@ -252,8 +252,11 @@
                 <h1 class="editorial-title">Tendencias de Temporada</h1>
 
                 <div style="margin-bottom: 40px; padding: 24px; background: #f9f9f9; border: 1px solid #eee;">
-                    <label style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600; display: block; margin-bottom: 8px;">CONFIGURAR TEMPORADA</label>
-                    <select id="season-selector" class="editorial-input" style="width: 300px;" onchange="cargarTendencias()">
+                    <label
+                        style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600; display: block; margin-bottom: 8px;">CONFIGURAR
+                        TEMPORADA</label>
+                    <select id="season-selector" class="editorial-input" style="width: 300px;"
+                        onchange="cargarTendencias()">
                         <option value="invierno">Invierno</option>
                         <option value="primavera">Primavera</option>
                         <option value="verano">Verano</option>
@@ -261,11 +264,14 @@
                     </select>
                 </div>
 
-                <div id="tendencias-recomendacion" style="margin-bottom: 40px; padding: 32px; background: #000; color: #fff; text-align: center;">
-                    <p style="font-family: var(--font-serif); font-size: 24px; font-style: italic; margin-bottom: 0;">Cargando recomendaciones...</p>
+                <div id="tendencias-recomendacion"
+                    style="margin-bottom: 40px; padding: 32px; background: #000; color: #fff; text-align: center;">
+                    <p style="font-family: var(--font-serif); font-size: 24px; font-style: italic; margin-bottom: 0;">
+                        Cargando recomendaciones...</p>
                 </div>
 
-                <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Productos Más Vendidos y Predicción</h2>
+                <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Productos Más Vendidos
+                    y Predicción</h2>
                 <table class="inventory-table">
                     <thead>
                         <tr>
@@ -276,12 +282,15 @@
                         </tr>
                     </thead>
                     <tbody id="tendencias-tbody">
-                        <tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">Cargando...</td></tr>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #888; padding: 20px;">Cargando...</td>
+                        </tr>
                     </tbody>
                 </table>
 
                 <div style="margin-top: 48px; border-top: 1px solid #eee; padding-top: 40px;">
-                    <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Análisis Sell-Through Automático</h2>
+                    <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Análisis
+                        Sell-Through Automático</h2>
                     <table class="inventory-table">
                         <thead>
                             <tr>
@@ -291,20 +300,24 @@
                             </tr>
                         </thead>
                         <tbody id="sell-through-tbody">
-                            <tr><td colspan="3" style="text-align: center; color: #888;">Cargando análisis...</td></tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: #888;">Cargando análisis...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
                     <div>
-                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Predicción por Clima</h2>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Predicción por
+                            Clima</h2>
                         <div id="clima-container" style="background: #000; color: #fff; padding: 32px;">
                             <p style="font-size: 16px; margin-bottom: 0;">Cargando clima...</p>
                         </div>
                     </div>
                     <div>
-                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Mapas de Calor (Rotación)</h2>
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; margin-bottom: 24px;">Mapas de Calor
+                            (Rotación)</h2>
                         <div id="heatmap-container" style="background: #f9f9f9; padding: 24px; border: 1px solid #eee;">
                             <p style="font-size: 14px; margin-bottom: 0; color: #888;">Cargando mapa...</p>
                         </div>
@@ -555,7 +568,7 @@
                     <!-- LEFT COLUMN -->
                     <div style="display: flex; flex-direction: column; gap: 40px;">
 
-                        <div class="form-row two-cols">
+                        <div class="form-row">
                             <div>
                                 <label
                                     style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">TIENDA
@@ -567,15 +580,6 @@
                                     <option>Fifth Avenue, NY</option>
                                 </select>
                             </div>
-                            <div>
-                                <label
-                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">PRODUCTO
-                                    VENDIDO</label>
-                                <select id="sales-producto" class="editorial-input"
-                                    style="color: #000; padding: 12px 0;">
-                                    <option value="">Seleccionar producto...</option>
-                                </select>
-                            </div>
                         </div>
 
                         <div class="form-row two-cols">
@@ -583,54 +587,68 @@
                                 <label
                                     style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">FECHA
                                     DE INICIO</label>
-                                <input type="date" class="editorial-input"
-                                    style="color: #000; padding: 12px 0; font-size: 13px;">
+                                <input type="date" id="sales-fecha-inicio" class="editorial-input"
+                                    style="color: #000; padding: 12px 0; font-size: 13px;"
+                                    onchange="actualizarFechaDisplay()">
                             </div>
                             <div>
                                 <label
                                     style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">FECHA
-                                    DE FIN</label>
-                                <input type="date" class="editorial-input"
-                                    style="color: #000; padding: 12px 0; font-size: 13px;">
+                                    DEL REPORTE</label>
+                                <input type="date" id="sales-fecha-reporte" class="editorial-input"
+                                    style="color: #000; padding: 12px 0; font-size: 13px;"
+                                    onchange="actualizarFechaDisplay()">
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
-                            <div>
-                                <label
-                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">VENTAS
-                                    TOTALES ($)</label>
-                                <input type="text" id="sales-total" class="editorial-input" placeholder="0.00" readonly
-                                    style="color: #000; padding: 12px 0; background: #f9f9f9; cursor: not-allowed; border: 1px solid #eee;">
+                        <div style="border-top: 1px solid #eee; padding-top: 24px;" id="sales-rows-wrapper">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
+                                    Productos en el Reporte</h4>
+                                <span id="sales-fecha-display"
+                                    style="font-size: 11px; color: #888; font-style: italic;"></span>
                             </div>
-                            <div>
-                                <label
-                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">UNIDADES
-                                    VENDIDAS</label>
-                                <input type="number" id="sales-cantidad" class="editorial-input" placeholder="0"
-                                    style="color: #000; padding: 12px 0;" min="1">
+                            <div id="sales-dynamic-rows" style="display: flex; flex-direction: column; gap: 16px;">
+                                <!-- Template Row -->
+                                <div class="sales-row"
+                                    style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 16px; align-items: end; background: #f9f9f9; padding: 16px; border: 1px solid #eee;">
+                                    <div>
+                                        <label
+                                            style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">PRODUCTO</label>
+                                        <select class="editorial-input s-prod" style="color: #000; padding: 12px 0;"
+                                            onchange="calcularTotalLote()"></select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">VENDIDOS</label>
+                                        <input type="number" class="editorial-input s-cant" placeholder="0" min="1"
+                                            style="color: #000; padding: 12px 0;" oninput="calcularTotalLote()">
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">DEVOLUC.</label>
+                                        <input type="number" class="editorial-input s-dev" placeholder="0" min="0"
+                                            value="0" style="color: #000; padding: 12px 0;"
+                                            oninput="calcularTotalLote()">
+                                    </div>
+                                    <div>
+                                        <button class="btn-discard"
+                                            style="height: 42px; padding: 0 16px; display: none;"
+                                            onclick="eliminarFilaVenta(this)">X</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label
-                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">DEVOLUCIONES</label>
-                                <input type="number" id="sales-devoluciones" class="editorial-input" placeholder="0"
-                                    style="color: #000; padding: 12px 0;" min="0">
-                            </div>
+
+                            <button class="batch-action-btn"
+                                style="margin-top: 16px; width: 100%; background: #fff; color: #000; border: 1px dashed #ccc;"
+                                onclick="agregarFilaVenta()">
+                                + AÑADIR OTRO PRODUCTO
+                            </button>
                         </div>
 
-                        <div class="form-row">
-                            <label
-                                style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CARGA
-                                DE DATOS DETALLADA (CSV / EXCEL)</label>
-                            <div class="thumb-box upload-btn"
-                                style="width: 100%; aspect-ratio: auto; height: 160px; margin-top: 8px; border: 1px dashed #CCC;">
-                                <i data-lucide="file-up" style="width: 24px; margin-bottom: 12px; color: #999;"></i>
-                                <span style="font-size: 11px; color: #999;">ARRASTRA TUS ARCHIVOS AQUÍ O <strong
-                                        style="color: #000; cursor: pointer;">EXAMINAR</strong></span>
-                                <span
-                                    style="font-size: 9px; color: #BBB; margin-top: 8px; text-transform: none;">Archivos
-                                    permitidos: .csv, .xlsx (Max. 10MB)</span>
-                            </div>
+                        <div style="font-size: 18px; font-weight: bold; text-align: right; margin-top: 24px;">
+                            Total del Reporte: <span id="sales-total-reporte">$0.00</span>
                         </div>
 
                         <button class="btn-save"
@@ -798,9 +816,11 @@
             </section>
 
             <!-- RETURN MODAL -->
-            <div id="return-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+            <div id="return-modal"
+                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
                 <div style="background: #fff; padding: 32px; width: 400px; max-width: 90%;">
-                    <h2 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Procesar Devolución</h2>
+                    <h2 style="font-family: var(--font-serif); font-size: 24px; margin-bottom: 16px;">Procesar
+                        Devolución</h2>
                     <form onsubmit="event.preventDefault(); enviarDevolucion();">
                         <input type="hidden" id="ret-id">
                         <div class="form-row">
@@ -813,7 +833,8 @@
                         </div>
                         <div class="form-row">
                             <label>MOTIVO</label>
-                            <input type="text" id="ret-motivo" class="editorial-input" placeholder="Ej: Talla incorrecta" required>
+                            <input type="text" id="ret-motivo" class="editorial-input"
+                                placeholder="Ej: Talla incorrecta" required>
                         </div>
                         <div class="form-row">
                             <label>ESTADO DEL PRODUCTO</label>
@@ -822,8 +843,10 @@
                                 <option value="merma">Tarado / Dañado (Merma)</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;">PROCESAR DEVOLUCIÓN</button>
-                        <button type="button" class="btn-discard" style="width: 100%; margin-top: 8px;" onclick="cerrarModalDevolucion()">CANCELAR</button>
+                        <button type="submit" class="btn-save" style="width: 100%; margin-top: 16px;">PROCESAR
+                            DEVOLUCIÓN</button>
+                        <button type="button" class="btn-discard" style="width: 100%; margin-top: 8px;"
+                            onclick="cerrarModalDevolucion()">CANCELAR</button>
                     </form>
                 </div>
             </div>
@@ -898,6 +921,7 @@
                 renderizarInventario(inventarioGlobal);
                 renderizarDashboardAlertas();
                 actualizarModelosPDF();
+                actualizarDropdownsVentas();
             } catch (error) {
                 console.error("Error cargando el inventario:", error);
             }
@@ -1455,9 +1479,26 @@
                     return;
                 }
 
-                ventas.slice(0, 10).forEach(v => {
-                    const fechaObj = new Date(v.fecha);
+                const batches = {};
+                ventas.forEach(v => {
+                    const groupKey = v.batchId || v.id;
+                    if (!batches[groupKey]) {
+                        batches[groupKey] = { items: [], total: 0, fecha: v.fecha };
+                    }
+                    batches[groupKey].items.push(v);
+                    batches[groupKey].total += v.total;
+                });
+
+                const sortedBatches = Object.entries(batches)
+                    .sort((a, b) => new Date(b[1].fecha) - new Date(a[1].fecha))
+                    .slice(0, 10);
+
+                sortedBatches.forEach(([batchId, batchData]) => {
+                    const fechaObj = new Date(batchData.fecha);
                     const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const numItems = batchData.items.length;
+                    const title = numItems > 1 ? `Reporte Múltiple (${numItems} productos)` : `${batchData.items[0].productoNombre} (x${batchData.items[0].cantidad})`;
+                    const subtitle = (numItems > 1 ? `Lote: ${batchId}` : `SKU: ${batchData.items[0].productoId}`) + ` — ${fechaStr}`;
 
                     const el = document.createElement('div');
                     el.style.display = 'flex';
@@ -1465,15 +1506,15 @@
                     el.style.alignItems = 'center';
                     el.innerHTML = `
                         <div style="flex: 1;">
-                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${v.productoNombre} (x${v.cantidad})</div>
-                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${v.productoId}</div>
+                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${title}</div>
+                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">${subtitle}</div>
                         </div>
                         <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
                             <div>
                                 <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">${fechaStr}</div>
-                                <div style="font-size: 14px; font-weight: 600;">$${v.total.toFixed(2)}</div>
+                                <div style="font-size: 14px; font-weight: 600;">$${batchData.total.toFixed(2)}</div>
                             </div>
-                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${v.id}')" title="Descargar PDF"></i>
+                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${batchId}')" title="Descargar PDF"></i>
                         </div>
                     `;
                     container.appendChild(el);
@@ -1484,96 +1525,166 @@
                     divLine.style.width = '100%';
                     container.appendChild(divLine);
                 });
-                // Guardar globalmente para el PDF
+
                 window.ventasGlobales = ventas;
+                window.batchesVentasGlobales = batches;
                 lucide.createIcons();
             } catch (e) {
                 console.error("Error cargando ventas", e);
             }
         }
 
-        function descargarVentaPDF(id) {
-            const venta = (window.ventasGlobales || []).find(v => v.id === id);
-            if (!venta) return;
+        function descargarVentaPDF(batchId) {
+            const batch = window.batchesVentasGlobales && window.batchesVentasGlobales[batchId];
+            if (!batch) return;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+            const fechaObj = new Date(batch.fecha);
 
             doc.setFontSize(18);
             doc.text("THE EDITORIAL INVENTORY - Ticket de Venta", 14, 22);
             doc.setFontSize(11);
             doc.setTextColor(100);
-            const fechaObj = new Date(venta.fecha);
             doc.text("Fecha: " + fechaObj.toLocaleString(), 14, 30);
-            doc.text("ID Transacción: " + venta.id, 14, 36);
+            doc.text("ID Transacción: " + batchId, 14, 36);
+
+            const bodyRows = batch.items.map(v => {
+                const fItem = new Date(v.fecha);
+                const fStr = fItem.toLocaleDateString();
+                return [
+                    fStr,
+                    v.productoNombre,
+                    v.productoId,
+                    v.cantidad.toString(),
+                    v.devoluciones ? v.devoluciones.toString() : "0",
+                    v.cantidadNeta !== undefined ? v.cantidadNeta.toString() : v.cantidad.toString(),
+                    "$" + v.precioUnitario.toFixed(2),
+                    "$" + v.total.toFixed(2)
+                ];
+            });
 
             doc.autoTable({
-                head: [["Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
-                body: [
-                    [
-                        venta.productoNombre,
-                        venta.productoId,
-                        venta.cantidad,
-                        venta.devoluciones || 0,
-                        venta.cantidadNeta !== undefined ? venta.cantidadNeta : venta.cantidad,
-                        "$" + venta.precioUnitario.toFixed(2),
-                        "$" + venta.total.toFixed(2)
-                    ]
-                ],
+                head: [["Fecha", "Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
+                body: bodyRows,
                 startY: 45,
                 theme: 'grid',
                 headStyles: { fillColor: [0, 0, 0] },
+                foot: [['', '', '', '', '', '', 'Gran Total:', '$' + batch.total.toFixed(2)]],
+                footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' }
             });
 
-            doc.save(`Ticket_Venta_${venta.id}.pdf`);
+            doc.save(`Ticket_Venta_${batchId}.pdf`);
+        }
+
+        function actualizarFechaDisplay() {
+            const inicio = document.getElementById('sales-fecha-inicio').value;
+            const reporte = document.getElementById('sales-fecha-reporte').value;
+            const span = document.getElementById('sales-fecha-display');
+            if (inicio && reporte) {
+                span.innerText = `${inicio}  →  ${reporte}`;
+            } else if (reporte) {
+                span.innerText = `Fecha: ${reporte}`;
+            } else if (inicio) {
+                span.innerText = `Desde: ${inicio}`;
+            } else {
+                span.innerText = '';
+            }
+        }
+
+        function agregarFilaVenta() {
+            const container = document.getElementById('sales-dynamic-rows');
+            const newRow = container.children[0].cloneNode(true);
+            newRow.querySelector('.s-prod').value = '';
+            newRow.querySelector('.s-cant').value = '';
+            newRow.querySelector('.s-dev').value = '0';
+            newRow.querySelector('.btn-discard').style.display = 'block';
+            container.appendChild(newRow);
+            calcularTotalLote();
+        }
+
+        function eliminarFilaVenta(btn) {
+            btn.closest('.sales-row').remove();
+            calcularTotalLote();
+        }
+
+        function calcularTotalLote() {
+            const rows = document.querySelectorAll('.sales-row');
+            let granTotal = 0;
+            rows.forEach(row => {
+                const id = row.querySelector('.s-prod').value;
+                const cant = parseInt(row.querySelector('.s-cant').value) || 0;
+                const dev = parseInt(row.querySelector('.s-dev').value) || 0;
+                if (id && cant > 0) {
+                    const prod = inventarioGlobal.find(p => p.id === id);
+                    if (prod) {
+                        const neto = cant - dev;
+                        granTotal += neto * (prod.precio || 0);
+                    }
+                }
+            });
+            document.getElementById('sales-total-reporte').innerText = `$${granTotal.toFixed(2)}`;
         }
 
         async function registrarVentaEnLote() {
-            const selectProducto = document.getElementById('sales-producto');
-            const inputCantidad = document.getElementById('sales-cantidad');
-            const inputDevoluciones = document.getElementById('sales-devoluciones');
+            const rows = document.querySelectorAll('.sales-row');
+            const items = [];
 
-            const id = selectProducto.value;
-            const cantidad = parseInt(inputCantidad.value);
-            const devoluciones = parseInt(inputDevoluciones.value) || 0;
+            let error = null;
+            rows.forEach(row => {
+                const id = row.querySelector('.s-prod').value;
+                const cant = parseInt(row.querySelector('.s-cant').value) || 0;
+                const dev = parseInt(row.querySelector('.s-dev').value) || 0;
 
-            if (!id) {
-                mostrarNotificacionEditorial("Por favor selecciona un producto.", true);
+                if (id) {
+                    if (cant <= 0) {
+                        error = "Todas las filas con producto seleccionado deben tener cantidad mayor a 0.";
+                    }
+                    if (dev > cant) {
+                        error = "Las devoluciones no pueden superar la cantidad vendida.";
+                    }
+                    items.push({ id, cantidad: cant, devoluciones: dev });
+                }
+            });
+
+            if (error) {
+                mostrarNotificacionEditorial(error, true);
                 return;
             }
-            if (!cantidad || cantidad <= 0) {
-                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida a vender.", true);
+
+            if (items.length === 0) {
+                mostrarNotificacionEditorial("Añade al menos un producto válido al reporte.", true);
                 return;
             }
-            if (devoluciones > cantidad) {
-                mostrarNotificacionEditorial("Las devoluciones no pueden superar las unidades vendidas.", true);
-                return;
-            }
+
+            mostrarNotificacionEditorial("Procesando reporte de ventas...");
 
             try {
-                const res = await fetch('/api/vender', {
+                const res = await fetch('/api/vender-lote', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, cantidad, devoluciones })
+                    body: JSON.stringify({ items })
                 });
 
                 if (res.ok) {
-                    const neto = cantidad - devoluciones;
-                    mostrarNotificacionEditorial(`¡Reporte registrado! Venta neta: ${neto} unidades.`);
+                    mostrarNotificacionEditorial("¡Reporte de ventas registrado correctamente!");
+
+                    // Limpiar filas
+                    const container = document.getElementById('sales-dynamic-rows');
+                    const firstRow = container.children[0];
+                    container.innerHTML = '';
+                    container.appendChild(firstRow);
+                    firstRow.querySelector('.s-prod').value = '';
+                    firstRow.querySelector('.s-cant').value = '';
+                    firstRow.querySelector('.s-dev').value = '0';
+                    firstRow.querySelector('.btn-discard').style.display = 'none';
+                    calcularTotalLote();
+
                     await cargarInventario();
                     await cargarHistorialVentas();
-
-                    // Actualizar dropdown
-                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
-                    inventarioGlobal.forEach(p => {
-                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
-                    });
-                    inputCantidad.value = '';
-                    inputDevoluciones.value = '';
-                    document.getElementById('sales-total').value = '0.00';
                 } else {
                     const err = await res.json();
-                    mostrarNotificacionEditorial("Error al registrar venta: " + err.error, true);
+                    mostrarNotificacionEditorial("Error: " + err.error, true);
                 }
             } catch (error) {
                 console.error("Error:", error);
@@ -1614,6 +1725,17 @@
 
             nombresUnicos.forEach(nombre => {
                 modeloSelect.innerHTML += `<option value="${nombre}">${nombre}</option>`;
+            });
+        }
+
+        function actualizarDropdownsVentas() {
+            const optionsHTML = '<option value="">Seleccionar producto...</option>' +
+                inventarioGlobal.map(p => `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`).join('');
+
+            document.querySelectorAll('.s-prod').forEach(select => {
+                const currentVal = select.value;
+                select.innerHTML = optionsHTML;
+                select.value = currentVal;
             });
         }
 
@@ -2131,7 +2253,7 @@
                 const temporada = document.getElementById('season-selector').value || 'invierno';
                 const res = await fetch('/api/tendencias?temporada=' + temporada);
                 const data = await res.json();
-                
+
                 const recContainer = document.getElementById('tendencias-recomendacion');
                 if (recContainer) {
                     recContainer.innerHTML = `<p style="font-family: var(--font-serif); font-size: 24px; font-style: italic; margin-bottom: 0;">${data.recomendacion}</p>`;
@@ -2169,7 +2291,7 @@
                         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #888; padding: 20px;">No hay datos de ventas para mostrar.</td></tr>';
                     }
                 }
-                
+
 
                 // Fetch other intelligence components
                 cargarInteligenciaExtra();
@@ -2296,19 +2418,14 @@
             document.getElementById('products-section').style.display = 'none';
             document.getElementById('movimientos-section').style.display = 'none';
             document.getElementById('analitica-section').style.display = 'none';
+            document.getElementById('suppliers-section').style.display = 'none';
 
             // Mostrar seleccionada
             const targetSection = document.getElementById(seccion + '-section');
             if (targetSection) targetSection.style.display = 'block';
 
             if (seccion === 'sales') {
-                const selectProducto = document.getElementById('sales-producto');
-                if (selectProducto) {
-                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
-                    inventarioGlobal.forEach(p => {
-                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
-                    });
-                }
+                actualizarDropdownsVentas();
                 cargarHistorialVentas();
             }
 

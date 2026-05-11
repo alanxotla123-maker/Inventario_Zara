@@ -7,11 +7,11 @@
     "demanda": "high",
     "temporada": "FW24",
     "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 4193,
+    "stock_total": 4161,
     "tallas": [
       {
         "talla": "S",
-        "stock": 959
+        "stock": 927
       },
       {
         "talla": "M",
@@ -32,7 +32,7 @@
     "demanda": "mid",
     "temporada": "Continua",
     "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 26,
+    "stock_total": 16,
     "tallas": [
       {
         "talla": "S",
@@ -40,7 +40,7 @@
       },
       {
         "talla": "M",
-        "stock": 12
+        "stock": 2
       },
       {
         "talla": "L",
@@ -57,7 +57,7 @@
     "demanda": "high",
     "temporada": "Primavera",
     "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 139,
+    "stock_total": 134,
     "tallas": [
       {
         "talla": "36",
@@ -99,11 +99,11 @@
     "demanda": "mid",
     "temporada": "Otoño",
     "img": "https://images.unsplash.com/photo-1598808503746-f34c53b4713b?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 28,
+    "stock_total": 23,
     "tallas": [
       {
         "talla": "M",
-        "stock": 18
+        "stock": 13
       },
       {
         "talla": "L",
@@ -120,11 +120,11 @@
     "demanda": "low",
     "temporada": "Invierno",
     "img": "https://images.unsplash.com/photo-1584917469275-8ad128a101d7?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 15,
+    "stock_total": 10,
     "tallas": [
       {
         "talla": "Única",
-        "stock": 15
+        "stock": 10
       }
     ],
     "precio": 74.99000000000001
@@ -154,11 +154,11 @@
     "demanda": "high",
     "temporada": "Primavera",
     "img": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 5,
+    "stock_total": 2,
     "tallas": [
       {
         "talla": "S",
-        "stock": 5
+        "stock": 2
       },
       {
         "talla": "M",

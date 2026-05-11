@@ -285,6 +285,91 @@ exports.sellProduct = (req, res) => {
     }
 };
 
+exports.sellProductBatch = (req, res) => {
+    const { items } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ error: 'No se enviaron productos válidos.' });
+    }
+
+    const productos = readData();
+    const ventas = readVentas();
+    const batchId = 'BATCH-' + Date.now().toString();
+    const fecha = new Date().toISOString();
+
+    let errors = [];
+    let itemsProcesados = [];
+
+    // Pre-validate stock
+    for (let item of items) {
+        const index = productos.findIndex(p => p.id === item.id);
+        if (index === -1) {
+            errors.push(`Producto ${item.id} no encontrado.`);
+            continue;
+        }
+
+        const producto = productos[index];
+        const qtyVendidas = parseInt(item.cantidad) || 1;
+        const dev = parseInt(item.devoluciones) || 0;
+        const qty = Math.max(0, qtyVendidas - dev);
+
+        if (producto.stock_total < qty) {
+            errors.push(`No hay stock suficiente para ${producto.nombre}.`);
+            continue;
+        }
+
+        itemsProcesados.push({
+            productoIndex: index,
+            producto: producto,
+            qtyVendidas,
+            dev,
+            qty
+        });
+    }
+
+    if (errors.length > 0) {
+        return res.status(400).json({ error: 'Errores de validación', details: errors });
+    }
+
+    // Process updates
+    itemsProcesados.forEach((item, i) => {
+        const { producto, qtyVendidas, dev, qty } = item;
+        
+        producto.stock_total -= qty;
+        if (producto.tallas && producto.tallas.length > 0) {
+            let remainingQty = qty;
+            for (let t of producto.tallas) {
+                if (remainingQty <= 0) break;
+                if (t.stock > 0) {
+                    const subtract = Math.min(t.stock, remainingQty);
+                    t.stock -= subtract;
+                    remainingQty -= subtract;
+                }
+            }
+        }
+
+        const precioVenta = producto.precio || 0;
+        const totalVenta = precioVenta * qty;
+
+        ventas.unshift({
+            id: batchId + '-' + i,
+            batchId: batchId,
+            fecha: fecha,
+            productoId: producto.id,
+            productoNombre: producto.nombre,
+            cantidad: qtyVendidas,
+            devoluciones: dev,
+            cantidadNeta: qty,
+            precioUnitario: precioVenta,
+            total: totalVenta
+        });
+    });
+
+    writeData(productos);
+    writeVentas(ventas);
+
+    res.json({ success: true, batchId });
+};
+
 exports.updateProduct = (req, res) => {
     const { id } = req.params;
     const productos = readData();
