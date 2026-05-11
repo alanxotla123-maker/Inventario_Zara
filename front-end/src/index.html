@@ -472,7 +472,7 @@
                 <div id="pdf-filters-wrapper">
                     <!-- Single Filter Row Template -->
                     <div class="filter-container pdf-filter-row"
-                        style="display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 16px; margin-bottom: 16px; align-items: end; padding: 16px; background: #fff; border: 1px solid #eee;">
+                        style="display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; padding: 24px; background: #fcfcfc; border: 1px solid #eee;">
                         <div class="filter-group">
                             <label>Tipo de Producto</label>
                             <select class="r-tipo" onchange="actualizarModelosPDF(this)">
@@ -640,56 +640,85 @@
                                 </div>
                             </div>
 
-                            <button class="batch-action-btn"
-                                style="margin-top: 16px; width: 100%; background: #fff; color: #000; border: 1px dashed #ccc;"
-                                onclick="agregarFilaVenta()">
-                                + AÑADIR OTRO PRODUCTO
+                            <div class="form-row">
+                                <label
+                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600;">CARGA
+                                    DE DATOS DETALLADA (CSV / EXCEL)</label>
+                                <div class="thumb-box upload-btn"
+                                    style="width: 100%; aspect-ratio: auto; height: 160px; margin-top: 8px; border: 1px dashed #CCC;">
+                                    <i data-lucide="file-up" style="width: 24px; margin-bottom: 12px; color: #999;"></i>
+                                    <span style="font-size: 11px; color: #999;">ARRASTRA TUS ARCHIVOS AQUÍ O <strong
+                                            style="color: #000; cursor: pointer;">EXAMINAR</strong></span>
+                                    <span
+                                        style="font-size: 9px; color: #BBB; margin-top: 8px; text-transform: none;">Archivos
+                                        permitidos: .csv, .xlsx (Max. 10MB)</span>
+                                </div>
+                            </div>
+
+                            <div style="border-top: 1px solid #eee; padding-top: 24px;">
+                                <label
+                                    style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; font-weight: 600; margin-bottom: 16px; display: block;">PRODUCTOS
+                                    EN ESTE REPORTE</label>
+                                <table class="inventory-table" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Devol.</th>
+                                            <th>Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-cart-tbody">
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; color: #999; padding: 20px;">No
+                                                hay productos añadidos.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                            <button class="btn-save"
+                                style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;"
+                                onclick="registrarVentaEnLote()">
+                                SUBIR REPORTE DE VENTAS <i data-lucide="arrow-right" style="width: 16px;"></i>
                             </button>
+
                         </div>
 
-                        <div style="font-size: 18px; font-weight: bold; text-align: right; margin-top: 24px;">
-                            Total del Reporte: <span id="sales-total-reporte">$0.00</span>
-                        </div>
+                        <!-- RIGHT COLUMN -->
+                        <div style="display: flex; flex-direction: column; gap: 40px;">
 
-                        <button class="btn-save"
-                            style="width: 100%; padding: 20px; font-size: 11px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px;"
-                            onclick="registrarVentaEnLote()">
-                            SUBIR REPORTE DE VENTAS <i data-lucide="arrow-right" style="width: 16px;"></i>
-                        </button>
+                            <div style="border: 1px solid var(--border-color); padding: 32px; background: #FFF;">
+                                <h3
+                                    style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 32px; font-weight: 500;">
+                                    Últimos Reportes Cargados</h3>
 
-                    </div>
-
-                    <!-- RIGHT COLUMN -->
-                    <div style="display: flex; flex-direction: column; gap: 40px;">
-
-                        <div style="border: 1px solid var(--border-color); padding: 32px; background: #FFF;">
-                            <h3
-                                style="font-family: var(--font-serif); font-size: 20px; margin-bottom: 32px; font-weight: 500;">
-                                Últimos Reportes Cargados</h3>
-
-                            <div id="sales-history-container"
-                                style="display: flex; flex-direction: column; gap: 24px; max-height: 400px; overflow-y: auto;">
-                                <div style="font-size: 12px; color: #888;">Cargando historial...</div>
+                                <div id="sales-history-container"
+                                    style="display: flex; flex-direction: column; gap: 24px; max-height: 400px; overflow-y: auto;">
+                                    <div style="font-size: 12px; color: #888;">Cargando historial...</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Image with Quote -->
-                        <div style="position: relative; width: 100%; aspect-ratio: 4/5;">
-                            <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=400&auto=format&fit=crop"
-                                style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);">
-                            <div
-                                style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 32px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-                                <p
-                                    style="font-family: var(--font-serif); font-size: 20px; font-style: italic; color: #FFF; line-height: 1.4; margin-bottom: 12px;">
-                                    "La precisión en el dato es el primer paso hacia la elegancia operativa."</p>
-                                <p
-                                    style="font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6);">
-                                    INTERNAL MANAGEMENT QUOTE</p>
+                            <!-- Image with Quote -->
+                            <div style="position: relative; width: 100%; aspect-ratio: 4/5;">
+                                <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=400&auto=format&fit=crop"
+                                    style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);">
+                                <div
+                                    style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 32px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                                    <p
+                                        style="font-family: var(--font-serif); font-size: 20px; font-style: italic; color: #FFF; line-height: 1.4; margin-bottom: 12px;">
+                                        "La precisión en el dato es el primer paso hacia la elegancia operativa."</p>
+                                    <p
+                                        style="font-size: 8px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6);">
+                                        INTERNAL MANAGEMENT QUOTE</p>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
             </section>
 
             <!-- PRODUCTS SECTION (ADD/EDIT) -->
@@ -1479,176 +1508,105 @@
                     return;
                 }
 
-                const batches = {};
-                ventas.forEach(v => {
-                    const groupKey = v.batchId || v.id;
-                    if (!batches[groupKey]) {
-                        batches[groupKey] = { items: [], total: 0, fecha: v.fecha };
-                    }
-                    batches[groupKey].items.push(v);
-                    batches[groupKey].total += v.total;
-                });
-
-                const sortedBatches = Object.entries(batches)
-                    .sort((a, b) => new Date(b[1].fecha) - new Date(a[1].fecha))
-                    .slice(0, 10);
-
-                sortedBatches.forEach(([batchId, batchData]) => {
-                    const fechaObj = new Date(batchData.fecha);
+                ventas.slice(0, 10).forEach(v => {
+                    const fechaObj = new Date(v.fecha);
                     const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     const numItems = batchData.items.length;
                     const title = numItems > 1 ? `Reporte Múltiple (${numItems} productos)` : `${batchData.items[0].productoNombre} (x${batchData.items[0].cantidad})`;
                     const subtitle = (numItems > 1 ? `Lote: ${batchId}` : `SKU: ${batchData.items[0].productoId}`) + ` — ${fechaStr}`;
 
                     const el = document.createElement('div');
+                    el.className = 'history-item';
                     el.style.display = 'flex';
                     el.style.justifyContent = 'space-between';
                     el.style.alignItems = 'center';
+                    el.style.padding = '16px 0';
+                    el.style.borderBottom = '1px solid #EEE';
+
+                    let itemsHtml = '';
+                    if (g.items.length === 1) {
+                        itemsHtml = `<div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${g.items[0].productoNombre} (x${g.items[0].cantidad})</div>
+                                     <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${g.items[0].productoId}</div>`;
+                    } else {
+                        itemsHtml = `<div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">REPORTE MULTI-PRODUCTO (${g.items.length} ítems)</div>
+                                     <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">${g.items.map(i => i.productoNombre).join(', ').substring(0, 50)}...</div>`;
+                    }
+
                     el.innerHTML = `
                         <div style="flex: 1;">
-                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${title}</div>
-                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">${subtitle}</div>
+                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${v.productoNombre} (x${v.cantidad})</div>
+                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${v.productoId}</div>
                         </div>
                         <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
                             <div>
                                 <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">${fechaStr}</div>
-                                <div style="font-size: 14px; font-weight: 600;">$${batchData.total.toFixed(2)}</div>
+                                <div style="font-size: 14px; font-weight: 600;">$${v.total.toFixed(2)}</div>
                             </div>
-                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${batchId}')" title="Descargar PDF"></i>
+                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${v.id}')" title="Descargar PDF"></i>
                         </div>
                     `;
                     container.appendChild(el);
-
-                    const divLine = document.createElement('div');
-                    divLine.style.height = '1px';
-                    divLine.style.background = '#EEE';
-                    divLine.style.width = '100%';
-                    container.appendChild(divLine);
                 });
-
+                // Guardar globalmente para el PDF
                 window.ventasGlobales = ventas;
-                window.batchesVentasGlobales = batches;
                 lucide.createIcons();
             } catch (e) {
                 console.error("Error cargando ventas", e);
             }
         }
 
-        function descargarVentaPDF(batchId) {
-            const batch = window.batchesVentasGlobales && window.batchesVentasGlobales[batchId];
-            if (!batch) return;
+        function descargarVentaPDF(id) {
+            const venta = (window.ventasGlobales || []).find(v => v.id === id);
+            if (!venta) return;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const fechaObj = new Date(batch.fecha);
+
 
             doc.setFontSize(18);
-            doc.text("THE EDITORIAL INVENTORY - Ticket de Venta", 14, 22);
+            doc.text("THE EDITORIAL INVENTORY - Reporte de Venta", 14, 22);
             doc.setFontSize(11);
             doc.setTextColor(100);
+            const fechaObj = new Date(venta.fecha);
             doc.text("Fecha: " + fechaObj.toLocaleString(), 14, 30);
-            doc.text("ID Transacción: " + batchId, 14, 36);
-
-            const bodyRows = batch.items.map(v => {
-                const fItem = new Date(v.fecha);
-                const fStr = fItem.toLocaleDateString();
-                return [
-                    fStr,
-                    v.productoNombre,
-                    v.productoId,
-                    v.cantidad.toString(),
-                    v.devoluciones ? v.devoluciones.toString() : "0",
-                    v.cantidadNeta !== undefined ? v.cantidadNeta.toString() : v.cantidad.toString(),
-                    "$" + v.precioUnitario.toFixed(2),
-                    "$" + v.total.toFixed(2)
-                ];
-            });
+            doc.text("ID Transacción: " + venta.id, 14, 36);
 
             doc.autoTable({
-                head: [["Fecha", "Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
-                body: bodyRows,
+                head: [["Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
+                body: [
+                    [
+                        venta.productoNombre,
+                        venta.productoId,
+                        venta.cantidad,
+                        venta.devoluciones || 0,
+                        venta.cantidadNeta !== undefined ? venta.cantidadNeta : venta.cantidad,
+                        "$" + venta.precioUnitario.toFixed(2),
+                        "$" + venta.total.toFixed(2)
+                    ]
+                ],
                 startY: 45,
                 theme: 'grid',
                 headStyles: { fillColor: [0, 0, 0] },
-                foot: [['', '', '', '', '', '', 'Gran Total:', '$' + batch.total.toFixed(2)]],
-                footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' }
             });
 
-            doc.save(`Ticket_Venta_${batchId}.pdf`);
-        }
-
-        function actualizarFechaDisplay() {
-            const inicio = document.getElementById('sales-fecha-inicio').value;
-            const reporte = document.getElementById('sales-fecha-reporte').value;
-            const span = document.getElementById('sales-fecha-display');
-            if (inicio && reporte) {
-                span.innerText = `${inicio}  →  ${reporte}`;
-            } else if (reporte) {
-                span.innerText = `Fecha: ${reporte}`;
-            } else if (inicio) {
-                span.innerText = `Desde: ${inicio}`;
-            } else {
-                span.innerText = '';
-            }
-        }
-
-        function agregarFilaVenta() {
-            const container = document.getElementById('sales-dynamic-rows');
-            const newRow = container.children[0].cloneNode(true);
-            newRow.querySelector('.s-prod').value = '';
-            newRow.querySelector('.s-cant').value = '';
-            newRow.querySelector('.s-dev').value = '0';
-            newRow.querySelector('.btn-discard').style.display = 'block';
-            container.appendChild(newRow);
-            calcularTotalLote();
-        }
-
-        function eliminarFilaVenta(btn) {
-            btn.closest('.sales-row').remove();
-            calcularTotalLote();
-        }
-
-        function calcularTotalLote() {
-            const rows = document.querySelectorAll('.sales-row');
-            let granTotal = 0;
-            rows.forEach(row => {
-                const id = row.querySelector('.s-prod').value;
-                const cant = parseInt(row.querySelector('.s-cant').value) || 0;
-                const dev = parseInt(row.querySelector('.s-dev').value) || 0;
-                if (id && cant > 0) {
-                    const prod = inventarioGlobal.find(p => p.id === id);
-                    if (prod) {
-                        const neto = cant - dev;
-                        granTotal += neto * (prod.precio || 0);
-                    }
-                }
-            });
-            document.getElementById('sales-total-reporte').innerText = `$${granTotal.toFixed(2)}`;
+            doc.save(`Ticket_Venta_${venta.id}.pdf`);
         }
 
         async function registrarVentaEnLote() {
-            const rows = document.querySelectorAll('.sales-row');
-            const items = [];
+            const selectProducto = document.getElementById('sales-producto');
+            const inputCantidad = document.getElementById('sales-cantidad');
+            const inputDevoluciones = document.getElementById('sales-devoluciones');
 
-            let error = null;
-            rows.forEach(row => {
-                const id = row.querySelector('.s-prod').value;
-                const cant = parseInt(row.querySelector('.s-cant').value) || 0;
-                const dev = parseInt(row.querySelector('.s-dev').value) || 0;
+            const id = selectProducto.value;
+            const cantidad = parseInt(inputCantidad.value);
+            const devoluciones = parseInt(inputDevoluciones.value) || 0;
 
-                if (id) {
-                    if (cant <= 0) {
-                        error = "Todas las filas con producto seleccionado deben tener cantidad mayor a 0.";
-                    }
-                    if (dev > cant) {
-                        error = "Las devoluciones no pueden superar la cantidad vendida.";
-                    }
-                    items.push({ id, cantidad: cant, devoluciones: dev });
-                }
-            });
-
-            if (error) {
-                mostrarNotificacionEditorial(error, true);
+            if (!id) {
+                mostrarNotificacionEditorial("Por favor selecciona un producto.", true);
+                return;
+            }
+            if (!cantidad || cantidad <= 0) {
+                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida a vender.", true);
                 return;
             }
 
@@ -1657,31 +1615,27 @@
                 return;
             }
 
-            mostrarNotificacionEditorial("Procesando reporte de ventas...");
-
             try {
                 const res = await fetch('/api/vender-lote', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items })
+                    body: JSON.stringify({ id, cantidad, devoluciones })
                 });
 
                 if (res.ok) {
-                    mostrarNotificacionEditorial("¡Reporte de ventas registrado correctamente!");
-
-                    // Limpiar filas
-                    const container = document.getElementById('sales-dynamic-rows');
-                    const firstRow = container.children[0];
-                    container.innerHTML = '';
-                    container.appendChild(firstRow);
-                    firstRow.querySelector('.s-prod').value = '';
-                    firstRow.querySelector('.s-cant').value = '';
-                    firstRow.querySelector('.s-dev').value = '0';
-                    firstRow.querySelector('.btn-discard').style.display = 'none';
-                    calcularTotalLote();
-
+                    const neto = cantidad - devoluciones;
+                    mostrarNotificacionEditorial(`¡Reporte registrado! Venta neta: ${neto} unidades.`);
                     await cargarInventario();
                     await cargarHistorialVentas();
+
+                    // Actualizar dropdown
+                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
+                    inventarioGlobal.forEach(p => {
+                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
+                    });
+                    inputCantidad.value = '';
+                    inputDevoluciones.value = '';
+                    document.getElementById('sales-total').value = '0.00';
                 } else {
                     const err = await res.json();
                     mostrarNotificacionEditorial("Error: " + err.error, true);
@@ -2144,24 +2098,50 @@
                     return;
                 }
 
+                // Agrupar por saleGroupId o fecha
+                const grupos = {};
                 ventas.forEach(v => {
-                    const fechaObj = new Date(v.fecha);
+                    const key = v.saleGroupId || v.id;
+                    if (!grupos[key]) {
+                        grupos[key] = {
+                            id: key,
+                            fecha: v.fecha,
+                            items: [],
+                            total: 0
+                        };
+                    }
+                    grupos[key].items.push(v);
+                    grupos[key].total += v.total;
+                });
+
+                const listaGrupos = Object.values(grupos).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                listaGrupos.forEach(g => {
+                    const fechaObj = new Date(g.fecha);
                     const fechaStr = fechaObj.toLocaleString();
-                    const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+
+                    let detalleHtml = '';
+                    if (g.items.length === 1) {
+                        const v = g.items[0];
+                        const neto = v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad;
+                        detalleHtml = `Reporte de venta: <strong>${v.productoNombre}</strong>. Se reportaron ${v.cantidad} unidades y ${v.devoluciones || 0} devoluciones. Neto: <strong>${neto}</strong> piezas.`;
+                    } else {
+                        detalleHtml = `Reporte multi-producto: <strong>${g.items.length} prendas registradas</strong>. Total de la operación: $${g.total.toFixed(2)}.`;
+                        const subItems = g.items.map(v => `<li>${v.productoNombre} (x${v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad})</li>`).join('');
+                        detalleHtml += `<ul style="margin-top: 8px; font-size: 11px; color: #666; padding-left: 20px;">${subItems}</ul>`;
+                    }
 
                     container.innerHTML += `
-                        <div style="display: flex; gap: 16px; align-items: flex-start; padding-bottom: 16px; border-bottom: 1px solid #eee;">
-                            <div style="padding: 8px; background: #f0f0f0; border-radius: 50%;">
-                                <i data-lucide="arrow-right-left" style="width: 16px; color: #555;"></i>
+                        <div style="display: flex; gap: 16px; align-items: flex-start; padding-bottom: 24px; border-bottom: 1px solid #eee; margin-bottom: 16px;">
+                            <div style="padding: 10px; background: #000; color: #FFF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="package-check" style="width: 16px;"></i>
                             </div>
-                            <div>
-                                <div style="font-size: 13px; margin-bottom: 4px;">
-                                    Se realizó un reporte de venta de la prenda <strong>${v.productoNombre}</strong> (SKU: ${v.productoId}). 
-                                    Se reportaron ${v.cantidad} unidades vendidas y ${v.devoluciones || 0} devoluciones. 
-                                    Se restaron <strong>${neto}</strong> piezas netas del inventario.
+                            <div style="flex: 1;">
+                                <div style="font-size: 14px; margin-bottom: 8px; line-height: 1.5; color: #333;">
+                                    ${detalleHtml}
                                 </div>
-                                <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px;">
-                                    ${fechaStr} | TOTAL TRANSACCIÓN: $${v.total.toFixed(2)}
+                                <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                                    ${fechaStr} | ID: ${g.id}
                                 </div>
                             </div>
                         </div>
@@ -2425,7 +2405,13 @@
             if (targetSection) targetSection.style.display = 'block';
 
             if (seccion === 'sales') {
-                actualizarDropdownsVentas();
+                const selectProducto = document.getElementById('sales-producto');
+                if (selectProducto) {
+                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
+                    inventarioGlobal.forEach(p => {
+                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
+                    });
+                }
                 cargarHistorialVentas();
             }
 
