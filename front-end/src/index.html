@@ -633,11 +633,16 @@
                                             oninput="calcularTotalLote()">
                                     </div>
                                     <div>
-                                        <button class="btn-discard"
+                                        <button class="btn-discard btn-remove-sale"
                                             style="height: 42px; padding: 0 16px; display: none;"
                                             onclick="eliminarFilaVenta(this)">X</button>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div style="margin-top: 16px;">
+                                <button class="batch-action-btn" onclick="agregarFilaVenta()"
+                                    style="background: #f9f9f9; color: #000; border: 1px dashed #ccc; padding: 8px 16px; width: auto;">+ Añadir otro producto al reporte</button>
                             </div>
 
                             <div class="form-row">
@@ -1508,13 +1513,28 @@
                     return;
                 }
 
-                ventas.slice(0, 10).forEach(v => {
-                    const fechaObj = new Date(v.fecha);
-                    const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const numItems = batchData.items.length;
-                    const title = numItems > 1 ? `Reporte Múltiple (${numItems} productos)` : `${batchData.items[0].productoNombre} (x${batchData.items[0].cantidad})`;
-                    const subtitle = (numItems > 1 ? `Lote: ${batchId}` : `SKU: ${batchData.items[0].productoId}`) + ` — ${fechaStr}`;
+                // Agrupar por lote o transacción individual
+                const grupos = {};
+                ventas.forEach(v => {
+                    const key = v.batchId || v.saleGroupId || v.id;
+                    if (!grupos[key]) {
+                        grupos[key] = {
+                            id: key,
+                            fecha: v.fecha,
+                            items: [],
+                            total: 0
+                        };
+                    }
+                    grupos[key].items.push(v);
+                    grupos[key].total += v.total;
+                });
 
+                const listaGrupos = Object.values(grupos).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                listaGrupos.slice(0, 10).forEach(g => {
+                    const fechaObj = new Date(g.fecha);
+                    const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
                     const el = document.createElement('div');
                     el.className = 'history-item';
                     el.style.display = 'flex';
@@ -1534,21 +1554,20 @@
 
                     el.innerHTML = `
                         <div style="flex: 1;">
-                            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">${v.productoNombre} (x${v.cantidad})</div>
-                            <div style="font-size: 11px; color: #888; font-style: italic; font-family: var(--font-serif);">SKU: ${v.productoId}</div>
+                            ${itemsHtml}
                         </div>
                         <div style="text-align: right; display: flex; align-items: center; gap: 16px;">
                             <div>
                                 <div style="font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px;">${fechaStr}</div>
-                                <div style="font-size: 14px; font-weight: 600;">$${v.total.toFixed(2)}</div>
+                                <div style="font-size: 14px; font-weight: 600;">$${g.total.toFixed(2)}</div>
                             </div>
-                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${v.id}')" title="Descargar PDF"></i>
+                            <i data-lucide="file-down" style="width: 18px; color: #000; cursor: pointer;" onclick="descargarVentaPDF('${g.id}')" title="Descargar PDF"></i>
                         </div>
                     `;
                     container.appendChild(el);
                 });
                 // Guardar globalmente para el PDF
-                window.ventasGlobales = ventas;
+                window.ventasAgrupadasGlobales = grupos;
                 lucide.createIcons();
             } catch (e) {
                 console.error("Error cargando ventas", e);
@@ -1556,62 +1575,149 @@
         }
 
         function descargarVentaPDF(id) {
-            const venta = (window.ventasGlobales || []).find(v => v.id === id);
-            if (!venta) return;
+            const grupo = window.ventasAgrupadasGlobales ? window.ventasAgrupadasGlobales[id] : null;
+            if (!grupo) return;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-
             doc.setFontSize(18);
-            doc.text("THE EDITORIAL INVENTORY - Reporte de Venta", 14, 22);
+            doc.text("THE EDITORIAL INVENTORY - Reporte de Ventas", 14, 22);
             doc.setFontSize(11);
             doc.setTextColor(100);
-            const fechaObj = new Date(venta.fecha);
+            const fechaObj = new Date(grupo.fecha);
             doc.text("Fecha: " + fechaObj.toLocaleString(), 14, 30);
-            doc.text("ID Transacción: " + venta.id, 14, 36);
+            doc.text("ID Referencia: " + grupo.id, 14, 36);
+
+            const tableBody = grupo.items.map(v => [
+                v.productoNombre,
+                v.productoId,
+                v.cantidad,
+                v.devoluciones || 0,
+                v.cantidadNeta !== undefined ? v.cantidadNeta : v.cantidad,
+                "$" + v.precioUnitario.toFixed(2),
+                "$" + v.total.toFixed(2)
+            ]);
 
             doc.autoTable({
                 head: [["Producto", "SKU", "Vendidas", "Devol.", "Neto", "Precio", "Total"]],
-                body: [
-                    [
-                        venta.productoNombre,
-                        venta.productoId,
-                        venta.cantidad,
-                        venta.devoluciones || 0,
-                        venta.cantidadNeta !== undefined ? venta.cantidadNeta : venta.cantidad,
-                        "$" + venta.precioUnitario.toFixed(2),
-                        "$" + venta.total.toFixed(2)
-                    ]
-                ],
+                body: tableBody,
                 startY: 45,
                 theme: 'grid',
                 headStyles: { fillColor: [0, 0, 0] },
+                foot: [[{ content: 'TOTAL REPORTE', colSpan: 6, styles: { halign: 'right', fontStyle: 'bold' } }, { content: '$' + grupo.total.toFixed(2), styles: { fontStyle: 'bold' } }]],
             });
 
-            doc.save(`Ticket_Venta_${venta.id}.pdf`);
+            doc.save(`Reporte_Ventas_${grupo.id}.pdf`);
+        }
+
+        function actualizarFechaDisplay() {
+            const inicio = document.getElementById('sales-fecha-inicio').value;
+            const reporte = document.getElementById('sales-fecha-reporte').value;
+            const display = document.getElementById('sales-fecha-display');
+            if (inicio && reporte) {
+                display.innerText = `Periodo: ${inicio} al ${reporte}`;
+            } else if (reporte) {
+                display.innerText = `Fecha: ${reporte}`;
+            }
+        }
+
+        function agregarFilaVenta() {
+            const wrapper = document.getElementById('sales-dynamic-rows');
+            const firstRow = wrapper.querySelector('.sales-row');
+            const newRow = firstRow.cloneNode(true);
+            
+            // Mostrar botón eliminar
+            newRow.querySelector('.btn-remove-sale').style.display = 'block';
+            
+            // Resetear valores
+            newRow.querySelector('.s-cant').value = '';
+            newRow.querySelector('.s-dev').value = '0';
+            
+            wrapper.appendChild(newRow);
+            actualizarDropdownsVentas();
+        }
+
+        function eliminarFilaVenta(btn) {
+            const row = btn.closest('.sales-row');
+            const wrapper = document.getElementById('sales-dynamic-rows');
+            if (wrapper.querySelectorAll('.sales-row').length > 1) {
+                row.remove();
+                calcularTotalLote();
+            }
+        }
+
+        function calcularTotalLote() {
+            const rows = document.querySelectorAll('.sales-row');
+            const tbody = document.getElementById('sales-cart-tbody');
+            tbody.innerHTML = '';
+            
+            let items = [];
+            let totalGeneral = 0;
+
+            rows.forEach(row => {
+                const id = row.querySelector('.s-prod').value;
+                const cant = parseInt(row.querySelector('.s-cant').value) || 0;
+                const dev = parseInt(row.querySelector('.s-dev').value) || 0;
+
+                if (id && cant > 0) {
+                    const prod = inventarioGlobal.find(p => p.id === id);
+                    if (prod) {
+                        const neto = Math.max(0, cant - dev);
+                        const total = neto * (prod.precio || 0);
+                        totalGeneral += total;
+                        
+                        items.push({
+                            id,
+                            nombre: prod.nombre,
+                            cantidad: cant,
+                            devoluciones: dev,
+                            neto,
+                            total
+                        });
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${prod.nombre}</td>
+                                <td>${cant}</td>
+                                <td>${dev}</td>
+                                <td><span style="font-weight: 600;">$${total.toFixed(2)}</span></td>
+                                <td></td>
+                            </tr>
+                        `;
+                    }
+                }
+            });
+
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 20px;">No hay productos añadidos.</td></tr>';
+            } else {
+                tbody.innerHTML += `
+                    <tr style="background: #f9f9f9; font-weight: bold;">
+                        <td colspan="3" style="text-align: right;">TOTAL REPORTE:</td>
+                        <td>$${totalGeneral.toFixed(2)}</td>
+                        <td></td>
+                    </tr>
+                `;
+            }
         }
 
         async function registrarVentaEnLote() {
-            const selectProducto = document.getElementById('sales-producto');
-            const inputCantidad = document.getElementById('sales-cantidad');
-            const inputDevoluciones = document.getElementById('sales-devoluciones');
+            const rows = document.querySelectorAll('.sales-row');
+            let items = [];
 
-            const id = selectProducto.value;
-            const cantidad = parseInt(inputCantidad.value);
-            const devoluciones = parseInt(inputDevoluciones.value) || 0;
+            rows.forEach(row => {
+                const id = row.querySelector('.s-prod').value;
+                const cantidad = parseInt(row.querySelector('.s-cant').value);
+                const devoluciones = parseInt(row.querySelector('.s-dev').value) || 0;
 
-            if (!id) {
-                mostrarNotificacionEditorial("Por favor selecciona un producto.", true);
-                return;
-            }
-            if (!cantidad || cantidad <= 0) {
-                mostrarNotificacionEditorial("Por favor ingresa una cantidad válida a vender.", true);
-                return;
-            }
+                if (id && cantidad > 0) {
+                    items.push({ id, cantidad, devoluciones });
+                }
+            });
 
             if (items.length === 0) {
-                mostrarNotificacionEditorial("Añade al menos un producto válido al reporte.", true);
+                mostrarNotificacionEditorial("Por favor añade al menos un producto válido al reporte.", true);
                 return;
             }
 
@@ -1619,30 +1725,31 @@
                 const res = await fetch('/api/vender-lote', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, cantidad, devoluciones })
+                    body: JSON.stringify({ items })
                 });
 
                 if (res.ok) {
-                    const neto = cantidad - devoluciones;
-                    mostrarNotificacionEditorial(`¡Reporte registrado! Venta neta: ${neto} unidades.`);
+                    mostrarNotificacionEditorial(`¡Reporte de ventas registrado con éxito!`);
                     await cargarInventario();
                     await cargarHistorialVentas();
 
-                    // Actualizar dropdown
-                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
-                    inventarioGlobal.forEach(p => {
-                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
-                    });
-                    inputCantidad.value = '';
-                    inputDevoluciones.value = '';
-                    document.getElementById('sales-total').value = '0.00';
+                    // Limpiar formulario: dejar solo una fila vacía
+                    const wrapper = document.getElementById('sales-dynamic-rows');
+                    wrapper.innerHTML = wrapper.querySelector('.sales-row').outerHTML;
+                    const row = wrapper.querySelector('.sales-row');
+                    row.querySelector('.s-cant').value = '';
+                    row.querySelector('.s-dev').value = '0';
+                    row.querySelector('.btn-remove-sale').style.display = 'none';
+                    
+                    document.getElementById('sales-cart-tbody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 20px;">No hay productos añadidos.</td></tr>';
+                    actualizarDropdownsVentas();
                 } else {
                     const err = await res.json();
-                    mostrarNotificacionEditorial("Error: " + err.error, true);
+                    mostrarNotificacionEditorial("Error: " + (err.error || "No se pudo procesar el reporte"), true);
                 }
             } catch (error) {
                 console.error("Error:", error);
-                mostrarNotificacionEditorial("Error de conexión", true);
+                mostrarNotificacionEditorial("Error de conexión al servidor", true);
             }
         }
 
@@ -2405,13 +2512,7 @@
             if (targetSection) targetSection.style.display = 'block';
 
             if (seccion === 'sales') {
-                const selectProducto = document.getElementById('sales-producto');
-                if (selectProducto) {
-                    selectProducto.innerHTML = '<option value="">Seleccionar producto...</option>';
-                    inventarioGlobal.forEach(p => {
-                        selectProducto.innerHTML += `<option value="${p.id}">${p.nombre} (Stock: ${p.stock_total}) - $${(p.precio || 0).toFixed(2)}</option>`;
-                    });
-                }
+                actualizarDropdownsVentas();
                 cargarHistorialVentas();
             }
 
@@ -2461,35 +2562,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Cargar dashboard por defecto si es la pantalla activa
             cargarDashboard();
-
-            const selectProducto = document.getElementById('sales-producto');
-            const inputCantidad = document.getElementById('sales-cantidad');
-            const inputDevoluciones = document.getElementById('sales-devoluciones');
-            const inputTotal = document.getElementById('sales-total');
-
-            function calcularTotalVenta() {
-                if (!selectProducto || !inputCantidad || !inputTotal) return;
-                const prodId = selectProducto.value;
-                const qty = parseInt(inputCantidad.value) || 0;
-                const dev = parseInt(inputDevoluciones ? inputDevoluciones.value : 0) || 0;
-
-                if (prodId && qty > 0) {
-                    const prod = inventarioGlobal.find(p => p.id === prodId);
-                    if (prod) {
-                        const precio = prod.precio || 0;
-                        const neto = Math.max(0, qty - dev);
-                        inputTotal.value = (precio * neto).toFixed(2);
-                    } else {
-                        inputTotal.value = '0.00';
-                    }
-                } else {
-                    inputTotal.value = '0.00';
-                }
-            }
-
-            if (selectProducto) selectProducto.addEventListener('change', calcularTotalVenta);
-            if (inputCantidad) inputCantidad.addEventListener('input', calcularTotalVenta);
-            if (inputDevoluciones) inputDevoluciones.addEventListener('input', calcularTotalVenta);
         });
     </script>
 </body>

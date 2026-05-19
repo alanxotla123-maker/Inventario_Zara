@@ -1,5 +1,65 @@
 [
   {
+    "id": "BATCH-1779208753606-0",
+    "batchId": "BATCH-1779208753606",
+    "fecha": "2026-05-19T16:39:13.606Z",
+    "productoId": "2",
+    "productoNombre": "Camisa de Seda 100%",
+    "cantidad": 3,
+    "devoluciones": 0,
+    "cantidadNeta": 3,
+    "precioUnitario": 149.99,
+    "total": 449.97
+  },
+  {
+    "id": "BATCH-1779208729856-1",
+    "batchId": "BATCH-1779208729856",
+    "fecha": "2026-05-19T16:38:49.856Z",
+    "productoId": "2",
+    "productoNombre": "Camisa de Seda 100%",
+    "cantidad": 5,
+    "devoluciones": 0,
+    "cantidadNeta": 5,
+    "precioUnitario": 149.99,
+    "total": 749.95
+  },
+  {
+    "id": "BATCH-1779208729856-0",
+    "batchId": "BATCH-1779208729856",
+    "fecha": "2026-05-19T16:38:49.856Z",
+    "productoId": "2",
+    "productoNombre": "Camisa de Seda 100%",
+    "cantidad": 8,
+    "devoluciones": 0,
+    "cantidadNeta": 8,
+    "precioUnitario": 149.99,
+    "total": 1199.92
+  },
+  {
+    "id": "BATCH-1778793060868-1",
+    "batchId": "BATCH-1778793060868",
+    "fecha": "2026-05-14T21:11:00.868Z",
+    "productoId": "1",
+    "productoNombre": "Abrigo Largo de Lana Premium",
+    "cantidad": 2,
+    "devoluciones": 2,
+    "cantidadNeta": 0,
+    "precioUnitario": 99.99,
+    "total": 0
+  },
+  {
+    "id": "BATCH-1778793060868-0",
+    "batchId": "BATCH-1778793060868",
+    "fecha": "2026-05-14T21:11:00.868Z",
+    "productoId": "1",
+    "productoNombre": "Abrigo Largo de Lana Premium",
+    "cantidad": 43,
+    "devoluciones": 0,
+    "cantidadNeta": 43,
+    "precioUnitario": 99.99,
+    "total": 4299.57
+  },
+  {
     "id": "BATCH-1778214186192-0",
     "batchId": "BATCH-1778214186192",
     "fecha": "2026-05-08T04:23:06.192Z",

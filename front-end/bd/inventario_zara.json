@@ -7,11 +7,11 @@
     "demanda": "high",
     "temporada": "FW24",
     "img": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 4161,
+    "stock_total": 4118,
     "tallas": [
       {
         "talla": "S",
-        "stock": 927
+        "stock": 884
       },
       {
         "talla": "M",
@@ -32,7 +32,7 @@
     "demanda": "mid",
     "temporada": "Continua",
     "img": "https://images.unsplash.com/photo-1620012253295-c05718565d6d?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 16,
+    "stock_total": 0,
     "tallas": [
       {
         "talla": "S",
@@ -40,7 +40,7 @@
       },
       {
         "talla": "M",
-        "stock": 2
+        "stock": 0
       },
       {
         "talla": "L",
@@ -57,11 +57,11 @@
     "demanda": "high",
     "temporada": "Primavera",
     "img": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=400&auto=format&fit=crop",
-    "stock_total": 134,
+    "stock_total": 139,
     "tallas": [
       {
         "talla": "36",
-        "stock": 0
+        "stock": 5
       },
       {
         "talla": "37",
